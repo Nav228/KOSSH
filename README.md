@@ -1,6 +1,6 @@
 # KOSH - Inventory Management System
 
-**Version 2.1.0** | American Circuits Inc.
+**Version 2.1.0**
 
 KOSH is a full-featured warehouse and PCB inventory management system built for American Circuits. It handles the complete lifecycle of electronic components — from BOM loading and job tracking to stock operations, shortage reporting, and barcode-based PCN management.
 
