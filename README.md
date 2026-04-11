@@ -2,7 +2,7 @@
 
 **Version 2.1.0**
 
-KOSH is a full-featured warehouse and PCB inventory management system built for American Circuits. It handles the complete lifecycle of electronic components — from BOM loading and job tracking to stock operations, shortage reporting, and barcode-based PCN management.
+KOSH is a full-featured warehouse and PCB inventory management system. It handles the complete lifecycle of electronic components — from BOM loading and job tracking to stock operations, shortage reporting, and barcode-based PCN management.
 
 ## Features
 
@@ -17,9 +17,9 @@ KOSH is a full-featured warehouse and PCB inventory management system built for 
 - **Job Management** - Create, view, and manage jobs with BOM detail, revisions, and build quantities
 - **Shortage Reports** - Generate, view, and export shortage reports comparing BOM requirements vs. on-hand inventory
 
-### PCN & ACI Numbers
+### PCN & Part Numbers
 - **Generate PCN** - Create unique PCN barcodes for inventory items with assignment tracking
-- **ACI Number Creator** - Create consecutive ACI part numbers (ACI-10XXX) for non-BOM parts to place in stock
+- **Part Number Creator** - Create consecutive part numbers for non-BOM parts to place in stock
 - **PCN History** - Full history of PCN generation and assignments
 - **PO History** - Purchase order history tracking
 
@@ -33,10 +33,9 @@ KOSH is a full-featured warehouse and PCB inventory management system built for 
 - **User Management** - Role-based access control (Super User, Manager, User, Operator, ITAR)
 - **Location Management** - Manage warehouse location codes
 - **Print Labels** - Generate and print labels with ZPL barcode support
-- **Sources** - Legacy Access database table browser (admin only)
 
 ### Platform
-- **SSO** - Single sign-on integration with ACI FORGE
+- **SSO** - Optional single sign-on integration via JWT
 - **Dark Mode** - Toggle between light and dark themes
 - **Responsive Design** - Optimized for desktop, tablet, and mobile devices
 - **Barcode Scanning** - Scan PCN barcodes from any page to view item details
@@ -49,85 +48,76 @@ KOSH is a full-featured warehouse and PCB inventory management system built for 
 | Database | PostgreSQL 15 |
 | Frontend | Jinja2, Bootstrap 5, JavaScript |
 | Excel Parsing | SheetJS (client-side), openpyxl (server-side) |
-| Auth | Session-based + SSO (JWT) with bcrypt |
+| Auth | Session-based + optional SSO (JWT) with bcrypt |
 | Deployment | Docker Compose, Nginx, Gunicorn |
-| Remote Access | Vercel serverless + Cloudflare tunnel |
+
+## Getting Started
+
+### Requirements
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+
+### Run with Docker
+
+```bash
+# Clone the repo
+git clone https://github.com/Nav228/KOSH.git
+cd KOSH
+
+# Set up environment
+cp .env.example .env
+# Edit .env and set a strong SECRET_KEY
+
+# Start all services
+docker compose up --build
+
+# App available at:
+#   http://localhost:5002
+```
+
+### Environment Variables
+
+Copy `.env.example` to `.env` and configure:
+
+| Variable | Description | Default |
+|---|---|---|
+| `POSTGRES_HOST` | Database host | `kosh-database` |
+| `POSTGRES_DB` | Database name | `kosh` |
+| `POSTGRES_USER` | Database user | `stockpick_user` |
+| `POSTGRES_PASSWORD` | Database password | *(set this)* |
+| `SECRET_KEY` | Flask session secret | *(set this)* |
+| `SSO_SECRET_KEY` | JWT secret for SSO (optional) | — |
+
+### Database Schema
+
+KOSH uses a `pcb_inventory` schema in PostgreSQL with tables including:
+
+- `tblWhse_Inventory` - Warehouse inventory
+- `tblBOM` / `tblJob` - Bills of Materials and Jobs
+- `tblTransaction` - Audit trail
+- `tblPCB_Inventory` - PCB inventory
+- `tblShortageReport` - Shortage reports
+- `tblUser` - User accounts and roles
+- `tblActivityLog` - Admin notification feed
 
 ## Project Structure
 
 ```
 KOSH/
-├── migration/stockAndPick/web_app/   # Docker build context
-│   ├── app.py                        # Main Flask application (~8000 lines)
-│   ├── expiration_manager.py         # DC/MSD expiration logic
-│   ├── templates/                    # Jinja2 HTML templates (38 files)
-│   ├── static/                       # CSS, JS, images
-│   ├── Dockerfile.webapp             # Docker image definition
-│   └── requirements.txt              # Python dependencies
-├── docker-compose.yml                # Docker Compose services
-├── nginx.conf                        # Nginx reverse proxy config
-├── VERSION                           # Current version
-├── CHANGELOG.md                      # Version history
-└── README.md
+├── app.py                  # Main Flask application
+├── expiration_manager.py   # DC/MSD expiration logic
+├── templates/              # Jinja2 HTML templates
+├── static/                 # CSS, SVG assets
+├── Dockerfile              # Docker image
+├── docker-compose.yml      # All services (app + postgres + nginx)
+├── nginx.conf              # Nginx reverse proxy config
+├── requirements.txt        # Python dependencies
+└── .env.example            # Environment variable template
 ```
 
-## Deployment
-
-### Docker (Production)
-
-```bash
-# Build and start
-docker compose build --no-cache web_app
-docker compose up -d
-
-# Services:
-#   stockandpick_webapp  - Flask app on port 5000 (internal)
-#   stockandpick_nginx   - Nginx proxy on port 5002 (external)
-#   aci-database         - PostgreSQL (shared, external)
-```
-
-### Environment Variables
-
-| Variable | Description |
-|----------|-------------|
-| `POSTGRES_HOST` | Database host (default: `aci-database`) |
-| `POSTGRES_DB` | Database name (default: `kosh`) |
-| `POSTGRES_USER` | Database user |
-| `POSTGRES_PASSWORD` | Database password |
-| `SECRET_KEY` | Flask session secret key |
-| `SSO_SECRET_KEY` | JWT secret for ACI FORGE SSO |
-
-### Database
-
-KOSH uses the `kosh` database on the shared `aci-database` PostgreSQL container. Tables are in the `pcb_inventory` schema:
-
-- `tblBOM` - Bill of Materials records
-- `tblJob` - Job master records
-- `tblWhse_Inventory` - Warehouse inventory
-- `tblPN_List` - Part number list
-- `tblTransaction` - Audit trail for stock/pick operations
-- `tblACI_PartNumbers` - Manually created ACI numbers
-- `tblActivityLog` - User activity notifications
-- `tblLoc` - Warehouse locations
-- `tblUser` - User accounts and roles
-- `tblShortageReport` / `tblShortageReportItems` - Shortage reports
-- `tblReceipt` - Receipt records
-- `tblPCB_Inventory` - PCB inventory
-- `tblBOM_Archive` - Historical BOM records
-
-## Development Notes
-
-- The Docker build context is `./migration/stockAndPick/web_app/`, not the repo root. When editing files in the repo root, copy them to the build context before rebuilding.
-- The `static_files` Docker volume persists `/app/static`. To deploy CSS/JS changes, remove the volume: `docker volume rm kosh_static_files` then recreate containers.
-- Flask runs in production mode (debug=False) behind Gunicorn and Nginx.
-- All database operations use connection pooling with automatic failover.
-
-## Owner
-
-**American Circuits Inc.**
+## Author
 
 Developed by **Kanav Sharma**
 
 ## License
 
-Proprietary — American Circuits Inc. Internal use only.
+MIT License

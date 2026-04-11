@@ -239,7 +239,7 @@ def add_security_headers(response):
         "style-src 'self' cdn.jsdelivr.net fonts.googleapis.com 'unsafe-inline'; "
         "font-src 'self' cdn.jsdelivr.net fonts.gstatic.com; "
         "img-src 'self' data:; "
-        "connect-src 'self' cdn.jsdelivr.net *.trycloudflare.com *.americancircuits.net"
+        "connect-src 'self' cdn.jsdelivr.net *.trycloudflare.com"
     )
     # HTTP Strict Transport Security (force HTTPS in production)
     response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
@@ -396,11 +396,12 @@ def is_admin_user():
         return True
     return session.get('username', '').lower() in ADMIN_AUTHORIZED_USERS
 
-# Users allowed to access ACI Numbers and Locations (in addition to admins)
-MANAGE_AUTHORIZED_USERS = {'parts@americancircuits.com'}
+# Users allowed to access Part Numbers and Locations (in addition to admins)
+# Add authorized usernames/emails here
+MANAGE_AUTHORIZED_USERS = set()
 
 def can_manage_parts():
-    """Check if user can access ACI Numbers and Locations (admins + Theresa)."""
+    """Check if user can access Part Numbers and Locations (admins only by default)."""
     if is_admin_user():
         return True
     return session.get('username', '').lower() in MANAGE_AUTHORIZED_USERS
@@ -2415,7 +2416,7 @@ def require_auth(f):
             # For page requests, redirect to FORGE login with SSO redirect back to KOSH
             is_local = request.host and ('.local' in request.host or '192.168.' in request.host or 'localhost' in request.host)
             if is_local:
-                forge_login_url = 'http://acidashboard.aci.local:2005/login?redirect=kosh'
+                forge_login_url = '/login'
             else:
                 forge_login_url = 'https://aci-forge.vercel.app/login?redirect=kosh'
             return redirect(forge_login_url)
@@ -2670,7 +2671,7 @@ def login():
     if request.method == 'GET':
         is_local = request.host and ('.local' in request.host or '192.168.' in request.host or 'localhost' in request.host)
         if is_local:
-            forge_login_url = 'http://acidashboard.aci.local:2005/login?redirect=kosh'
+            forge_login_url = '/login'
         else:
             forge_login_url = 'https://aci-forge.vercel.app/login?redirect=kosh'
         return redirect(forge_login_url)
@@ -2799,7 +2800,7 @@ def logout():
     # Redirect to FORGE login with redirect back to KOSH
     is_local = request.host and ('.local' in request.host or '192.168.' in request.host or 'localhost' in request.host)
     if is_local:
-        return redirect('http://acidashboard.aci.local:2005/login?redirect=kosh')
+        return redirect('/login')
     return redirect('https://aci-forge.vercel.app/login?redirect=kosh')
 
 @app.route('/')
@@ -4719,7 +4720,7 @@ def sso_login():
 @app.route('/sso/callback')
 @csrf.exempt
 def sso_callback():
-    """Handle SSO callback redirect from ACI FORGE.
+    """Handle SSO callback redirect from SSO Provider.
     Validates the SSO JWT token and creates a KOSH session."""
     from jose import jwt as jose_jwt, JWTError as JoseJWTError
 
@@ -4817,7 +4818,7 @@ def sso_callback():
         conn.commit()
 
         logger.info(f"SSO login successful for user: {username}")
-        flash(f'Welcome, {user["username"] or username}! (Signed in via ACI FORGE)', 'success')
+        flash(f'Welcome, {user["username"] or username}! (Signed in via SSO Provider)', 'success')
         return redirect(url_for('index'))
 
     except Exception as e:
@@ -6681,7 +6682,7 @@ def admin_notifications():
             cursor.execute("""
                 SELECT id, user_id, username, full_name, action_type, description, details, created_at, seen, seen_at
                 FROM pcb_inventory."tblActivityLog"
-                WHERE username = 'james@americancircuits.com'
+                WHERE username = 'admin'
                 ORDER BY created_at DESC
                 LIMIT 200
             """)
@@ -6698,7 +6699,7 @@ def admin_notifications():
         if is_theresa and not is_admin_user():
             cursor.execute("""
                 SELECT COUNT(*) as count FROM pcb_inventory."tblActivityLog"
-                WHERE seen = FALSE AND username = 'james@americancircuits.com'
+                WHERE seen = FALSE AND username = 'admin'
             """)
         else:
             cursor.execute("""
@@ -6794,7 +6795,7 @@ def get_notification_count():
         if is_theresa and not is_admin_user():
             cursor.execute("""
                 SELECT COUNT(*) as count FROM pcb_inventory."tblActivityLog"
-                WHERE seen = FALSE AND username = 'james@americancircuits.com'
+                WHERE seen = FALSE AND username = 'admin'
             """)
         else:
             cursor.execute("""
