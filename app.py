@@ -2413,13 +2413,8 @@ def require_auth(f):
                     'error': 'Authentication required. Please log in.'
                 }), 401
 
-            # For page requests, redirect to FORGE login with SSO redirect back to KOSH
-            is_local = request.host and ('.local' in request.host or '192.168.' in request.host or 'localhost' in request.host)
-            if is_local:
-                forge_login_url = '/login'
-            else:
-                forge_login_url = 'https://aci-forge.vercel.app/login?redirect=kosh'
-            return redirect(forge_login_url)
+            # For page requests, redirect to login page
+            return redirect(url_for('login'))
 
         # Check for ACI Dashboard SSO token in headers (optional)
         auth_token = request.headers.get('X-ACI-Auth-Token') or session.get('aci_auth_token')
@@ -2667,14 +2662,9 @@ def login():
     if 'user_id' in session:
         return redirect(url_for('index'))
 
-    # For GET requests, redirect to FORGE login (centralized auth)
+    # For GET requests, render the login form directly
     if request.method == 'GET':
-        is_local = request.host and ('.local' in request.host or '192.168.' in request.host or 'localhost' in request.host)
-        if is_local:
-            forge_login_url = '/login'
-        else:
-            forge_login_url = 'https://aci-forge.vercel.app/login?redirect=kosh'
-        return redirect(forge_login_url)
+        return render_template('login.html')
 
     if request.method == 'POST':
         username = request.form.get('username', '').strip()
@@ -2797,11 +2787,7 @@ def logout():
     log_user_activity('LOGOUT', f'{full_name or username} logged out')
     session.clear()
     logger.info(f"User logged out: {username}")
-    # Redirect to FORGE login with redirect back to KOSH
-    is_local = request.host and ('.local' in request.host or '192.168.' in request.host or 'localhost' in request.host)
-    if is_local:
-        return redirect('/login')
-    return redirect('https://aci-forge.vercel.app/login?redirect=kosh')
+    return redirect(url_for('login'))
 
 @app.route('/')
 @require_auth
