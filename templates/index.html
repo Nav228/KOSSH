@@ -178,36 +178,35 @@
                     <table class="modern-table" id="inventoryTable">
                         <thead>
                             <tr>
-                                <th>Description</th>
-                                <th>MPN</th>
+                                <th>MPN / Part</th>
                                 <th>Location</th>
+                                <th>Qty</th>
                             </tr>
                         </thead>
                         <tbody id="inventoryTableBody">
-                            {% if recent_inventory %}
-                                {% for item in recent_inventory %}
+                            {% if summary %}
+                                {% for item in summary %}
                                 <tr>
                                     <td>
                                         <span style="font-weight:600;color:var(--text-primary);">
                                             <i class="bi bi-cpu" style="color:var(--brand);margin-right:6px;"></i>
-                                            {{ item.item or item.description or '—' }}
+                                            {{ item.pcb_type or item.description or '—' }}
                                         </span>
-                                    </td>
-                                    <td>
-                                        {% if item.mpn %}
-                                        <span class="badge-count">{{ item.mpn }}</span>
-                                        {% else %}
-                                        <span class="text-muted">—</span>
+                                        {% if item.description %}
+                                        <div style="font-size:0.75rem;color:var(--text-secondary);margin-top:2px;">{{ item.description }}</div>
                                         {% endif %}
                                     </td>
                                     <td>
-                                        {% if item.loc_to %}
+                                        {% if item.location %}
                                         <span class="location-tag">
-                                            <i class="bi bi-geo-alt"></i> {{ item.loc_to }}
+                                            <i class="bi bi-geo-alt"></i> {{ item.location }}
                                         </span>
                                         {% else %}
                                         <span class="text-muted">—</span>
                                         {% endif %}
+                                    </td>
+                                    <td>
+                                        <span class="qty-value">{{ '{:,}'.format(item.total_qty | int) if item.total_qty else '0' }}</span>
                                     </td>
                                 </tr>
                                 {% endfor %}
@@ -249,18 +248,26 @@
                     {% for activity in recent_activity %}
                     <div class="activity-item">
                         <div class="activity-dot
-                            {% if activity.action_type in ['STOCK'] %}activity-dot-green
-                            {% elif activity.action_type in ['PICK'] %}activity-dot-red
-                            {% elif activity.action_type in ['RESTOCK'] %}activity-dot-blue
-                            {% elif activity.action_type in ['PCN'] %}activity-dot-violet
+                            {% if activity.operation == 'STOCK' %}activity-dot-green
+                            {% elif activity.operation == 'PICK' %}activity-dot-red
+                            {% elif activity.operation == 'UPDATE' %}activity-dot-blue
+                            {% elif activity.operation == 'GEN' %}activity-dot-violet
                             {% else %}activity-dot-amber{% endif %}
                         "></div>
                         <div class="activity-content">
-                            <div class="activity-text">{{ activity.description or activity.action_type }}</div>
+                            <div class="activity-text">
+                                <strong>{{ activity.operation }}</strong>
+                                — {{ activity.job or activity.pcb_type or 'Part' }}
+                                {% if activity.quantity_change %}
+                                <span class="badge ms-1 {% if activity.operation == 'PICK' %}bg-danger{% else %}bg-success{% endif %}" style="font-size:0.7rem;">
+                                    {{ '+' if activity.operation != 'PICK' else '' }}{{ activity.quantity_change }} units
+                                </span>
+                                {% endif %}
+                            </div>
                             <div class="activity-time">
                                 <i class="bi bi-clock me-1"></i>
-                                {{ activity.created_at.strftime('%b %d, %I:%M %p') if activity.created_at else '—' }}
-                                {% if activity.username %} · {{ activity.username }}{% endif %}
+                                {{ activity.timestamp or '—' }}
+                                {% if activity.user_id %} · {{ activity.user_id }}{% endif %}
                             </div>
                         </div>
                     </div>
