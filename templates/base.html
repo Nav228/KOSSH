@@ -44,21 +44,33 @@
             <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                     <linearGradient id="kaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#7c3aed"/>
-                        <stop offset="100%" stop-color="#db2777"/>
+                        <stop offset="0%" stop-color="#a855f7"/>
+                        <stop offset="100%" stop-color="#ec4899"/>
+                    </linearGradient>
+                    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#2e1065"/>
+                        <stop offset="100%" stop-color="#4a044e"/>
                     </linearGradient>
                 </defs>
-                <rect x="4" y="4" width="72" height="72" rx="18" fill="#1a0533"/>
-                <rect x="4" y="4" width="72" height="72" rx="18" fill="none" stroke="url(#kaGrad)" stroke-width="1.5"/>
-                <g transform="translate(40, 42)">
-                    <text x="0" y="0" font-family="serif" font-size="40" fill="url(#kaGrad)"
-                          text-anchor="middle" dy="0.35em">क</text>
-                </g>
+                <!-- Outer glow ring -->
+                <rect x="2" y="2" width="76" height="76" rx="20" fill="none"
+                      stroke="url(#kaGrad)" stroke-width="0.5" opacity="0.3"/>
+                <!-- Badge body -->
+                <rect x="6" y="6" width="68" height="68" rx="16" fill="url(#bgGrad)"/>
+                <!-- Inner border -->
+                <rect x="6" y="6" width="68" height="68" rx="16" fill="none"
+                      stroke="url(#kaGrad)" stroke-width="1.5"/>
+                <!-- Shirorekha top bar -->
+                <rect x="18" y="20" width="44" height="2.5" rx="1.2" fill="url(#kaGrad)" opacity="0.9"/>
+                <!-- क character -->
+                <text x="40" y="58" font-family="serif" font-size="36"
+                      fill="url(#kaGrad)" text-anchor="middle">क</text>
             </svg>
         </div>
         <div>
             <div class="sidebar-brand-text">KOSSH</div>
-            <div class="sidebar-brand-version">Inventory System</div>
+            <div class="sidebar-brand-version">
+                <span class="brand-dot">◆</span> Inventory System</div>
         </div>
     </a>
 
