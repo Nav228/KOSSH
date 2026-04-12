@@ -2192,10 +2192,7 @@ class DatabaseManager:
             with conn.cursor(cursor_factory=RealDictCursor) as cur:
                 query = """
                     SELECT id, po as po_number, item, pcn, mpn, dc as date_code,
-                           CASE
-                               WHEN tranqty ~ '^[0-9]+$' THEN CAST(tranqty AS INTEGER)
-                               ELSE NULL
-                           END as quantity,
+                           COALESCE(tranqty, 0) as quantity,
                            trantype as transaction_type, tran_time as transaction_date,
                            loc_from as location_from, loc_to as location_to, userid as user_id
                     FROM pcb_inventory."tblTransaction"
@@ -2281,10 +2278,7 @@ class DatabaseManager:
             with conn.cursor(cursor_factory=RealDictCursor) as cur:
                 query = """
                     SELECT id, po as po_number, item, pcn, mpn, dc as date_code,
-                           CASE
-                               WHEN tranqty ~ '^[0-9]+$' THEN CAST(tranqty AS INTEGER)
-                               ELSE NULL
-                           END as quantity,
+                           COALESCE(tranqty, 0) as quantity,
                            trantype as transaction_type, tran_time as transaction_date,
                            loc_from as location_from, loc_to as location_to, userid as user_id
                     FROM pcb_inventory."tblTransaction"
@@ -4242,7 +4236,7 @@ def view_shortage_report(report_id):
             FROM pcb_inventory."tblShortageReportItems"
             WHERE report_id = %s AND COALESCE(location, '') != 'MFG Floor'
             ORDER BY
-                CASE WHEN line_no ~ '^[0-9]+$' THEN CAST(line_no AS INTEGER) ELSE 999999 END,
+                COALESCE(line_no, 999999),
                 line_no
         """, (report_id,))
         items = cursor.fetchall()
@@ -4301,7 +4295,7 @@ def export_shortage_report(report_id):
             FROM pcb_inventory."tblShortageReportItems"
             WHERE report_id = %s AND COALESCE(location, '') != 'MFG Floor'
             ORDER BY
-                CASE WHEN line_no ~ '^[0-9]+$' THEN CAST(line_no AS INTEGER) ELSE 999999 END,
+                COALESCE(line_no, 999999),
                 line_no
         """, (report_id,))
         items = cursor.fetchall()
@@ -5136,10 +5130,7 @@ def po_history():
             # Build query from tblTransaction (actual table that stores PO data)
             query = """
                 SELECT id, po as po_number, item, pcn, mpn, dc as date_code,
-                       CASE
-                           WHEN tranqty ~ '^[0-9]+$' THEN CAST(tranqty AS INTEGER)
-                           ELSE NULL
-                       END as quantity,
+                       COALESCE(tranqty, 0) as quantity,
                        trantype as transaction_type, tran_time as transaction_date,
                        loc_from as location_from, loc_to as location_to, userid as user_id,
                        vendor as vendor_name
