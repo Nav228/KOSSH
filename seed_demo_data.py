@@ -48,6 +48,15 @@ def seed_schema(conn):
     """)
 
     run(conn, f"""
+        CREATE TABLE IF NOT EXISTS {SCHEMA}."tblPN_List" (
+            id SERIAL PRIMARY KEY,
+            item VARCHAR(100) UNIQUE,
+            "DESC" VARCHAR(500),
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+
+    run(conn, f"""
         CREATE TABLE IF NOT EXISTS {SCHEMA}."tblWhse_Inventory" (
             id SERIAL PRIMARY KEY,
             item VARCHAR(100),
@@ -256,6 +265,12 @@ def seed_inventory(conn):
             (item, pcn, mpn, dc, onhandqty, loc_from, loc_to, msd, po)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
         """, (item, pcn, mpn, dc, qty, 'RECV', loc, msd, po))
+
+        # Add to part number lookup table
+        run(conn, f"""
+            INSERT INTO {SCHEMA}."tblPN_List" (item, "DESC")
+            VALUES (%s, %s) ON CONFLICT (item) DO NOTHING
+        """, (item, item))
 
         # Add transaction record
         run(conn, f"""

@@ -6755,6 +6755,7 @@ def clear_notifications():
         if conn:
             db_manager.return_connection(conn)
 
+@app.route('/api/notifications/count')
 @app.route('/api/admin/notification-count')
 @require_auth
 def get_notification_count():
