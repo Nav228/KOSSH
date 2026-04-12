@@ -1,25 +1,25 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 72">
   <defs>
     <linearGradient id="badgeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#6366f1"/>
-      <stop offset="100%" stop-color="#4f46e5"/>
+      <stop offset="0%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#db2777"/>
     </linearGradient>
-    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#f8fafc"/>
-      <stop offset="100%" stop-color="#e2e8f0"/>
+    <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#e879f9"/>
+      <stop offset="100%" stop-color="#f0abfc"/>
     </linearGradient>
   </defs>
-  <!-- Badge square -->
-  <rect x="4" y="4" width="72" height="72" rx="16" fill="url(#badgeGrad)"/>
-  <!-- KS monogram -->
-  <text x="10" y="62" font-family="'Segoe UI',system-ui,-apple-system,sans-serif"
-        font-size="48" font-weight="900" fill="#ffffff" letter-spacing="-4">KS</text>
-  <!-- Cyan accent dot -->
-  <circle cx="68" cy="16" r="6" fill="#06b6d4"/>
-  <!-- KOSSH wordmark -->
-  <text x="90" y="52" font-family="'Segoe UI',system-ui,-apple-system,sans-serif"
-        font-size="38" font-weight="800" fill="#f8fafc" letter-spacing="-0.5">KOSSH</text>
+  <!-- Badge -->
+  <rect x="2" y="3" width="66" height="66" rx="18" fill="#1a0533"/>
+  <rect x="2" y="3" width="66" height="66" rx="18" fill="none" stroke="url(#badgeGrad)" stroke-width="1.5"/>
+  <!-- Devanagari क -->
+  <text x="10" y="57" font-family="serif" font-size="46" fill="url(#badgeGrad)">क</text>
+  <!-- Wordmark -->
+  <text x="84" y="46" font-family="'Segoe UI',system-ui,-apple-system,sans-serif"
+        font-size="34" font-weight="800" fill="#faf5ff" letter-spacing="-0.5">KOSSH</text>
+  <!-- Gradient underline -->
+  <rect x="84" y="53" width="192" height="2" rx="1" fill="url(#badgeGrad)" opacity="0.6"/>
   <!-- Tagline -->
-  <text x="92" y="67" font-family="'Segoe UI',system-ui,-apple-system,sans-serif"
-        font-size="9" font-weight="500" fill="#64748b" letter-spacing="4">INVENTORY SYSTEM</text>
+  <text x="85" y="66" font-family="'Segoe UI',system-ui,-apple-system,sans-serif"
+        font-size="8.5" font-weight="400" fill="#581c87" letter-spacing="4">INVENTORY SYSTEM</text>
 </svg>
