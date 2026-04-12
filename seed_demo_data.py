@@ -247,6 +247,14 @@ def seed_schema(conn):
         ('tblBOM',            'manufacturer','VARCHAR(200)'),
         ('tblPCB_Inventory',  'job',        'VARCHAR(100)'),
         ('tblPCB_Inventory',  'pcb_type',   'VARCHAR(100)'),
+        ('tblJob',            'order_qty',  'INTEGER DEFAULT 1'),
+        ('tblBOM',            'pou',        'VARCHAR(50)'),
+        ('tblBOM',            'last_rev',   'VARCHAR(20)'),
+        ('tblBOM',            'cust',       'VARCHAR(200)'),
+        ('tblBOM',            'cust_pn',    'VARCHAR(100)'),
+        ('tblBOM',            'cust_rev',   'VARCHAR(20)'),
+        ('tblBOM',            'loc',        'VARCHAR(50)'),
+        ('tblWhse_Inventory', 'created_at', 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP'),
     ]
     for table, col, coltype in migrations:
         try:

@@ -4107,7 +4107,7 @@ def generate_shortage_report():
                 ORDER BY b.aci_pn, b.line
             ),
             inventory_match AS (
-                SELECT DISTINCT ON (COALESCE(w.pcn, bl.aci_pn || '_nopcn'), bl.aci_pn)
+                SELECT DISTINCT ON (COALESCE(w.pcn::text, bl.aci_pn || '_nopcn'), bl.aci_pn)
                     bl.line,
                     bl.aci_pn,
                     COALESCE(w.mpn, bl.bom_mpn) as mpn,
@@ -4124,24 +4124,24 @@ def generate_shortage_report():
                 LEFT JOIN pcb_inventory."tblWhse_Inventory" w
                     ON (bl.aci_pn = w.item OR bl.bom_mpn = w.mpn)
                     AND COALESCE(w.loc_to, '') != 'MFG Floor'
-                ORDER BY COALESCE(w.pcn, bl.aci_pn || '_nopcn'), bl.aci_pn, match_priority
+                ORDER BY COALESCE(w.pcn::text, bl.aci_pn || '_nopcn'), bl.aci_pn, match_priority
             )
             SELECT
                 line as line_no,
                 aci_pn,
                 pcn,
                 mpn,
-                CAST(COALESCE(NULLIF(qty, ''), '0') AS INTEGER) as qty,
+                COALESCE(qty, 0) as qty,
                 COALESCE(SUM(onhandqty), 0) as qty_on_hand,
                 item,
                 COALESCE(loc_to, '') as location,
-                CAST(COALESCE(NULLIF(cost, ''), '0') AS DECIMAL(10,4)) as unit_cost,
+                COALESCE(cost, 0) as unit_cost,
                 man as manufacturer,
                 "DESC" as description
             FROM inventory_match
             GROUP BY line, aci_pn, mpn, man, "DESC", qty, cost, pcn, item, loc_to
             ORDER BY
-                CASE WHEN line ~ '^[0-9]+$' THEN CAST(line AS INTEGER) ELSE 999999 END,
+                COALESCE(line, 999999),
                 line
         """, (job, job, job))
         matched_items = cursor.fetchall()
@@ -6886,7 +6886,7 @@ def job_detail(job_number):
                 ORDER BY b.aci_pn, b.line
             ),
             inventory_match AS (
-                SELECT DISTINCT ON (COALESCE(w.pcn, bl.aci_pn || '_nopcn'), bl.aci_pn)
+                SELECT DISTINCT ON (COALESCE(w.pcn::text, bl.aci_pn || '_nopcn'), bl.aci_pn)
                     bl.line,
                     bl.aci_pn,
                     bl."DESC",
@@ -6909,7 +6909,7 @@ def job_detail(job_number):
                 LEFT JOIN pcb_inventory."tblWhse_Inventory" w
                     ON (bl.aci_pn = w.item OR bl.bom_mpn = w.mpn)
                     AND COALESCE(w.loc_to, '') != 'MFG Floor'
-                ORDER BY COALESCE(w.pcn, bl.aci_pn || '_nopcn'), bl.aci_pn, match_priority
+                ORDER BY COALESCE(w.pcn::text, bl.aci_pn || '_nopcn'), bl.aci_pn, match_priority
             )
             SELECT
                 line as line_no,
@@ -6917,12 +6917,12 @@ def job_detail(job_number):
                 "DESC" as description,
                 mpn,
                 man as manufacturer,
-                CAST(COALESCE(NULLIF(qty, ''), '0') AS INTEGER) as qty,
+                COALESCE(qty, 0) as qty,
                 COALESCE(SUM(onhandqty), 0) as on_hand,
                 pcn,
                 item,
                 COALESCE(loc_to, '') as location,
-                CAST(COALESCE(NULLIF(cost, ''), '0') AS DECIMAL(10,4)) as unit_cost,
+                COALESCE(cost, 0) as unit_cost,
                 pou,
                 job_rev as bom_job_rev,
                 last_rev as bom_last_rev,
@@ -6932,8 +6932,8 @@ def job_detail(job_number):
             FROM inventory_match
             GROUP BY line, aci_pn, "DESC", mpn, man, qty, cost, pou, job_rev, last_rev, cust, cust_pn, cust_rev, pcn, item, loc_to
             ORDER BY
-                CASE WHEN line ~ '^[0-9]+$' THEN CAST(line AS INTEGER) ELSE 999999 END,
-                line
+                COALESCE(line, 999999),
+                aci_pn
         """, (job_number, job_number, job_number))
         raw_lines = cursor.fetchall()
 
@@ -7141,7 +7141,7 @@ def job_generate_shortage(job_number):
                 ORDER BY b.aci_pn, b.line
             ),
             inventory_match AS (
-                SELECT DISTINCT ON (COALESCE(w.pcn, bl.aci_pn || '_nopcn'), bl.aci_pn)
+                SELECT DISTINCT ON (COALESCE(w.pcn::text, bl.aci_pn || '_nopcn'), bl.aci_pn)
                     bl.line,
                     bl.aci_pn,
                     COALESCE(w.mpn, bl.bom_mpn) as mpn,
@@ -7158,24 +7158,24 @@ def job_generate_shortage(job_number):
                 LEFT JOIN pcb_inventory."tblWhse_Inventory" w
                     ON (bl.aci_pn = w.item OR bl.bom_mpn = w.mpn)
                     AND COALESCE(w.loc_to, '') != 'MFG Floor'
-                ORDER BY COALESCE(w.pcn, bl.aci_pn || '_nopcn'), bl.aci_pn, match_priority
+                ORDER BY COALESCE(w.pcn::text, bl.aci_pn || '_nopcn'), bl.aci_pn, match_priority
             )
             SELECT
                 line as line_no,
                 aci_pn,
                 pcn,
                 mpn,
-                CAST(COALESCE(NULLIF(qty, ''), '0') AS INTEGER) as qty,
+                COALESCE(qty, 0) as qty,
                 COALESCE(SUM(onhandqty), 0) as qty_on_hand,
                 item,
                 COALESCE(loc_to, '') as location,
-                CAST(COALESCE(NULLIF(cost, ''), '0') AS DECIMAL(10,4)) as unit_cost,
+                COALESCE(cost, 0) as unit_cost,
                 man as manufacturer,
                 "DESC" as description
             FROM inventory_match
             GROUP BY line, aci_pn, mpn, man, "DESC", qty, cost, pcn, item, loc_to
             ORDER BY
-                CASE WHEN line ~ '^[0-9]+$' THEN CAST(line AS INTEGER) ELSE 999999 END,
+                COALESCE(line, 999999),
                 line
         """, (job_number, job_number, job_number))
         matched_items = cursor.fetchall()
@@ -7301,7 +7301,7 @@ def job_export(job_number):
                 ORDER BY b.aci_pn, b.line
             ),
             inventory_match AS (
-                SELECT DISTINCT ON (COALESCE(w.pcn, bl.aci_pn || '_nopcn'), bl.aci_pn)
+                SELECT DISTINCT ON (COALESCE(w.pcn::text, bl.aci_pn || '_nopcn'), bl.aci_pn)
                     bl.line,
                     bl.aci_pn,
                     COALESCE(w.mpn, bl.bom_mpn) as mpn,
@@ -7318,7 +7318,7 @@ def job_export(job_number):
                 LEFT JOIN pcb_inventory."tblWhse_Inventory" w
                     ON (bl.aci_pn = w.item OR bl.bom_mpn = w.mpn)
                     AND COALESCE(w.loc_to, '') != 'MFG Floor'
-                ORDER BY COALESCE(w.pcn, bl.aci_pn || '_nopcn'), bl.aci_pn, match_priority
+                ORDER BY COALESCE(w.pcn::text, bl.aci_pn || '_nopcn'), bl.aci_pn, match_priority
             )
             SELECT
                 line as line_no,
@@ -7326,16 +7326,16 @@ def job_export(job_number):
                 mpn,
                 man as manufacturer,
                 "DESC" as description,
-                CAST(COALESCE(NULLIF(qty, ''), '0') AS INTEGER) as qty,
+                COALESCE(qty, 0) as qty,
                 COALESCE(SUM(onhandqty), 0) as on_hand,
                 pcn,
                 item,
                 COALESCE(loc_to, '') as location,
-                CAST(COALESCE(NULLIF(cost, ''), '0') AS DECIMAL(10,4)) as unit_cost
+                COALESCE(cost, 0) as unit_cost
             FROM inventory_match
             GROUP BY line, aci_pn, mpn, man, "DESC", qty, cost, pcn, item, loc_to
             ORDER BY
-                CASE WHEN line ~ '^[0-9]+$' THEN CAST(line AS INTEGER) ELSE 999999 END,
+                COALESCE(line, 999999),
                 line
         """, (job_number, job_number, job_number))
         raw_items = cursor.fetchall()
