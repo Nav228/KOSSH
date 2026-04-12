@@ -4691,7 +4691,7 @@ def sso_login():
 @csrf.exempt
 def sso_callback():
     """Handle SSO callback redirect from SSO Provider.
-    Validates the SSO JWT token and creates a KOSH session."""
+    Validates the SSO JWT token and creates a KOSSH session."""
     from jose import jwt as jose_jwt, JWTError as JoseJWTError
 
     sso_secret = os.environ.get('SSO_SECRET_KEY', '')
@@ -4773,10 +4773,10 @@ def sso_callback():
                 logger.info(f"SSO auto-created KOSH user: {username}")
 
         if not user:
-            flash(f'SSO login failed: Could not create user "{username}" in KOSH. Contact your administrator.', 'danger')
+            flash(f'SSO login failed: Could not create user in KOSSH. Contact your administrator.', 'danger')
             return redirect(url_for('login'))
 
-        # Create KOSH session (same as regular login)
+        # Create KOSSH session (same as regular login)
         session.clear()
         session['user_id'] = user['id']
         session['username'] = user['userlogin']

@@ -1,8 +1,8 @@
-# KOSH - Inventory Management System
+# KOSSH - Inventory Management System
 
 **Version 2.1.0**
 
-KOSH is a full-featured warehouse and PCB inventory management system. It handles the complete lifecycle of electronic components — from BOM loading and job tracking to stock operations, shortage reporting, and barcode-based PCN management.
+KOSSH is a full-featured warehouse and PCB inventory management system. It handles the complete lifecycle of electronic components — from BOM loading and job tracking to stock operations, shortage reporting, and barcode-based PCN management.
 
 ## Features
 
@@ -60,8 +60,8 @@ KOSH is a full-featured warehouse and PCB inventory management system. It handle
 
 ```bash
 # Clone the repo
-git clone https://github.com/Nav228/KOSH.git
-cd KOSH
+git clone https://github.com/Nav228/KOSSH.git
+cd KOSSH
 
 # Set up environment
 cp .env.example .env
@@ -89,7 +89,7 @@ Copy `.env.example` to `.env` and configure:
 
 ### Database Schema
 
-KOSH uses a `pcb_inventory` schema in PostgreSQL with tables including:
+KOSSH uses a `pcb_inventory` schema in PostgreSQL with tables including:
 
 - `tblWhse_Inventory` - Warehouse inventory
 - `tblBOM` / `tblJob` - Bills of Materials and Jobs
@@ -102,7 +102,7 @@ KOSH uses a `pcb_inventory` schema in PostgreSQL with tables including:
 ## Project Structure
 
 ```
-KOSH/
+KOSSH/
 ├── app.py                  # Main Flask application
 ├── expiration_manager.py   # DC/MSD expiration logic
 ├── templates/              # Jinja2 HTML templates
