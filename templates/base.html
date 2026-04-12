@@ -3,826 +3,412 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cache-Control" content="private, max-age=0, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{% block title %}Kosh - Inventory Management{% endblock %}</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg transform='translate(42,50)'%3E%3Crect x='-9' y='-35' width='18' height='70' rx='2' fill='%233b82f6'/%3E%3Cpolygon points='9,-25 39,-32 35,-10 9,-2' fill='%2306b6d4'/%3E%3Cpolygon points='9,2 35,10 39,32 9,25' fill='%2306b6d4'/%3E%3C/g%3E%3C/svg%3E">
+    <title>{% block title %}KOSH — Inventory Management{% endblock %}</title>
 
-    <!-- Preload critical resources -->
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%236366f1'/%3E%3Cg transform='translate(28,18)'%3E%3Crect x='16' y='0' width='12' height='64' rx='3' fill='white'/%3E%3Cpolygon points='28,8 58,0 54,20 28,28' fill='rgba(255,255,255,0.7)'/%3E%3Cpolygon points='28,36 54,44 58,64 28,56' fill='rgba(255,255,255,0.7)'/%3E%3C/g%3E%3C/svg%3E">
+
+    <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 
-    <!-- Bootstrap CSS - Critical for layout -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons - Defer to speed up initial load -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" media="print" onload="this.media='all'">
-    <!-- Google Fonts - Only Inter (primary), load async with font-display swap -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <noscript>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    </noscript>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Application CSS (cached by browser) -->
+    <!-- KOSH CSS -->
     <link href="{{ url_for('static', filename='kosh.css') }}?v={{ cache_version }}" rel="stylesheet">
 
     {% block extra_css %}{% endblock %}
 
-    <!-- Apply dark mode BEFORE paint to prevent white flash -->
+    <!-- Dark mode before paint -->
     <script>
-        (function(){var t=localStorage.getItem('theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');})();
+        (function(){
+            var t = localStorage.getItem('theme');
+            if(t === 'dark') document.documentElement.setAttribute('data-theme','dark');
+        })();
     </script>
 </head>
 <body>
-    <!-- Modern Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark modern-navbar">
-        <div class="container-fluid px-3">
-            <a class="navbar-brand" href="{{ url_for('index') }}">
-                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg transform='translate(42,50)'%3E%3Crect x='-9' y='-35' width='18' height='70' rx='2' fill='%233b82f6'/%3E%3Cpolygon points='9,-25 39,-32 35,-10 9,-2' fill='%2306b6d4'/%3E%3Cpolygon points='9,2 35,10 39,32 9,25' fill='%2306b6d4'/%3E%3C/g%3E%3C/svg%3E"
-                     alt="Kosh Inventory Logo"
-                     style="width: 50px !important; height: 50px !important; margin-right: 10px !important;">
-                <span style="font-weight: 800 !important; font-size: 2.5rem !important; letter-spacing: 6px !important; color: #ffffff !important; text-shadow: 2px 2px 5px rgba(0,0,0,0.4) !important;">KOSH</span>
+
+<!-- Mobile overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- ====== SIDEBAR ====== -->
+<aside class="sidebar" id="sidebar">
+    <!-- Brand -->
+    <a class="sidebar-brand" href="{{ url_for('index') }}">
+        <div class="sidebar-brand-logo">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="6" y="2" width="4" height="20" rx="1" fill="white"/>
+                <path d="M10 6L20 4L19 10L10 12" fill="rgba(255,255,255,0.75)"/>
+                <path d="M10 12L19 14L20 20L10 18" fill="rgba(255,255,255,0.75)"/>
+            </svg>
+        </div>
+        <div>
+            <div class="sidebar-brand-text">KOSH</div>
+            <div class="sidebar-brand-version">Inventory v2.1</div>
+        </div>
+    </a>
+
+    <!-- Navigation -->
+    <nav class="sidebar-nav">
+
+        <div class="sidebar-section">
+            <div class="sidebar-section-label">Main</div>
+        </div>
+
+        <a class="sidebar-link {% if request.endpoint == 'index' %}active{% endif %}"
+           href="{{ url_for('index') }}">
+            <i class="bi bi-speedometer2"></i> Dashboard
+        </a>
+
+        <a class="sidebar-link {% if request.endpoint in ['jobs_list','job_detail','bom_loader'] %}active{% endif %}"
+           href="{{ url_for('jobs_list') }}">
+            <i class="bi bi-briefcase"></i> Jobs
+        </a>
+
+        <a class="sidebar-link {% if request.endpoint and request.endpoint.startswith('shortage') %}active{% endif %}"
+           href="{{ url_for('shortage_report') }}">
+            <i class="bi bi-clipboard-data"></i> Shortage Reports
+        </a>
+
+        <div class="sidebar-section">
+            <div class="sidebar-section-label">Operations</div>
+        </div>
+
+        <a class="sidebar-link {% if request.endpoint == 'generate_pcn' %}active{% endif %}"
+           href="{{ url_for('generate_pcn') }}">
+            <i class="bi bi-upc-scan"></i> Generate PCN
+        </a>
+
+        <a class="sidebar-link {% if request.endpoint == 'stock' %}active{% endif %}"
+           href="{{ url_for('stock') }}">
+            <i class="bi bi-plus-circle"></i> Stock Parts
+        </a>
+
+        <a class="sidebar-link {% if request.endpoint == 'pick' %}active{% endif %}"
+           href="{{ url_for('pick') }}">
+            <i class="bi bi-dash-circle"></i> Pick Parts
+        </a>
+
+        <a class="sidebar-link {% if request.endpoint == 'restock' %}active{% endif %}"
+           href="{{ url_for('restock') }}">
+            <i class="bi bi-arrow-counterclockwise"></i> Restock
+        </a>
+
+        <a class="sidebar-link {% if request.endpoint == 'part_number_change' %}active{% endif %}"
+           href="{{ url_for('part_number_change') }}">
+            <i class="bi bi-pencil-square"></i> Part Number Change
+        </a>
+
+        <div class="sidebar-section">
+            <div class="sidebar-section-label">Inventory</div>
+        </div>
+
+        <a class="sidebar-link {% if request.endpoint == 'pcb_inventory' %}active{% endif %}"
+           href="{{ url_for('pcb_inventory') }}">
+            <i class="bi bi-cpu"></i> PCB Inventory
+        </a>
+
+        <a class="sidebar-link {% if request.endpoint == 'warehouse_inventory' %}active{% endif %}"
+           href="{{ url_for('warehouse_inventory') }}">
+            <i class="bi bi-building"></i> Warehouse
+        </a>
+
+        <a class="sidebar-link" href="#" onclick="openPrintLabelModal(); return false;">
+            <i class="bi bi-printer"></i> Print Label
+        </a>
+
+        <div class="sidebar-section">
+            <div class="sidebar-section-label">History & Reports</div>
+        </div>
+
+        <a class="sidebar-link {% if request.endpoint == 'pcn_history' %}active{% endif %}"
+           href="{{ url_for('pcn_history') }}">
+            <i class="bi bi-clock-history"></i> PCN History
+        </a>
+
+        <a class="sidebar-link {% if request.endpoint == 'po_history' %}active{% endif %}"
+           href="{{ url_for('po_history') }}">
+            <i class="bi bi-receipt"></i> PO History
+        </a>
+
+        <a class="sidebar-link {% if request.endpoint == 'reports' %}active{% endif %}"
+           href="{{ url_for('reports') }}">
+            <i class="bi bi-bar-chart"></i> Reports
+        </a>
+
+        {% if can_manage %}
+        <div class="sidebar-section">
+            <div class="sidebar-section-label">Manage</div>
+        </div>
+
+        <a class="sidebar-link {% if request.endpoint == 'aci_numbers' %}active{% endif %}"
+           href="{{ url_for('aci_numbers') }}">
+            <i class="bi bi-hash"></i> Part Numbers
+        </a>
+
+        <a class="sidebar-link {% if request.endpoint == 'admin_locations' %}active{% endif %}"
+           href="{{ url_for('admin_locations') }}">
+            <i class="bi bi-geo-alt"></i> Locations
+        </a>
+        {% endif %}
+
+        {% if is_admin %}
+        <div class="sidebar-section">
+            <div class="sidebar-section-label">Admin</div>
+        </div>
+
+        <a class="sidebar-link {% if request.endpoint == 'admin_notifications' %}active{% endif %}"
+           href="{{ url_for('admin_notifications') }}">
+            <i class="bi bi-bell"></i> Notifications
+            <span id="sidebarNotifBadge" class="badge bg-danger ms-auto" style="display:none;">0</span>
+        </a>
+
+        <a class="sidebar-link {% if request.endpoint == 'admin_users' %}active{% endif %}"
+           href="{{ url_for('admin_users') }}">
+            <i class="bi bi-people"></i> Users
+        </a>
+
+        {% if session.get('role') == 'ADMIN' %}
+        <a class="sidebar-link {% if request.endpoint and request.endpoint.startswith('sources') %}active{% endif %}"
+           href="{{ url_for('sources') }}">
+            <i class="bi bi-database"></i> Sources
+        </a>
+        {% endif %}
+        {% endif %}
+
+    </nav>
+
+    <!-- Sidebar footer -->
+    <div class="sidebar-footer">
+        <button class="dark-mode-toggle w-100" id="darkModeToggle">
+            <i class="bi bi-moon-fill" id="darkModeIcon"></i>
+            <span id="darkModeText">Dark Mode</span>
+        </button>
+    </div>
+</aside>
+
+<!-- ====== MAIN WRAPPER ====== -->
+<div class="main-wrapper">
+
+    <!-- Topbar -->
+    <header class="topbar">
+        <div class="topbar-left">
+            <!-- Mobile hamburger -->
+            <button class="topbar-menu-btn" id="sidebarToggle" aria-label="Toggle menu">
+                <i class="bi bi-list" style="font-size:1.4rem;"></i>
+            </button>
+
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('index') }}">KOSH</a></li>
+                    {% block breadcrumb %}{% endblock %}
+                </ol>
+            </nav>
+        </div>
+
+        <div class="topbar-right">
+            <!-- Notifications -->
+            {% if is_admin or can_manage %}
+            <a href="{{ url_for('admin_notifications') }}" class="topbar-btn" title="Notifications">
+                <i class="bi bi-bell"></i>
+                <span class="notif-badge" id="topbarNotifBadge" style="display:none;"></span>
             </a>
-            
-            <!-- User menu + bell: stays visible when navbar collapses -->
-            <div class="d-flex align-items-center gap-2 order-lg-last ms-auto ms-lg-0">
-                {% if is_admin or can_manage %}
-                <a href="{{ url_for('admin_notifications') }}" class="notification-bell" id="adminNotificationBell" title="Login Notifications">
-                    <i class="bi bi-bell-fill"></i>
-                    <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
-                </a>
-                {% endif %}
-                <div class="dropdown">
-                    <button class="btn btn-light dropdown-toggle user-profile-btn" type="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
-                        <div class="user-avatar">
-                            {{ session.get('full_name', session.get('username', 'U'))[0]|upper }}
-                        </div>
-                        <span class="user-name">{{ session.get('full_name', session.get('username', 'User')) }}</span>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end user-dropdown" aria-labelledby="userMenu">
-                        <li class="user-dropdown-header">
-                            <div class="user-avatar-large">
-                                {{ session.get('full_name', session.get('username', 'U'))[0]|upper }}
+            {% endif %}
+
+            <!-- User menu -->
+            <div class="dropdown">
+                <button class="user-avatar-btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
+                        style="background:none;border:none;cursor:pointer;">
+                    <div class="user-avatar">
+                        {{ session.get('full_name', session.get('username', 'A'))[0]|upper }}
+                    </div>
+                    <div class="d-none d-md-block">
+                        <div class="user-name">{{ session.get('full_name', session.get('username', 'Admin')) }}</div>
+                        <div class="user-role-badge">{{ session.get('role', 'USER') }}</div>
+                    </div>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <div class="user-dropdown-header">
+                            <div class="user-avatar" style="width:38px;height:38px;border-radius:10px;">
+                                {{ session.get('full_name', session.get('username', 'A'))[0]|upper }}
                             </div>
-                            <div class="user-info">
-                                <div class="user-full-name">{{ session.get('full_name', session.get('username', 'User')) }}</div>
-                                <div class="user-role">
+                            <div>
+                                <div class="user-dropdown-name">{{ session.get('full_name', session.get('username', 'Admin')) }}</div>
+                                <div class="user-dropdown-role">
                                     <i class="bi bi-shield-check me-1"></i>{{ session.get('role', 'USER') }}
                                 </div>
                             </div>
-                        </li>
-                        {% if is_admin %}
-                        <li>
-                            <a class="dropdown-item" href="{{ url_for('admin_users') }}">
-                                <i class="bi bi-people me-2"></i> Manage Users
-                            </a>
-                        </li>
-                        {% endif %}
-                        <li><hr class="dropdown-divider"></li>
-                        <li>
-                            <a class="dropdown-item logout-btn" href="{{ url_for('logout') }}">
-                                <i class="bi bi-box-arrow-right me-2"></i> Sign Out
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <button class="navbar-toggler ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="modern-nav-link {% if request.endpoint == 'index' %}active{% endif %}" href="{{ url_for('index') }}">
-                            <i class="bi bi-speedometer2"></i> Dashboard
-                        </a>
+                        </div>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="modern-nav-link dropdown-toggle {% if request.endpoint == 'bom_loader' or (request.endpoint and request.endpoint.startswith('job')) or (request.endpoint and request.endpoint.startswith('shortage')) %}active{% endif %}" href="#" id="jobsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-briefcase-fill"></i> Jobs
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="jobsDropdown">
-                            <li>
-                                <a class="dropdown-item {% if request.endpoint == 'bom_loader' or (request.endpoint and request.endpoint.startswith('job')) %}active{% endif %}" href="{{ url_for('jobs_list') }}">
-                                    <i class="bi bi-briefcase-fill me-2"></i> Jobs
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item {% if request.endpoint and request.endpoint.startswith('shortage') %}active{% endif %}" href="{{ url_for('shortage_report') }}">
-                                    <i class="bi bi-clipboard-data me-2"></i> Shortage Report
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="modern-nav-link {% if request.endpoint == 'generate_pcn' %}active{% endif %}" href="{{ url_for('generate_pcn') }}">
-                            <i class="bi bi-upc-scan"></i> Generate PCN
-                        </a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="modern-nav-link dropdown-toggle {% if request.endpoint in ['stock', 'pick'] %}active{% endif %}" href="#" id="stockPickDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-arrow-left-right"></i> Stock / Pick
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="stockPickDropdown">
-                            <li>
-                                <a class="dropdown-item {% if request.endpoint == 'stock' %}active{% endif %}" href="{{ url_for('stock') }}">
-                                    <i class="bi bi-plus-circle-fill me-2"></i> Stock Parts
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item {% if request.endpoint == 'pick' %}active{% endif %}" href="{{ url_for('pick') }}">
-                                    <i class="bi bi-dash-circle-fill me-2"></i> Pick Parts
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item {% if request.endpoint == 'restock' %}active{% endif %}" href="{{ url_for('restock') }}">
-                                    <i class="bi bi-arrow-counterclockwise me-2"></i> Restock Parts
-                                </a>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <a class="dropdown-item {% if request.endpoint == 'part_number_change' %}active{% endif %}" href="{{ url_for('part_number_change') }}">
-                                    <i class="bi bi-pencil-square me-2"></i> Part Number Change
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="modern-nav-link dropdown-toggle {% if request.endpoint in ['pcb_inventory', 'warehouse_inventory'] %}active{% endif %}" href="#" id="inventoryDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-grid-3x3-gap-fill"></i> Inventory
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="inventoryDropdown">
-                            <li>
-                                <a class="dropdown-item {% if request.endpoint == 'pcb_inventory' %}active{% endif %}" href="{{ url_for('pcb_inventory') }}">
-                                    <i class="bi bi-cpu-fill me-2"></i> PCB Inventory
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item {% if request.endpoint == 'warehouse_inventory' %}active{% endif %}" href="{{ url_for('warehouse_inventory') }}">
-                                    <i class="bi bi-building me-2"></i> Warehouse Inventory
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="modern-nav-link" href="#" onclick="openPrintLabelModal(); return false;">
-                            <i class="bi bi-printer-fill"></i> Print Label
-                        </a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="modern-nav-link dropdown-toggle {% if request.endpoint in ['pcn_history', 'po_history'] %}active{% endif %}" href="#" id="historyDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-clock-history"></i> History
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="historyDropdown">
-                            <li>
-                                <a class="dropdown-item {% if request.endpoint == 'pcn_history' %}active{% endif %}" href="{{ url_for('pcn_history') }}">
-                                    <i class="bi bi-upc-scan me-2"></i> PCN History
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item {% if request.endpoint == 'po_history' %}active{% endif %}" href="{{ url_for('po_history') }}">
-                                    <i class="bi bi-receipt me-2"></i> PO History
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    {% if can_manage %}
-                    <li class="nav-item dropdown">
-                        <a class="modern-nav-link dropdown-toggle {% if request.endpoint in ['aci_numbers', 'admin_locations'] %}active{% endif %}" href="#" id="manageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-gear-fill"></i> Manage
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="manageDropdown">
-                            <li>
-                                <a class="dropdown-item {% if request.endpoint == 'aci_numbers' %}active{% endif %}" href="{{ url_for('aci_numbers') }}">
-                                    <i class="bi bi-plus-square-fill me-2"></i> ACI Numbers
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item {% if request.endpoint == 'admin_locations' %}active{% endif %}" href="{{ url_for('admin_locations') }}">
-                                    <i class="bi bi-geo-alt-fill me-2"></i> Locations
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    {% endif %}
-                    <li class="nav-item">
-                        <a class="modern-nav-link {% if request.endpoint == 'reports' %}active{% endif %}" href="{{ url_for('reports') }}">
-                            <i class="bi bi-bar-chart-fill"></i> Reports
-                        </a>
-                    </li>
-                    {% if session.get('role') == 'ADMIN' %}
-                    <li class="nav-item">
-                        <a class="modern-nav-link {% if request.endpoint and request.endpoint.startswith('sources') %}active{% endif %}" href="{{ url_for('sources') }}">
-                            <i class="bi bi-database-fill"></i> Sources
+                    {% if is_admin %}
+                    <li>
+                        <a class="dropdown-item" href="{{ url_for('admin_users') }}">
+                            <i class="bi bi-people"></i> Manage Users
                         </a>
                     </li>
                     {% endif %}
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <a class="dropdown-item" href="{{ url_for('logout') }}">
+                            <i class="bi bi-box-arrow-right"></i> Sign Out
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
-    </nav>
+    </header>
 
-    <!-- User menu is now inside the navbar above -->
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                {% for category, message in messages %}
+                showToast('{{ message|e }}', '{{ category }}');
+                {% endfor %}
+            });
+            </script>
+        {% endif %}
+    {% endwith %}
 
-
-    <!-- Floating Dark Mode Toggle -->
-    <button class="dark-mode-toggle" id="darkModeToggle" aria-label="Toggle dark mode">
-        <i class="bi bi-moon-fill" id="darkModeIcon"></i>
-        <span id="darkModeText">Dark</span>
-    </button>
-
-    <!-- Main Content -->
-    <div class="container-fluid px-4" style="margin-top: 4rem;">
-        <!-- Modern Toast Notifications -->
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    {% for category, message in messages %}
-                    showToast('{{ message|e }}', '{{ category }}');
-                    {% endfor %}
-                });
-                </script>
-            {% endif %}
-        {% endwith %}
-
-        <!-- Page Header -->
+    <!-- Page content -->
+    <main class="page-content">
+        <!-- Page header block -->
         <div class="page-header-wrapper">
-        {% block page_header %}{% endblock %}
+            {% block page_header %}{% endblock %}
         </div>
 
-        <!-- Page Content -->
+        <!-- Main content block -->
         {% block content %}{% endblock %}
-    </div>
+    </main>
 
     <!-- Footer -->
-    <footer class="text-center text-muted">
-        <div class="container-fluid px-4">
-            <div class="d-flex align-items-center justify-content-center gap-2 mb-1">
-                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg transform='translate(42,50)'%3E%3Crect x='-9' y='-35' width='18' height='70' rx='2' fill='%233b82f6'/%3E%3Cpolygon points='9,-25 39,-32 35,-10 9,-2' fill='%2306b6d4'/%3E%3Cpolygon points='9,2 35,10 39,32 9,25' fill='%2306b6d4'/%3E%3C/g%3E%3C/svg%3E"
-                     alt="KOSH" style="width: 24px; height: 24px;">
-                <p class="mb-0">&copy; {{ current_year }} Kosh | PCB Inventory Management System</p>
-            </div>
-            <p class="small">
-                <i class="bi bi-database"></i> PostgreSQL Database |
-                <i class="bi bi-shield-check"></i> Audit Logging Enabled |
-                <i class="bi bi-speedometer2"></i> Real-time Updates
-            </p>
-        </div>
+    <footer>
+        <p>KOSH Inventory Management &nbsp;·&nbsp; PostgreSQL &nbsp;·&nbsp; Audit Logging Enabled &nbsp;·&nbsp; Built by Kanav Sharma</p>
     </footer>
+</div>
 
-    <!-- Bootstrap JS - Defer for faster page load -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" defer></script>
-    <!-- Moment.js for time formatting - Defer non-critical -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js" defer></script>
+<!-- Toast container -->
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index:11000;"></div>
 
-    <script>
-        // Dark Mode Functionality
-        (function() {
-            const darkModeToggle = document.getElementById('darkModeToggle');
-            const darkModeIcon = document.getElementById('darkModeIcon');
-            const darkModeText = document.getElementById('darkModeText');
-            const htmlElement = document.documentElement;
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js" defer></script>
 
-            // Check for saved theme preference or default to light mode
-            const currentTheme = localStorage.getItem('theme') || 'light';
+<script>
+// ---- Dark Mode ----
+(function() {
+    const toggle = document.getElementById('darkModeToggle');
+    const icon   = document.getElementById('darkModeIcon');
+    const text   = document.getElementById('darkModeText');
+    const html   = document.documentElement;
 
-            // Apply the theme on page load
-            function applyTheme(theme) {
-                if (theme === 'dark') {
-                    htmlElement.setAttribute('data-theme', 'dark');
-                    darkModeIcon.className = 'bi bi-sun-fill';
-                    darkModeText.textContent = 'Light';
-                } else {
-                    htmlElement.removeAttribute('data-theme');
-                    darkModeIcon.className = 'bi bi-moon-fill';
-                    darkModeText.textContent = 'Dark';
-                }
-            }
-
-            // Apply saved theme
-            applyTheme(currentTheme);
-
-            // Toggle dark mode
-            if (darkModeToggle) {
-                darkModeToggle.addEventListener('click', function() {
-                    const currentTheme = htmlElement.getAttribute('data-theme');
-                    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-
-                    // Apply new theme
-                    applyTheme(newTheme);
-
-                    // Save preference to localStorage
-                    localStorage.setItem('theme', newTheme);
-
-                    // Toast notification removed - user finds it annoying
-                });
-            }
-        })();
-
-        // Dark Mode Chart.js Integration
-        // This helper updates Chart.js default colors based on theme
-        window.getChartOptions = function(isDark) {
-            return {
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: isDark ? '#e0e0e0' : '#666'
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        ticks: {
-                            color: isDark ? '#a0a0a0' : '#666'
-                        },
-                        grid: {
-                            color: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
-                        }
-                    },
-                    y: {
-                        ticks: {
-                            color: isDark ? '#a0a0a0' : '#666'
-                        },
-                        grid: {
-                            color: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
-                        }
-                    }
-                }
-            };
-        };
-
-        // Helper to check if dark mode is active
-        window.isDarkMode = function() {
-            return document.documentElement.getAttribute('data-theme') === 'dark';
-        };
-    </script>
-
-    <script>
-        // Update time every minute
-        function updateTime() {
-            const timeElement = document.getElementById('current-time');
-            if (timeElement) {
-                timeElement.textContent = moment().format('MMMM DD, YYYY h:mm A');
-            }
+    function applyTheme(theme) {
+        if (theme === 'dark') {
+            html.setAttribute('data-theme', 'dark');
+            icon.className = 'bi bi-sun-fill';
+            text.textContent = 'Light Mode';
+        } else {
+            html.removeAttribute('data-theme');
+            icon.className = 'bi bi-moon-fill';
+            text.textContent = 'Dark Mode';
         }
-        
-        // Update time immediately and then every minute
-        updateTime();
-        setInterval(updateTime, 60000);
-        
-        // Auto-dismiss alerts after 5 seconds (except persistent ones)
-        setTimeout(function() {
-            const alerts = document.querySelectorAll('.alert:not(.alert-persistent)');
-            alerts.forEach(function(alert) {
-                const bsAlert = new bootstrap.Alert(alert);
-                bsAlert.close();
-            });
-        }, 5000);
-        
-        // Add loading states to forms
-        document.addEventListener('DOMContentLoaded', function() {
-            const forms = document.querySelectorAll('form');
-            forms.forEach(function(form) {
-                form.addEventListener('submit', function() {
-                    const submitBtn = form.querySelector('input[type="submit"], button[type="submit"]');
-                    if (submitBtn) {
-                        submitBtn.disabled = true;
-                        submitBtn.innerHTML = '<i class="bi bi-arrow-clockwise spin"></i> Processing...';
-                    }
-                });
-            });
-        });
-    </script>
-    
-    
-    <!-- Toast Notification Container -->
-    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 11000;">
-        <!-- Toast notifications will be dynamically added here -->
-    </div>
-    
-    <script>
-        // Modern Toast Notification System
-        let toastCounter = 0;
-        
-        function showToast(message, type = 'info', duration = 5000) {
-            toastCounter++;
-            const toastId = `toast-${toastCounter}`;
-            
-            // Map flash message types to Bootstrap toast types
-            const typeMap = {
-                'error': 'danger',
-                'success': 'success',
-                'warning': 'warning',
-                'info': 'info'
-            };
-            
-            const toastType = typeMap[type] || 'info';
-            
-            // Icon mapping
-            const iconMap = {
-                'danger': 'bi-exclamation-triangle-fill',
-                'success': 'bi-check-circle-fill',
-                'warning': 'bi-exclamation-triangle-fill',
-                'info': 'bi-info-circle-fill'
-            };
-            
-            const icon = iconMap[toastType] || 'bi-info-circle-fill';
-            
-            // Create toast HTML
-            const toastHtml = `
-                <div id="${toastId}" class="toast align-items-center text-bg-${toastType} border-0" role="alert" aria-live="assertive" aria-atomic="true">
-                    <div class="d-flex">
-                        <div class="toast-body">
-                            <i class="bi ${icon} me-2"></i>
-                            ${message}
-                        </div>
-                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                    </div>
-                </div>
-            `;
-            
-            // Add toast to container
-            const container = document.querySelector('.toast-container');
-            if (container) {
-                container.insertAdjacentHTML('beforeend', toastHtml);
-                
-                // Initialize and show the toast
-                const toastElement = document.getElementById(toastId);
-                const toast = new bootstrap.Toast(toastElement, {
-                    delay: duration
-                });
-                
-                // Auto-remove toast element after it's hidden
-                toastElement.addEventListener('hidden.bs.toast', function() {
-                    toastElement.remove();
-                });
-                
-                toast.show();
-            }
-        }
-        
-        // Function to show success notifications
-        function showSuccess(message, duration = 4000) {
-            showToast(message, 'success', duration);
-        }
-        
-        // Function to show error notifications
-        function showError(message, duration = 6000) {
-            showToast(message, 'error', duration);
-        }
-        
-        // Function to show warning notifications
-        function showWarning(message, duration = 5000) {
-            showToast(message, 'warning', duration);
-        }
-        
-        // Function to show info notifications
-        function showInfo(message, duration = 4000) {
-            showToast(message, 'info', duration);
-        }
-        
-        // Export functions globally for use in other templates
-        window.showToast = showToast;
-        window.showSuccess = showSuccess;
-        window.showError = showError;
-        window.showWarning = showWarning;
-        window.showInfo = showInfo;
-    </script>
-
-    <!-- Admin Notification Badge Update -->
-    {% if is_admin %}
-    <script>
-        // Update notification count for admin
-        function updateNotificationCount() {
-            fetch('/api/admin/notification-count')
-                .then(response => response.json())
-                .then(data => {
-                    const badge = document.getElementById('notificationBadge');
-                    if (badge) {
-                        if (data.count > 0) {
-                            badge.textContent = data.count > 99 ? '99+' : data.count;
-                            badge.style.display = 'flex';
-                        } else {
-                            badge.style.display = 'none';
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.log('Could not fetch notification count');
-                });
-        }
-
-        // Update immediately on page load
-        document.addEventListener('DOMContentLoaded', updateNotificationCount);
-
-        // Update every 60 seconds
-        setInterval(updateNotificationCount, 60000);
-    </script>
-    {% endif %}
-    
-    <script>
-    function downloadFile(url, fallbackFilename) {
-        fetch(url)
-            .then(resp => {
-                if (!resp.ok) throw new Error('Download failed');
-                const cd = resp.headers.get('Content-Disposition');
-                let filename = fallbackFilename || 'download.xlsx';
-                if (cd) {
-                    const match = cd.match(/filename="?([^"]+)"?/);
-                    if (match) filename = match[1];
-                }
-                return resp.blob().then(blob => ({ blob, filename }));
-            })
-            .then(({ blob, filename }) => {
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(blob);
-                a.download = filename;
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-                URL.revokeObjectURL(a.href);
-            })
-            .catch(err => alert('Download failed: ' + err.message));
     }
-    </script>
-    {% block extra_js %}{% endblock %}
 
-    <!-- Print Label Modal -->
-    <div class="modal fade" id="printLabelModal" tabindex="-1" aria-labelledby="printLabelModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header" style="background: linear-gradient(135deg, #6d28d9, #8b5cf6); color: white;">
-                    <h5 class="modal-title" id="printLabelModalLabel"><i class="bi bi-printer-fill me-2"></i>Print PCN Label</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+    applyTheme(localStorage.getItem('theme') || 'light');
+
+    if (toggle) {
+        toggle.addEventListener('click', function() {
+            const curr = html.getAttribute('data-theme');
+            const next = curr === 'dark' ? 'light' : 'dark';
+            applyTheme(next);
+            localStorage.setItem('theme', next);
+        });
+    }
+})();
+
+// ---- Sidebar mobile toggle ----
+(function() {
+    const btn     = document.getElementById('sidebarToggle');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+
+    function openSidebar()  { sidebar.classList.add('open'); overlay.style.display = 'block'; }
+    function closeSidebar() { sidebar.classList.remove('open'); overlay.style.display = 'none'; }
+
+    if (btn)     btn.addEventListener('click', openSidebar);
+    if (overlay) overlay.addEventListener('click', closeSidebar);
+})();
+
+// ---- Toast system ----
+let toastCounter = 0;
+function showToast(message, type, duration) {
+    duration = duration || 5000;
+    toastCounter++;
+    const id = 'toast-' + toastCounter;
+    const typeMap = { error:'danger', success:'success', warning:'warning', info:'info', danger:'danger' };
+    const t = typeMap[type] || 'info';
+    const iconMap = { danger:'bi-exclamation-triangle-fill', success:'bi-check-circle-fill', warning:'bi-exclamation-triangle-fill', info:'bi-info-circle-fill' };
+    const i = iconMap[t] || 'bi-info-circle-fill';
+
+    const el = document.createElement('div');
+    el.innerHTML = `
+        <div id="${id}" class="toast align-items-center text-bg-${t} border-0 mb-2" role="alert">
+            <div class="d-flex">
+                <div class="toast-body d-flex align-items-center gap-2">
+                    <i class="bi ${i}"></i> ${message}
                 </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="printLabelPcn" class="form-label fw-semibold">PCN Number</label>
-                        <input type="text" class="form-control form-control-lg" id="printLabelPcn" placeholder="Enter PCN number" autofocus>
-                    </div>
-                    <div id="printLabelStatus" style="display: none;" class="alert alert-danger mt-2"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle me-1"></i>Cancel</button>
-                    <button type="button" class="btn btn-primary" onclick="printLabelFromModal()"><i class="bi bi-printer me-1"></i>Print</button>
-                    <button type="button" class="btn btn-outline-danger" onclick="downloadZplFromModal()"><i class="bi bi-download me-1"></i>Download ZPL</button>
-                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
             </div>
-        </div>
-    </div>
+        </div>`;
+    document.querySelector('.toast-container').appendChild(el.firstElementChild);
+    const t2 = new bootstrap.Toast(document.getElementById(id), { delay: duration });
+    t2.show();
+}
 
-    <script>
-    var _printLabelModal = null;
-
-    function _getPrintLabelModal() {
-        var modalEl = document.getElementById('printLabelModal');
-        if (!modalEl) return null;
-        if (!_printLabelModal) {
-            _printLabelModal = new bootstrap.Modal(modalEl);
+// ---- Chart helpers ----
+window.isDarkMode = function() { return document.documentElement.getAttribute('data-theme') === 'dark'; };
+window.getChartOptions = function(isDark) {
+    return {
+        plugins: { legend: { labels: { color: isDark ? '#94a3b8' : '#64748b' } } },
+        scales: {
+            x: { ticks: { color: isDark ? '#94a3b8' : '#64748b' }, grid: { color: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)' } },
+            y: { ticks: { color: isDark ? '#94a3b8' : '#64748b' }, grid: { color: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)' } }
         }
-        return _printLabelModal;
-    }
+    };
+};
 
-    function openPrintLabelModal() {
-        var pcnInput = document.getElementById('printLabelPcn');
-        var statusEl = document.getElementById('printLabelStatus');
-        var modal = _getPrintLabelModal();
-        if (!modal || !pcnInput) return;
+// ---- Notification count ----
+function updateNotifCount() {
+    fetch('/api/notifications/count', { credentials: 'same-origin' })
+        .then(r => r.ok ? r.json() : null)
+        .then(d => {
+            if (!d) return;
+            const count = d.unseen_count || 0;
+            const topBadge = document.getElementById('topbarNotifBadge');
+            const sideBadge = document.getElementById('sidebarNotifBadge');
+            if (topBadge)  { topBadge.style.display  = count > 0 ? 'block' : 'none'; }
+            if (sideBadge) { sideBadge.style.display  = count > 0 ? 'inline' : 'none'; sideBadge.textContent = count; }
+        }).catch(() => {});
+}
+updateNotifCount();
+setInterval(updateNotifCount, 30000);
 
-        pcnInput.value = '';
-        if (statusEl) statusEl.style.display = 'none';
-        modal.show();
-        setTimeout(function() { pcnInput.focus(); }, 300);
-    }
-
-    function printLabelFromModal() {
-        var pcnInput = document.getElementById('printLabelPcn');
-        var statusEl = document.getElementById('printLabelStatus');
-        if (!pcnInput) return;
-
-        var pcn = pcnInput.value.trim();
-        if (!pcn) {
-            if (statusEl) {
-                statusEl.textContent = 'Please enter a PCN number.';
-                statusEl.style.display = 'block';
-            }
-            return;
-        }
-
-        if (statusEl) statusEl.style.display = 'none';
-
-        // Close modal first, then open print window
-        var modal = _getPrintLabelModal();
-        if (modal) modal.hide();
-
-        var printUrl = '/print-label/' + encodeURIComponent(pcn);
-        window.open(printUrl, 'printLabel', 'width=500,height=350,toolbar=no,menubar=no,scrollbars=no');
-    }
-
-    function downloadZplFromModal() {
-        var pcnInput = document.getElementById('printLabelPcn');
-        var statusEl = document.getElementById('printLabelStatus');
-        if (!pcnInput) return;
-
-        var pcn = pcnInput.value.trim();
-        if (!pcn) {
-            if (statusEl) {
-                statusEl.textContent = 'Please enter a PCN number.';
-                statusEl.style.display = 'block';
-            }
-            return;
-        }
-
-        if (statusEl) statusEl.style.display = 'none';
-
-        var link = document.createElement('a');
-        link.href = '/print-label/' + encodeURIComponent(pcn) + '/zpl';
-        link.download = 'PCN_' + pcn + '.zpl';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
-
-    // Enter key triggers print
-    document.addEventListener('DOMContentLoaded', function() {
-        var pcnInput = document.getElementById('printLabelPcn');
-        if (pcnInput) {
-            pcnInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    printLabelFromModal();
-                }
-            });
-        }
-
-        // Global barcode scanner listener
-        // Barcode scanners type characters very fast (< 50ms between keys) and end with Enter
-        var scanBuffer = '';
-        var scanTimeout = null;
-        var lastKeyTime = 0;
-        var SCAN_THRESHOLD = 50; // max ms between characters for scanner input
-        var MIN_SCAN_LENGTH = 3; // minimum characters to count as a scan
-
-        document.addEventListener('keydown', function(e) {
-            // Skip if user is focused on an input/textarea/select field
-            var tag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';
-            if (tag === 'input' || tag === 'textarea' || tag === 'select') {
-                return;
-            }
-
-            var now = Date.now();
-
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                // Check if we have a valid scan buffer
-                if (scanBuffer.length >= MIN_SCAN_LENGTH) {
-                    handleBarcodeScan(scanBuffer.trim());
-                }
-                scanBuffer = '';
-                clearTimeout(scanTimeout);
-                return;
-            }
-
-            // Only capture printable characters
-            if (e.key.length === 1) {
-                // If too much time passed since last key, reset buffer
-                if (now - lastKeyTime > SCAN_THRESHOLD && scanBuffer.length > 0) {
-                    scanBuffer = '';
-                }
-                scanBuffer += e.key;
-                lastKeyTime = now;
-
-                // Auto-clear buffer after 500ms of no input (in case Enter never comes)
-                clearTimeout(scanTimeout);
-                scanTimeout = setTimeout(function() {
-                    scanBuffer = '';
-                }, 500);
-            }
-        });
-
-        function handleBarcodeScan(scannedValue) {
-            console.log('Barcode scanned:', scannedValue);
-
-            // PCN numbers are typically numeric (up to 5 digits)
-            var pcnNumber = scannedValue.replace(/\D/g, '');
-            if (!pcnNumber) {
-                console.warn('Scanned value is not a valid PCN:', scannedValue);
-                return;
-            }
-
-            // Look up the PCN and show options
-            fetch('/api/pcn/details/' + encodeURIComponent(pcnNumber))
-                .then(function(response) { return response.json(); })
-                .then(function(data) {
-                    if (data.success) {
-                        // PCN found - show scan result modal
-                        showScanResult(data);
-                    } else {
-                        showScanNotFound(pcnNumber);
-                    }
-                })
-                .catch(function(error) {
-                    console.error('Error looking up scanned PCN:', error);
-                    showScanNotFound(pcnNumber);
-                });
-        }
-
-        // Show scan result modal
-        window.showScanResult = function(data) {
-            var pcn = data.pcn_number || data.pcn || '';
-            var item = data.item || data.job || '';
-            var qty = data.quantity || data.onhandqty || 0;
-            var mpn = data.mpn || '';
-            var location = data.location || data.loc_to || '';
-
-            // Remove any existing scan modal
-            var existing = document.getElementById('scanResultModal');
-            if (existing) existing.remove();
-
-            var modalHtml = `
-                <div class="modal fade" id="scanResultModal" tabindex="-1">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header" style="background: linear-gradient(135deg, #5b21b6, #8b5cf6); color: white;">
-                                <h5 class="modal-title"><i class="bi bi-upc-scan me-2"></i>PCN Scanned: ${pcn}</h5>
-                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="row g-2 mb-3">
-                                    <div class="col-sm-6 col-12"><strong>Item:</strong> ${item}</div>
-                                    <div class="col-sm-6 col-12"><strong>QTY:</strong> ${qty}</div>
-                                    <div class="col-sm-6 col-12"><strong>MPN:</strong> ${mpn || '-'}</div>
-                                    <div class="col-sm-6 col-12"><strong>Location:</strong> ${location || '-'}</div>
-                                </div>
-                                <hr>
-                                <p class="text-muted small mb-0">Choose an action for this PCN:</p>
-                            </div>
-                            <div class="modal-footer d-flex flex-wrap gap-2 justify-content-center">
-                                <button class="btn btn-primary" onclick="window.open('/print-label/${pcn}', 'printLabel', 'width=500,height=350,toolbar=no,menubar=no,scrollbars=no'); bootstrap.Modal.getInstance(document.getElementById('scanResultModal')).hide();">
-                                    <i class="bi bi-printer me-1"></i> Print Label
-                                </button>
-                                <a href="/pick?job=${encodeURIComponent(item)}&pcn=${encodeURIComponent(pcn)}" class="btn btn-danger">
-                                    <i class="bi bi-dash-circle me-1"></i> Pick
-                                </a>
-                                <a href="/stock?job=${encodeURIComponent(item)}&pcn=${encodeURIComponent(pcn)}" class="btn btn-success">
-                                    <i class="bi bi-plus-circle me-1"></i> Stock
-                                </a>
-                                <button class="btn btn-secondary" data-bs-dismiss="modal">
-                                    <i class="bi bi-x-circle me-1"></i> Close
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>`;
-
-            document.body.insertAdjacentHTML('beforeend', modalHtml);
-            var scanModal = new bootstrap.Modal(document.getElementById('scanResultModal'));
-            scanModal.show();
-
-            // Cleanup on close
-            document.getElementById('scanResultModal').addEventListener('hidden.bs.modal', function() {
-                this.remove();
-            });
-        };
-
-        // Show not found message
-        window.showScanNotFound = function(pcnNumber) {
-            var existing = document.getElementById('scanResultModal');
-            if (existing) existing.remove();
-
-            var modalHtml = `
-                <div class="modal fade" id="scanResultModal" tabindex="-1">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header" style="background: linear-gradient(135deg, #5b21b6, #8b5cf6); color: white;">
-                                <h5 class="modal-title"><i class="bi bi-exclamation-triangle me-2"></i>PCN Not Found</h5>
-                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                            </div>
-                            <div class="modal-body text-center py-4">
-                                <i class="bi bi-search" style="font-size: 3rem; color: #dc2626;"></i>
-                                <p class="mt-3 mb-0">PCN <strong>${pcnNumber}</strong> was not found in warehouse inventory.</p>
-                            </div>
-                            <div class="modal-footer justify-content-center">
-                                <button class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle me-1"></i> Close</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>`;
-
-            document.body.insertAdjacentHTML('beforeend', modalHtml);
-            var scanModal = new bootstrap.Modal(document.getElementById('scanResultModal'));
-            scanModal.show();
-
-            document.getElementById('scanResultModal').addEventListener('hidden.bs.modal', function() {
-                this.remove();
-            });
-        };
+// ---- Auto dismiss alerts ----
+setTimeout(function() {
+    document.querySelectorAll('.alert:not(.alert-persistent)').forEach(function(a) {
+        try { new bootstrap.Alert(a).close(); } catch(e) {}
     });
-    </script>
+}, 5000);
+</script>
+
+{% block extra_js %}{% endblock %}
 </body>
 </html>
