@@ -1,0 +1,4 @@
+# Tell GitHub this is a Python project, not HTML
+templates/*.html linguist-detectable=false
+static/*.html linguist-detectable=false
+*.html linguist-detectable=false
