@@ -15,8 +15,8 @@
     --sidebar-active-border: #6366f1;
 
     --topbar-height: 60px;
-    --topbar-bg: #ffffff;
-    --topbar-border: #e2e8f0;
+    --topbar-bg: #f5f3ef;
+    --topbar-border: #e5e0d8;
 
     --bg: #f1f5f9;
     --bg-card: #ffffff;
@@ -122,49 +122,49 @@ h1, h2, h3, h4, h5, h6 { color: var(--text-primary); font-weight: 600; }
     text-decoration: none;
 }
 
-.sidebar-brand-logo {
-    width: 46px;
-    height: 46px;
+.sidebar-brand-ka {
+    font-family: serif;
+    font-size: 48px;
+    line-height: 0.9;
     flex-shrink: 0;
-    filter: drop-shadow(0 0 10px rgba(168, 85, 247, 0.45))
-            drop-shadow(0 0 24px rgba(236, 72, 153, 0.2));
-    transition: filter 0.3s ease;
-}
-.sidebar-brand:hover .sidebar-brand-logo {
-    filter: drop-shadow(0 0 14px rgba(168, 85, 247, 0.7))
-            drop-shadow(0 0 32px rgba(236, 72, 153, 0.35));
+    background: linear-gradient(160deg, #f59e0b, #b45309, #92400e);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
-.sidebar-brand-logo svg { width: 46px; height: 46px; }
+.sidebar-brand-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
 
 .sidebar-brand-text {
-    font-size: 1.25rem;
-    font-weight: 800;
-    letter-spacing: 3px;
+    font-size: 1.1rem;
+    font-weight: 900;
+    letter-spacing: 5px;
     text-transform: uppercase;
-    background: linear-gradient(90deg, #c084fc, #f472b6);
+    background: linear-gradient(90deg, #fcd34d, #d97706);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     line-height: 1.2;
 }
 
-.sidebar-brand-version {
-    font-size: 0.6rem;
-    color: #4b2d6b;
-    font-weight: 500;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    margin-top: 2px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
+.sidebar-brand-line {
+    height: 1.5px;
+    background: linear-gradient(90deg, #b45309, transparent);
+    margin-top: 3px;
+    border-radius: 1px;
 }
 
-.brand-dot {
-    font-size: 0.45rem;
-    color: #a855f7;
-    opacity: 0.8;
+.sidebar-brand-version {
+    font-size: 0.5rem;
+    color: #b87333;
+    font-weight: 500;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    margin-top: 4px;
 }
 
 /* Sidebar section labels */
@@ -390,7 +390,7 @@ h1, h2, h3, h4, h5, h6 { color: var(--text-primary); font-weight: 600; }
 }
 
 .page-header-inner {
-    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    background: linear-gradient(135deg, #18120a 0%, #2c1f0e 100%);
     border-radius: var(--radius-lg);
     padding: 22px 26px;
     display: flex;
@@ -398,7 +398,10 @@ h1, h2, h3, h4, h5, h6 { color: var(--text-primary); font-weight: 600; }
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 16px;
-    box-shadow: 0 4px 20px rgba(99,102,241,0.25);
+    border-top: 2px solid #b45309;
+    border-left: 1px solid rgba(180,83,9,0.25);
+    border-right: 1px solid rgba(180,83,9,0.1);
+    border-bottom: 1px solid rgba(180,83,9,0.15);
 }
 
 .page-header-info {
@@ -408,29 +411,20 @@ h1, h2, h3, h4, h5, h6 { color: var(--text-primary); font-weight: 600; }
 }
 
 .page-header-icon {
-    width: 46px;
-    height: 46px;
-    background: rgba(255,255,255,0.15);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.3rem;
-    color: white;
-    flex-shrink: 0;
+    display: none;
 }
 
 .page-header-title {
     font-size: 1.35rem;
     font-weight: 700;
-    color: white;
+    color: #fef3c7;
     margin: 0;
     line-height: 1.2;
 }
 
 .page-header-subtitle {
     font-size: 0.85rem;
-    color: rgba(255,255,255,0.75);
+    color: rgba(253,186,116,0.55);
     margin: 2px 0 0;
 }
 
@@ -565,10 +559,23 @@ h1, h2, h3, h4, h5, h6 { color: var(--text-primary); font-weight: 600; }
     box-shadow: var(--shadow-lg);
 }
 
+.stat-card-gradient { position: relative; overflow: hidden; }
 .stat-card-gradient .stat-label { color: rgba(255,255,255,0.8); }
 .stat-card-gradient .stat-value { color: white; }
-.stat-card-gradient .stat-meta  { color: rgba(255,255,255,0.65); }
-.stat-card-gradient .stat-icon  { background: rgba(255,255,255,0.2); color: white; }
+.stat-card-gradient .stat-meta  { color: rgba(255,255,255,0.6); }
+.stat-card-gradient .stat-icon  {
+    background: none;
+    color: white;
+    font-size: 3rem;
+    opacity: 0.18;
+    position: absolute;
+    bottom: -6px;
+    right: 10px;
+    width: auto;
+    height: auto;
+    border-radius: 0;
+    pointer-events: none;
+}
 
 .grad-blue    { background: linear-gradient(135deg, #3b82f6, #1d4ed8); box-shadow: 0 4px 15px rgba(59,130,246,0.35); }
 .grad-cyan    { background: linear-gradient(135deg, #06b6d4, #0e7490); box-shadow: 0 4px 15px rgba(6,182,212,0.35); }
@@ -583,50 +590,70 @@ h1, h2, h3, h4, h5, h6 { color: var(--text-primary); font-weight: 600; }
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: 20px 12px;
+    gap: 10px;
+    padding: 24px 12px 18px;
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     text-decoration: none;
-    transition: all var(--transition);
+    transition: all 0.22s ease;
     text-align: center;
-    box-shadow: var(--shadow);
     height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Copper accent line slides in from left on hover */
+.quick-action::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #f59e0b, #b45309);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s ease;
+}
+
+.quick-action:hover::before {
+    transform: scaleX(1);
 }
 
 .quick-action:hover {
-    border-color: var(--brand);
-    box-shadow: 0 0 0 3px var(--brand-light), var(--shadow-md);
+    border-color: rgba(245,158,11,0.25);
     transform: translateY(-2px);
-    color: var(--brand);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.07);
 }
 
+/* No box — just the icon */
 .quick-action-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    background: var(--brand-light);
-    color: var(--brand);
-    transition: all var(--transition);
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    transition: color 0.22s, transform 0.22s;
+    line-height: 1;
+    display: block;
+    width: auto;
+    height: auto;
+    background: none;
+    border-radius: 0;
 }
 
 .quick-action:hover .quick-action-icon {
-    background: var(--brand);
-    color: white;
+    color: #d97706;
+    transform: scale(1.15);
+    background: none;
 }
 
 .quick-action-label {
-    font-size: 0.82rem;
+    font-size: 0.78rem;
     font-weight: 600;
-    color: var(--text-primary);
+    color: var(--text-secondary);
+    letter-spacing: 0.2px;
 }
 
-.quick-action:hover .quick-action-label { color: var(--brand); }
+.quick-action:hover .quick-action-label {
+    color: var(--text-primary);
+}
 
 /* ---- Tables ---- */
 .table {
