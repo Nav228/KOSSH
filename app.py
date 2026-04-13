@@ -351,15 +351,30 @@ def format_number_filter(value):
     except (ValueError, TypeError):
         return value
 
-# Database configuration from environment variables (local PostgreSQL)
-DB_CONFIG = {
-    'host': os.getenv('POSTGRES_HOST', 'aci-database'),
-    'port': int(os.getenv('POSTGRES_PORT', 5432)),
-    'database': os.getenv('POSTGRES_DB', 'pcb_inventory'),
-    'user': os.getenv('POSTGRES_USER', 'stockpick_user'),
-    'password': os.getenv('POSTGRES_PASSWORD', 'stockpick_pass')
-}
-logger.info("Using local database")
+# Database configuration — supports DATABASE_URL / NEON_DATABASE_URL (Vercel/Neon)
+# or individual POSTGRES_* vars (Docker / local)
+_db_url = os.getenv('NEON_DATABASE_URL') or os.getenv('DATABASE_URL')
+if _db_url:
+    from urllib.parse import urlparse
+    _p = urlparse(_db_url)
+    DB_CONFIG = {
+        'host': _p.hostname,
+        'port': _p.port or 5432,
+        'database': _p.path.lstrip('/'),
+        'user': _p.username,
+        'password': _p.password,
+        'sslmode': 'require'
+    }
+    logger.info("Using cloud database (Neon/URL)")
+else:
+    DB_CONFIG = {
+        'host': os.getenv('POSTGRES_HOST', 'aci-database'),
+        'port': int(os.getenv('POSTGRES_PORT', 5432)),
+        'database': os.getenv('POSTGRES_DB', 'pcb_inventory'),
+        'user': os.getenv('POSTGRES_USER', 'stockpick_user'),
+        'password': os.getenv('POSTGRES_PASSWORD', 'stockpick_pass')
+    }
+    logger.info("Using local database")
 
 # PCB Types and Locations (matching the original application)
 PCB_TYPES = [
