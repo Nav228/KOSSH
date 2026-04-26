@@ -5,7 +5,7 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV FLASK_APP=app.py
 ENV FLASK_RUN_HOST=0.0.0.0
-ENV FLASK_RUN_PORT=5002
+ENV PORT=5002
 # Performance optimizations
 ENV PYTHONOPTIMIZE=2
 ENV FLASK_ENV=production
@@ -37,13 +37,8 @@ RUN adduser --disabled-password --gecos '' appuser && \
     chown -R appuser:appuser /app
 USER appuser
 
-# Expose port
+# Expose port (Koyeb/Railway/Render inject their own $PORT at runtime)
 EXPOSE 5002
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:5002/api/inventory || exit 1
-
-# Run the application with Gunicorn for production performance
-# Using 4 workers for better concurrency
-CMD ["gunicorn", "--bind", "0.0.0.0:5002", "--workers", "4", "--threads", "2", "--worker-class", "gthread", "--timeout", "120", "--keep-alive", "5", "--access-logfile", "-", "--error-logfile", "-", "app:app"]
+# Run the application with Gunicorn — bind to $PORT so it works locally and on cloud
+CMD gunicorn --bind 0.0.0.0:${PORT:-5002} --workers 2 --threads 2 --worker-class gthread --timeout 120 --keep-alive 5 --access-logfile - --error-logfile - app:app
