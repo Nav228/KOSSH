@@ -120,7 +120,7 @@
             text-align: center;
         }
 
-        /* ===== INVENTORY FLOW NETWORK ANIMATION ===== */
+        /* ===== ANIMATED WAREHOUSE SHELVES ===== */
         .visual-icon {
             position: relative;
             width: 240px;
@@ -137,74 +137,59 @@
             height: 100%;
         }
 
-        /* Network connection lines */
-        .network-line {
-            stroke: url(#lineGradient);
-            stroke-width: 2;
+        /* Shelf structure */
+        .shelf {
             fill: none;
-            opacity: 0.6;
-        }
-
-        /* Network nodes */
-        .network-node {
-            fill: rgba(255, 0, 110, 0.2);
-            stroke: #ff006e;
+            stroke: rgba(255, 0, 110, 0.3);
             stroke-width: 2;
         }
 
-        /* Flowing items/components */
-        .flow-item {
-            r: 4;
-            opacity: 0.8;
+        /* Inventory items on shelves */
+        .inventory-item {
+            opacity: 0.9;
         }
 
-        .item-red {
-            fill: #ff006e;
-            animation: flowPath1 6s linear infinite;
+        /* Individual item animations */
+        .item-1 { fill: #ff006e; animation: slide1 4s ease-in-out infinite; }
+        .item-2 { fill: #ff3a44; animation: slide2 4.5s ease-in-out infinite 0.3s; }
+        .item-3 { fill: #8b5cf6; animation: slide3 4s ease-in-out infinite 0.6s; }
+        .item-4 { fill: #00d4ff; animation: slide4 4.5s ease-in-out infinite 0.9s; }
+        .item-5 { fill: #ff006e; animation: slide5 4s ease-in-out infinite 1.2s; }
+        .item-6 { fill: #8b5cf6; animation: slide6 4.5s ease-in-out infinite 1.5s; }
+
+        @keyframes slide1 {
+            0%, 100% { transform: translateX(0px); opacity: 0.6; }
+            50% { transform: translateX(40px); opacity: 1; }
+        }
+        @keyframes slide2 {
+            0%, 100% { transform: translateX(0px); opacity: 0.6; }
+            50% { transform: translateX(-40px); opacity: 1; }
+        }
+        @keyframes slide3 {
+            0%, 100% { transform: translateX(0px); opacity: 0.6; }
+            50% { transform: translateX(35px); opacity: 1; }
+        }
+        @keyframes slide4 {
+            0%, 100% { transform: translateX(0px); opacity: 0.6; }
+            50% { transform: translateX(-35px); opacity: 1; }
+        }
+        @keyframes slide5 {
+            0%, 100% { transform: translateX(0px); opacity: 0.6; }
+            50% { transform: translateX(38px); opacity: 1; }
+        }
+        @keyframes slide6 {
+            0%, 100% { transform: translateX(0px); opacity: 0.6; }
+            50% { transform: translateX(-38px); opacity: 1; }
         }
 
-        .item-purple {
-            fill: #8b5cf6;
-            animation: flowPath2 6s linear infinite 0.5s;
+        /* Glow effect on active items */
+        .glow-pulse {
+            animation: glow 2s ease-in-out infinite;
         }
 
-        .item-cyan {
-            fill: #00d4ff;
-            animation: flowPath3 6s linear infinite 1s;
-        }
-
-        .item-red2 {
-            fill: #ff3a44;
-            animation: flowPath4 6s linear infinite 1.5s;
-        }
-
-        /* Animation paths for items flowing through network */
-        @keyframes flowPath1 {
-            0% { cx: 70; cy: 70; opacity: 0; }
-            5% { opacity: 1; }
-            95% { opacity: 1; }
-            100% { cx: 170; cy: 100; opacity: 0; }
-        }
-
-        @keyframes flowPath2 {
-            0% { cx: 170; cy: 100; opacity: 0; }
-            5% { opacity: 1; }
-            95% { opacity: 1; }
-            100% { cx: 120; cy: 180; opacity: 0; }
-        }
-
-        @keyframes flowPath3 {
-            0% { cx: 120; cy: 180; opacity: 0; }
-            5% { opacity: 1; }
-            95% { opacity: 1; }
-            100% { cx: 50; cy: 140; opacity: 0; }
-        }
-
-        @keyframes flowPath4 {
-            0% { cx: 50; cy: 140; opacity: 0; }
-            5% { opacity: 1; }
-            95% { opacity: 1; }
-            100% { cx: 70; cy: 70; opacity: 0; }
+        @keyframes glow {
+            0%, 100% { filter: drop-shadow(0 0 2px rgba(255, 0, 110, 0.3)); }
+            50% { filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.6)); }
         }
 
 
@@ -613,32 +598,37 @@
             <div class="visual-content">
                 <div class="visual-icon">
                     <svg viewBox="0 0 220 220" class="box-container">
-                        <defs>
-                            <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#ff006e;stop-opacity:1" />
-                                <stop offset="50%" style="stop-color:#8b5cf6;stop-opacity:1" />
-                                <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:1" />
-                            </linearGradient>
-                        </defs>
+                        <!-- WAREHOUSE SHELVING STRUCTURE -->
 
-                        <!-- NETWORK LINES (connections) -->
-                        <line x1="70" y1="70" x2="170" y2="100" class="network-line" />
-                        <line x1="170" y1="100" x2="120" y2="180" class="network-line" />
-                        <line x1="120" y1="180" x2="50" y2="140" class="network-line" />
-                        <line x1="50" y1="140" x2="70" y2="70" class="network-line" />
-                        <line x1="70" y1="70" x2="120" y2="180" class="network-line" />
+                        <!-- Vertical posts -->
+                        <line x1="50" y1="60" x2="50" y2="180" class="shelf" />
+                        <line x1="170" y1="60" x2="170" y2="180" class="shelf" />
 
-                        <!-- NETWORK NODES -->
-                        <circle cx="70" cy="70" r="6" class="network-node" />
-                        <circle cx="170" cy="100" r="6" class="network-node" />
-                        <circle cx="120" cy="180" r="6" class="network-node" />
-                        <circle cx="50" cy="140" r="6" class="network-node" />
+                        <!-- Horizontal shelf lines -->
+                        <line x1="50" y1="80" x2="170" y2="80" class="shelf" />
+                        <line x1="50" y1="110" x2="170" y2="110" class="shelf" />
+                        <line x1="50" y1="140" x2="170" y2="140" class="shelf" />
+                        <line x1="50" y1="170" x2="170" y2="170" class="shelf" />
 
-                        <!-- FLOWING ITEMS (animated components) -->
-                        <circle cx="70" cy="70" class="flow-item item-red" />
-                        <circle cx="170" cy="100" class="flow-item item-purple" />
-                        <circle cx="120" cy="180" class="flow-item item-cyan" />
-                        <circle cx="50" cy="140" class="flow-item item-red2" />
+                        <!-- SHELF 1 - Items sliding -->
+                        <rect x="60" y="70" width="8" height="8" class="inventory-item item-1" />
+                        <rect x="85" y="70" width="8" height="8" class="inventory-item item-2" />
+                        <rect x="110" y="70" width="8" height="8" class="inventory-item item-3" />
+
+                        <!-- SHELF 2 - Items sliding -->
+                        <rect x="70" y="100" width="8" height="8" class="inventory-item item-4" />
+                        <rect x="100" y="100" width="8" height="8" class="inventory-item item-5" />
+                        <rect x="130" y="100" width="8" height="8" class="inventory-item item-1" />
+
+                        <!-- SHELF 3 - Items sliding -->
+                        <rect x="65" y="130" width="8" height="8" class="inventory-item item-2" />
+                        <rect x="95" y="130" width="8" height="8" class="inventory-item item-6" />
+                        <rect x="125" y="130" width="8" height="8" class="inventory-item item-3" />
+
+                        <!-- SHELF 4 - Items sliding -->
+                        <rect x="75" y="160" width="8" height="8" class="inventory-item item-4" />
+                        <rect x="110" y="160" width="8" height="8" class="inventory-item item-5" />
+                        <rect x="145" y="160" width="8" height="8" class="inventory-item item-6" />
                     </svg>
                 </div>
 
