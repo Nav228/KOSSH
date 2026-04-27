@@ -120,7 +120,7 @@
             text-align: center;
         }
 
-        /* ===== ANIMATED ISOMETRIC BOX ===== */
+        /* ===== SIMPLE CARDBOARD BOX ANIMATION ===== */
         .visual-icon {
             position: relative;
             width: 200px;
@@ -129,143 +129,105 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            perspective: 1000px;
         }
 
         .box-container {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            transform-style: preserve-3d;
+            position: relative;
+            width: 140px;
+            height: 140px;
         }
 
-        /* Isometric box base (front face) */
-        .box-front {
-            fill: rgba(30, 25, 40, 0.8);
-            stroke: url(#gradientStroke);
-            stroke-width: 2.5;
+        /* Box body (brown cardboard) */
+        .box-body {
+            fill: #c99854;
+            stroke: #a67c4d;
+            stroke-width: 2;
         }
 
-        /* Isometric top face */
-        .box-top {
-            fill: rgba(30, 25, 40, 0.5);
-            stroke: url(#gradientStroke);
-            stroke-width: 2.5;
+        /* Box flaps */
+        .box-flap {
+            fill: #c99854;
+            stroke: #a67c4d;
+            stroke-width: 2;
+            transform-origin: center top;
         }
 
-        /* Isometric right face */
-        .box-right {
-            fill: rgba(30, 25, 40, 0.3);
-            stroke: url(#gradientStroke);
-            stroke-width: 2.5;
-        }
-
-        /* Left flap */
         .flap-left {
-            fill: rgba(30, 25, 40, 0.7);
-            stroke: url(#gradientStroke);
-            stroke-width: 2.5;
-            transform-origin: 85px 60px;
-            animation: flapOpenLeft 4.5s ease-in-out infinite;
+            animation: flapSwingLeft 4s ease-in-out infinite;
         }
 
-        /* Right flap */
         .flap-right {
-            fill: rgba(30, 25, 40, 0.7);
-            stroke: url(#gradientStroke);
-            stroke-width: 2.5;
-            transform-origin: 115px 60px;
-            animation: flapOpenRight 4.5s ease-in-out infinite;
+            animation: flapSwingRight 4s ease-in-out infinite;
         }
 
-        @keyframes flapOpenLeft {
-            0% {
-                transform: rotateZ(0deg);
-                opacity: 1;
-            }
-            15% {
-                transform: rotateZ(-75deg) translateX(-30px);
-                opacity: 0.8;
-            }
-            35% {
-                transform: rotateZ(-75deg) translateX(-30px);
-                opacity: 0.8;
-            }
-            55% {
-                transform: rotateZ(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: rotateZ(0deg);
-                opacity: 1;
-            }
+        @keyframes flapSwingLeft {
+            0% { transform: rotateZ(0deg); }
+            20% { transform: rotateZ(-90deg); }
+            50% { transform: rotateZ(-90deg); }
+            70% { transform: rotateZ(0deg); }
+            100% { transform: rotateZ(0deg); }
         }
 
-        @keyframes flapOpenRight {
-            0% {
-                transform: rotateZ(0deg);
-                opacity: 1;
-            }
-            15% {
-                transform: rotateZ(75deg) translateX(30px);
-                opacity: 0.8;
-            }
-            35% {
-                transform: rotateZ(75deg) translateX(30px);
-                opacity: 0.8;
-            }
-            55% {
-                transform: rotateZ(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: rotateZ(0deg);
-                opacity: 1;
-            }
+        @keyframes flapSwingRight {
+            0% { transform: rotateZ(0deg); }
+            20% { transform: rotateZ(90deg); }
+            50% { transform: rotateZ(90deg); }
+            70% { transform: rotateZ(0deg); }
+            100% { transform: rotateZ(0deg); }
         }
 
-        /* Logo that goes into box */
+        /* Logo falling into box */
         .logo-inside-box {
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            font-size: 55px;
+            transform: translate(-50%, -50%) scale(1);
+            font-size: 50px;
             font-weight: 900;
             background: linear-gradient(135deg, #ff006e, #ff3a44);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: dropIntoBox 4.5s ease-in-out infinite;
+            animation: logoDropIn 4s ease-in-out infinite;
             z-index: 20;
             pointer-events: none;
         }
 
-        @keyframes dropIntoBox {
+        @keyframes logoDropIn {
             0% {
                 opacity: 0;
-                transform: translate(-50%, -60%) scale(0.3);
+                transform: translate(-50%, -80px) scale(0.5);
             }
-            15% {
+            18% {
                 opacity: 1;
-                transform: translate(-50%, -60%) scale(1);
-            }
-            25% {
-                opacity: 1;
-                transform: translate(-50%, -20%) scale(0.95);
+                transform: translate(-50%, -80px) scale(1);
             }
             35% {
                 opacity: 1;
-                transform: translate(-50%, 0%) scale(0.9);
+                transform: translate(-50%, 0px) scale(1);
             }
-            55% {
+            50% {
                 opacity: 0;
-                transform: translate(-50%, 0%) scale(0);
+                transform: translate(-50%, 0px) scale(1);
             }
             100% {
                 opacity: 0;
-                transform: translate(-50%, -60%) scale(0.3);
+                transform: translate(-50%, -80px) scale(0.5);
             }
+        }
+
+        /* Tape on box (appears when closed) */
+        .box-tape {
+            fill: none;
+            stroke: #8b7355;
+            stroke-width: 1.5;
+            animation: tapeAppear 4s ease-in-out infinite;
+        }
+
+        @keyframes tapeAppear {
+            0%, 50% { opacity: 0; }
+            70% { opacity: 1; }
+            100% { opacity: 1; }
         }
 
         .visual-text h2 {
@@ -672,43 +634,28 @@
         <div class="login-visual">
             <div class="visual-content">
                 <div class="visual-icon">
-                    <svg viewBox="0 0 200 200" class="box-container">
-                        <defs>
-                            <linearGradient id="gradientStroke" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#ff006e;stop-opacity:1" />
-                                <stop offset="50%" style="stop-color:#8b5cf6;stop-opacity:1" />
-                                <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:1" />
-                            </linearGradient>
-                        </defs>
+                    <svg viewBox="0 0 140 140" class="box-container">
+                        <!-- BOX BODY (closed bottom part) -->
+                        <rect x="20" y="60" width="100" height="70" rx="4" class="box-body" />
 
-                        <!-- ISOMETRIC BOX - 3D PERSPECTIVE -->
+                        <!-- LEFT FLAP (animated - swings left) -->
+                        <g class="flap-left">
+                            <rect x="20" y="25" width="50" height="35" rx="3" class="box-flap" />
+                        </g>
 
-                        <!-- Right side face (dark) -->
-                        <polygon points="130,65 160,80 160,140 130,125" class="box-right" />
+                        <!-- RIGHT FLAP (animated - swings right) -->
+                        <g class="flap-right">
+                            <rect x="70" y="25" width="50" height="35" rx="3" class="box-flap" />
+                        </g>
 
-                        <!-- Front face (medium) -->
-                        <polygon points="70,65 130,65 130,125 70,125" class="box-front" />
+                        <!-- CENTER DIVIDING LINE -->
+                        <line x1="70" y1="25" x2="70" y2="60" stroke="#a67c4d" stroke-width="1.5" />
 
-                        <!-- Top face (light) -->
-                        <polygon points="70,65 100,45 160,80 130,65" class="box-top" />
-
-                        <!-- Left flap (animated) - swings left -->
-                        <polygon points="70,65 100,45 100,35 70,55" class="flap-left" />
-
-                        <!-- Right flap (animated) - swings right -->
-                        <polygon points="130,65 160,80 160,70 130,55" class="flap-right" />
-
-                        <!-- Box top edge -->
-                        <line x1="70" y1="65" x2="130" y2="65" stroke="url(#gradientStroke)" stroke-width="2.5" opacity="0.6" />
-
-                        <!-- Box left edge -->
-                        <line x1="70" y1="65" x2="70" y2="125" stroke="url(#gradientStroke)" stroke-width="2.5" opacity="0.6" />
-
-                        <!-- Box bottom edge -->
-                        <line x1="70" y1="125" x2="130" y2="125" stroke="url(#gradientStroke)" stroke-width="2.5" opacity="0.6" />
+                        <!-- TAPE across center (appears when closed) -->
+                        <line x1="20" y1="32" x2="120" y2="32" class="box-tape" />
                     </svg>
 
-                    <!-- Devanagari logo that drops into box -->
+                    <!-- Logo that drops into box -->
                     <div class="logo-inside-box">क</div>
                 </div>
 
