@@ -158,105 +158,6 @@
             stroke-width: 2.5;
         }
 
-        /* Left flap - opens outward and upward */
-        .flap-left {
-            fill: #d4a574;
-            stroke: #9d7e54;
-            stroke-width: 2.5;
-            transform-origin: 70px 70px;
-            animation: flapOpen 5s ease-in-out infinite;
-        }
-
-        /* Right flap - opens outward and upward */
-        .flap-right {
-            fill: #d4a574;
-            stroke: #9d7e54;
-            stroke-width: 2.5;
-            transform-origin: 150px 70px;
-            animation: flapOpen 5s ease-in-out infinite;
-        }
-
-        @keyframes flapOpen {
-            0% {
-                transform: rotateX(0deg) rotateZ(0deg);
-                opacity: 1;
-            }
-            20% {
-                transform: rotateX(-85deg) rotateZ(0deg);
-                opacity: 0.8;
-            }
-            45% {
-                transform: rotateX(-85deg) rotateZ(0deg);
-                opacity: 0.8;
-            }
-            65% {
-                transform: rotateX(0deg) rotateZ(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: rotateX(0deg) rotateZ(0deg);
-                opacity: 1;
-            }
-        }
-
-        /* Logo descending into box */
-        .logo-inside-box {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translate(-50%, -60px) scale(1);
-            font-size: 48px;
-            font-weight: 900;
-            background: linear-gradient(135deg, #ff006e, #ff3a44);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: logoFallIn 5s ease-in-out infinite;
-            z-index: 15;
-            pointer-events: none;
-        }
-
-        @keyframes logoFallIn {
-            0% {
-                opacity: 0;
-                transform: translate(-50%, -80px) scale(0.3);
-            }
-            15% {
-                opacity: 1;
-                transform: translate(-50%, -80px) scale(1);
-            }
-            30% {
-                opacity: 1;
-                transform: translate(-50%, 0px) scale(1);
-            }
-            45% {
-                opacity: 1;
-                transform: translate(-50%, 15px) scale(0.9);
-            }
-            65% {
-                opacity: 0;
-                transform: translate(-50%, 15px) scale(0.8);
-            }
-            100% {
-                opacity: 0;
-                transform: translate(-50%, -80px) scale(0.3);
-            }
-        }
-
-        /* Tape that seals box */
-        .seal-tape {
-            fill: none;
-            stroke: #a89968;
-            stroke-width: 3;
-            stroke-linecap: round;
-            animation: tapeSeal 5s ease-in-out infinite;
-        }
-
-        @keyframes tapeSeal {
-            0%, 45% { opacity: 0; stroke-dasharray: 120 120; stroke-dashoffset: 120; }
-            55% { opacity: 1; stroke-dasharray: 120 120; stroke-dashoffset: 0; }
-            100% { opacity: 1; stroke-dasharray: 120 120; stroke-dashoffset: 0; }
-        }
 
         .visual-text h2 {
             font-size: 36px;
@@ -662,30 +563,17 @@
         <div class="login-visual">
             <div class="visual-content">
                 <div class="visual-icon">
-                    <svg viewBox="0 0 220 220" class="box-container">
-                        <!-- ISOMETRIC 3D CARDBOARD BOX -->
+                    <svg viewBox="0 0 200 200" class="box-container">
+                        <!-- CENTERED 3D ISOMETRIC BOX (static, no animation) -->
 
-                        <!-- FRONT FACE (main body) -->
-                        <polygon points="55,140 55,80 145,80 145,140" class="box-front" />
+                        <!-- FRONT FACE -->
+                        <polygon points="60,120 60,70 120,70 120,120" class="box-front" />
 
-                        <!-- TOP FACE (light - isometric angle) -->
-                        <polygon points="55,80 95,50 185,50 145,80" class="box-top" />
+                        <!-- TOP FACE -->
+                        <polygon points="60,70 90,50 150,50 120,70" class="box-top" />
 
-                        <!-- RIGHT SIDE FACE (dark - isometric angle) -->
-                        <polygon points="145,80 185,50 185,110 145,140" class="box-right" />
-
-                        <!-- LEFT FLAP (top-left, swings open) -->
-                        <g class="flap-left">
-                            <polygon points="55,80 75,60 95,50 75,70" />
-                        </g>
-
-                        <!-- RIGHT FLAP (top-right, swings open) -->
-                        <g class="flap-right">
-                            <polygon points="145,80 165,60 185,50 165,70" />
-                        </g>
-
-                        <!-- CENTER CREASE -->
-                        <line x1="100" y1="50" x2="100" y2="80" stroke="#9d7e54" stroke-width="1.5" />
+                        <!-- RIGHT SIDE FACE -->
+                        <polygon points="120,70 150,50 150,100 120,120" class="box-right" />
                     </svg>
                 </div>
 
