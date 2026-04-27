@@ -20,6 +20,8 @@
             min-height: 100vh;
             background: linear-gradient(135deg, #0a0a0f 0%, #1a0f2e 50%, #0f1a2e 100%);
             display: flex;
+            align-items: center;
+            justify-content: center;
             overflow: hidden;
             position: relative;
         }
@@ -89,35 +91,8 @@
         .login-wrapper {
             position: relative;
             z-index: 1;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
             width: 100%;
-            min-height: 100vh;
-            gap: 0;
-        }
-
-        /* Visual element side */
-        .login-visual {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .login-visual::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(255, 0, 110, 0.1) 0%, rgba(139, 92, 246, 0.1) 50%, rgba(0, 212, 255, 0.1) 100%);
-            pointer-events: none;
-        }
-
-        .visual-content {
-            position: relative;
-            z-index: 2;
-            text-align: center;
+            height: 100vh;
         }
 
         /* ===== PREMIUM METRICS DASHBOARD ===== */
@@ -242,33 +217,36 @@
             100% { width: 40px; }
         }
 
-        /* Form container side */
+        /* Form container - centered */
         .login-container {
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 40px;
-            background: rgba(10, 10, 15, 0.6);
-            backdrop-filter: blur(20px);
+            min-height: 100vh;
+            padding: 20px;
             position: relative;
-            overflow: hidden;
         }
 
         .login-container::before {
             content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 0, 110, 0.5), transparent);
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(255, 0, 110, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 30%, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
         }
 
         .form-wrapper {
             width: 100%;
-            max-width: 380px;
+            max-width: 480px;
             position: relative;
             z-index: 2;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 0, 110, 0.2);
+            border-radius: 24px;
+            padding: 60px 50px;
         }
 
         .login-header {
@@ -559,28 +537,10 @@
         }
 
         /* Mobile Responsiveness */
-        @media (max-width: 1024px) {
-            .login-wrapper {
-                grid-template-columns: 1fr;
-            }
-
-            .login-visual {
-                display: none;
-            }
-
-            .login-container {
-                padding: 40px 32px;
-                background: rgba(10, 10, 15, 0.85);
-            }
-        }
-
         @media (max-width: 640px) {
-            .login-container {
-                padding: 32px 20px;
-            }
-
             .form-wrapper {
                 max-width: 100%;
+                padding: 40px 24px;
             }
 
             .login-header h1 {
@@ -612,54 +572,8 @@
 
     <!-- LOGIN FORM -->
     <div class="login-wrapper">
-        <!-- Visual Element Side -->
-        <div class="login-visual">
-            <div class="visual-content">
-                <div class="visual-icon">
-                    <div class="box-container">
-                        <!-- METRIC CARD 1 -->
-                        <div class="metric-card">
-                            <div class="metric-value">271K</div>
-                            <div class="metric-label">Components</div>
-                        </div>
-
-                        <!-- METRIC CARD 2 -->
-                        <div class="metric-card">
-                            <div class="metric-value">35</div>
-                            <div class="metric-label">Active Jobs</div>
-                        </div>
-
-                        <!-- METRIC CARD 3 -->
-                        <div class="metric-card">
-                            <div class="metric-value">14</div>
-                            <div class="metric-label">Locations</div>
-                        </div>
-
-                        <!-- METRIC CARD 4 -->
-                        <div class="metric-card">
-                            <div class="metric-value">100%</div>
-                            <div class="metric-label">Visible</div>
-                        </div>
-                    </div>
-
-                    <!-- STATUS INDICATOR -->
-                    <div class="status-indicator">
-                        <div class="status-dot"></div>
-                        <div class="status-text">LIVE • REAL-TIME</div>
-                    </div>
-                </div>
-
-                <div class="visual-text">
-                    <h2>Inventory at Speed</h2>
-                    <p>Manage thousands of components with real-time visibility</p>
-                    <div class="gradient-accent"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Form Side -->
+        <!-- FULL SCREEN LOGIN -->
         <div class="login-container">
-            <div class="form-wrapper">
                 <div class="login-header">
                 <div class="logo-section">
                     <span class="logo-icon">क</span>
