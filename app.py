@@ -2862,8 +2862,8 @@ def signup():
             # Create new user with 'User' role by default
             cursor.execute("""
                 INSERT INTO pcb_inventory."tblUser"
-                (userid, username, userlogin, password, usersecurity, created_at)
-                VALUES (%s, %s, %s, %s, %s, CURRENT_TIMESTAMP AT TIME ZONE 'America/New_York')
+                (userid, username, userlogin, password, usersecurity)
+                VALUES (%s, %s, %s, %s, %s)
                 RETURNING id, userid, username, userlogin, usersecurity
             """, (username, fullname, username, hashed_password, 'User'))
 
