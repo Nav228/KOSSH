@@ -12,13 +12,26 @@ from psycopg2.extras import RealDictCursor
 from datetime import datetime, timedelta
 import random
 
-DB = {
-    'host':     os.getenv('POSTGRES_HOST', 'localhost'),
-    'port':     int(os.getenv('POSTGRES_PORT', '5432')),
-    'dbname':   os.getenv('POSTGRES_DB', 'kosh'),
-    'user':     os.getenv('POSTGRES_USER', 'stockpick_user'),
-    'password': os.getenv('POSTGRES_PASSWORD', 'stockpick_pass'),
-}
+_url = os.getenv('NEON_DATABASE_URL') or os.getenv('DATABASE_URL')
+if _url:
+    from urllib.parse import urlparse
+    _p = urlparse(_url)
+    DB = {
+        'host': _p.hostname,
+        'port': _p.port or 5432,
+        'dbname': _p.path.lstrip('/'),
+        'user': _p.username,
+        'password': _p.password,
+        'sslmode': 'require',
+    }
+else:
+    DB = {
+        'host':     os.getenv('POSTGRES_HOST', 'localhost'),
+        'port':     int(os.getenv('POSTGRES_PORT', '5432')),
+        'dbname':   os.getenv('POSTGRES_DB', 'kosh'),
+        'user':     os.getenv('POSTGRES_USER', 'stockpick_user'),
+        'password': os.getenv('POSTGRES_PASSWORD', 'stockpick_pass'),
+    }
 
 SCHEMA = 'pcb_inventory'
 

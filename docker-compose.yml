@@ -36,7 +36,6 @@ services:
       - POSTGRES_DB=${POSTGRES_DB:-kosh}
       - POSTGRES_USER=${POSTGRES_USER:-stockpick_user}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-stockpick_pass}
-      - DATABASE_URL=postgresql://${POSTGRES_USER:-stockpick_user}:${POSTGRES_PASSWORD:-stockpick_pass}@kosh-database:5432/${POSTGRES_DB:-kosh}
       - SECRET_KEY=${SECRET_KEY:-change-me-in-production}
       - SSO_SECRET_KEY=${SSO_SECRET_KEY:-}
       - FLASK_RUN_PORT=5002

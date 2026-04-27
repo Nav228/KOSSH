@@ -2789,8 +2789,14 @@ def logout():
     return redirect(url_for('login'))
 
 @app.route('/')
-@require_auth
 def index():
+    """Landing page for unauthenticated users, dashboard for authenticated users."""
+    if 'username' not in session:
+        return render_template('landing.html')
+
+    return dashboard()
+
+def dashboard():
     """Main dashboard page - optimized for fast loading with accurate stats."""
     try:
         # Serve cached dashboard data if available (60s TTL)
