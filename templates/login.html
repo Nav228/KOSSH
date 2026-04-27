@@ -18,7 +18,7 @@
         body {
             font-family: 'Sora', sans-serif;
             min-height: 100vh;
-            background: #0a0a0f;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a0f2e 50%, #0f1a2e 100%);
             display: flex;
             overflow: hidden;
             position: relative;
@@ -40,7 +40,7 @@
                 linear-gradient(0deg, transparent 24%, rgba(255, 0, 110, 0.03) 25%, rgba(255, 0, 110, 0.03) 26%, transparent 27%, transparent 74%, rgba(255, 0, 110, 0.03) 75%, rgba(255, 0, 110, 0.03) 76%, transparent 77%, transparent),
                 linear-gradient(90deg, transparent 24%, rgba(255, 0, 110, 0.03) 25%, rgba(255, 0, 110, 0.03) 26%, transparent 27%, transparent 74%, rgba(255, 0, 110, 0.03) 75%, rgba(255, 0, 110, 0.03) 76%, transparent 77%, transparent);
             background-size: 60px 60px;
-            animation: slideGrid 20s linear infinite;
+            animation: slideGrid 30s linear infinite;
         }
 
         @keyframes slideGrid {
@@ -89,26 +89,109 @@
         .login-wrapper {
             position: relative;
             z-index: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            width: 100%;
+            min-height: 100vh;
+            gap: 0;
+        }
+
+        /* Visual element side */
+        .login-visual {
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
-            padding: 20px;
-            width: 100%;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
         }
 
+        .login-visual::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 0, 110, 0.1) 0%, rgba(139, 92, 246, 0.1) 50%, rgba(0, 212, 255, 0.1) 100%);
+            pointer-events: none;
+        }
+
+        .visual-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .visual-icon {
+            font-size: 120px;
+            margin-bottom: 30px;
+            animation: floatIcon 4s ease-in-out infinite;
+        }
+
+        @keyframes floatIcon {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-20px) scale(1.05); }
+        }
+
+        .visual-text h2 {
+            font-size: 36px;
+            font-weight: 700;
+            color: #f8fafc;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+
+        .visual-text p {
+            font-size: 16px;
+            color: #cbd5e1;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .gradient-accent {
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #ff006e, #8b5cf6, #00d4ff);
+            margin: 24px auto 0;
+            border-radius: 2px;
+            animation: slideAccent 3s ease-in-out infinite;
+        }
+
+        @keyframes slideAccent {
+            0% { width: 40px; }
+            50% { width: 80px; }
+            100% { width: 40px; }
+        }
+
+        /* Form container side */
         .login-container {
-            width: 100%;
-            max-width: 420px;
-            background: rgba(10, 10, 15, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            background: rgba(10, 10, 15, 0.6);
             backdrop-filter: blur(20px);
-            border: 2px solid rgba(255, 0, 110, 0.2);
-            border-radius: 20px;
-            padding: 60px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 0, 110, 0.5), transparent);
+        }
+
+        .form-wrapper {
+            width: 100%;
+            max-width: 380px;
+            position: relative;
+            z-index: 2;
         }
 
         .login-header {
-            margin-bottom: 50px;
+            margin-bottom: 40px;
             text-align: center;
         }
 
@@ -116,41 +199,62 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            margin-bottom: 30px;
+            gap: 10px;
+            margin-bottom: 24px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .logo-icon {
-            font-size: 32px;
+            font-size: 28px;
             background: linear-gradient(135deg, #ff006e, #ff3a44, #ff6b6b);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             font-weight: 900;
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
         }
 
         .logo-text {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 900;
             font-family: 'DM Sans', sans-serif;
             background: linear-gradient(135deg, #ff006e, #ff3a44, #ff6b6b);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            letter-spacing: 1px;
         }
 
         .login-header h1 {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 700;
             color: #f8fafc;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
             letter-spacing: -0.5px;
+            animation: fadeInDown 1s ease;
         }
 
         .login-header p {
-            font-size: 16px;
+            font-size: 15px;
             color: #cbd5e1;
             font-weight: 400;
+            animation: fadeInDown 1.2s ease;
         }
 
         .form-group {
@@ -373,13 +477,47 @@
             margin-top: 8px;
         }
 
+        /* Mobile Responsiveness */
+        @media (max-width: 1024px) {
+            .login-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .login-visual {
+                display: none;
+            }
+
+            .login-container {
+                padding: 40px 32px;
+                background: rgba(10, 10, 15, 0.85);
+            }
+        }
+
         @media (max-width: 640px) {
             .login-container {
-                padding: 40px 24px;
+                padding: 32px 20px;
+            }
+
+            .form-wrapper {
+                max-width: 100%;
             }
 
             .login-header h1 {
-                font-size: 28px;
+                font-size: 24px;
+            }
+
+            .login-header p {
+                font-size: 14px;
+            }
+
+            .form-control {
+                padding: 12px 14px 12px 42px;
+                font-size: 14px;
+            }
+
+            .btn-login {
+                padding: 14px;
+                font-size: 15px;
             }
         }
     </style>
@@ -393,8 +531,22 @@
 
     <!-- LOGIN FORM -->
     <div class="login-wrapper">
+        <!-- Visual Element Side -->
+        <div class="login-visual">
+            <div class="visual-content">
+                <div class="visual-icon">📦</div>
+                <div class="visual-text">
+                    <h2>Inventory at Speed</h2>
+                    <p>Manage thousands of components with real-time visibility</p>
+                    <div class="gradient-accent"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Side -->
         <div class="login-container">
-            <div class="login-header">
+            <div class="form-wrapper">
+                <div class="login-header">
                 <div class="logo-section">
                     <span class="logo-icon">क</span>
                     <span class="logo-text">KOSSH</span>
@@ -460,6 +612,7 @@
                     <span>Secured with industry-standard encryption</span>
                 </p>
                 <small>&copy; 2025 KOSSH. All rights reserved.</small>
+            </div>
             </div>
         </div>
     </div>
