@@ -351,6 +351,18 @@ def format_number_filter(value):
     except (ValueError, TypeError):
         return value
 
+@app.template_filter('datetimeformat')
+def datetimeformat_filter(value, format='%b %d, %Y %I:%M %p'):
+    """Format datetime object to string"""
+    if value is None:
+        return ''
+    if isinstance(value, str):
+        return value
+    try:
+        return value.strftime(format)
+    except (AttributeError, ValueError):
+        return str(value)
+
 # Database configuration — supports DATABASE_URL / NEON_DATABASE_URL (Vercel/Neon)
 # or individual POSTGRES_* vars (Docker / local)
 _db_url = os.getenv('NEON_DATABASE_URL') or os.getenv('DATABASE_URL')
