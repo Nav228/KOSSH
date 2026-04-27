@@ -662,34 +662,36 @@
         <div class="login-visual">
             <div class="visual-content">
                 <div class="visual-icon">
-                    <svg viewBox="0 0 200 200" class="box-container">
-                        <!-- BOX MAIN BODY -->
-                        <rect x="50" y="100" width="100" height="60" rx="4" class="box-front" />
+                    <svg viewBox="0 0 220 220" class="box-container">
+                        <!-- ISOMETRIC 3D CARDBOARD BOX -->
 
-                        <!-- TOP OF BOX (shows depth) -->
-                        <polygon points="50,100 70,75 170,75 150,100" class="box-top" />
+                        <!-- FRONT FACE (main body) -->
+                        <polygon points="55,140 55,80 145,80 145,140" class="box-front" />
 
-                        <!-- RIGHT SIDE (dark for depth) -->
-                        <polygon points="150,100 170,75 170,135 150,160" class="box-right" />
+                        <!-- TOP FACE (light - isometric angle) -->
+                        <polygon points="55,80 95,50 185,50 145,80" class="box-top" />
 
-                        <!-- LEFT FLAP (swings up and open) -->
+                        <!-- RIGHT SIDE FACE (dark - isometric angle) -->
+                        <polygon points="145,80 185,50 185,110 145,140" class="box-right" />
+
+                        <!-- LEFT FLAP (top-left, swings open) -->
                         <g class="flap-left">
-                            <rect x="50" y="60" width="45" height="40" rx="3" />
+                            <polygon points="55,80 75,60 95,50 75,70" />
                         </g>
 
-                        <!-- RIGHT FLAP (swings up and open) -->
+                        <!-- RIGHT FLAP (top-right, swings open) -->
                         <g class="flap-right">
-                            <rect x="105" y="60" width="45" height="40" rx="3" />
+                            <polygon points="145,80 165,60 185,50 165,70" />
                         </g>
 
-                        <!-- CENTER SEAM -->
-                        <line x1="100" y1="60" x2="100" y2="100" stroke="#9d7e54" stroke-width="1.5" />
+                        <!-- CENTER CREASE -->
+                        <line x1="100" y1="50" x2="100" y2="80" stroke="#9d7e54" stroke-width="1.5" />
 
-                        <!-- TAPE across middle (seals) -->
-                        <rect x="50" y="95" width="100" height="8" rx="2" class="seal-tape" />
+                        <!-- TAPE SEAL (horizontal) -->
+                        <line x1="55" y1="75" x2="145" y2="75" class="seal-tape" stroke-width="4" />
                     </svg>
 
-                    <!-- Logo drops into box -->
+                    <!-- Logo drops into open box -->
                     <div class="logo-inside-box">क</div>
                 </div>
 
@@ -769,7 +771,7 @@
                     <i class="bi bi-shield-lock-fill"></i>
                     <span>Secured with industry-standard encryption</span>
                 </p>
-                <small>&copy; 2025 KOSSH. All rights reserved.</small>
+                <small>&copy; 2026 KOSSH. All rights reserved.</small>
             </div>
             </div>
         </div>
