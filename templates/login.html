@@ -120,11 +120,11 @@
             text-align: center;
         }
 
-        /* ===== 3D CARDBOARD BOX ANIMATION ===== */
+        /* ===== INVENTORY FLOW NETWORK ANIMATION ===== */
         .visual-icon {
             position: relative;
-            width: 220px;
-            height: 220px;
+            width: 240px;
+            height: 240px;
             margin-bottom: 30px;
             display: flex;
             align-items: center;
@@ -137,25 +137,74 @@
             height: 100%;
         }
 
-        /* Box front face (main body) */
-        .box-front {
-            fill: #d4a574;
-            stroke: #9d7e54;
-            stroke-width: 2.5;
+        /* Network connection lines */
+        .network-line {
+            stroke: url(#lineGradient);
+            stroke-width: 2;
+            fill: none;
+            opacity: 0.6;
         }
 
-        /* Box top face (shows 3D depth) */
-        .box-top {
-            fill: #e6b88a;
-            stroke: #9d7e54;
-            stroke-width: 2.5;
+        /* Network nodes */
+        .network-node {
+            fill: rgba(255, 0, 110, 0.2);
+            stroke: #ff006e;
+            stroke-width: 2;
         }
 
-        /* Box right side (shadow/depth) */
-        .box-right {
-            fill: #b8956a;
-            stroke: #9d7e54;
-            stroke-width: 2.5;
+        /* Flowing items/components */
+        .flow-item {
+            r: 4;
+            opacity: 0.8;
+        }
+
+        .item-red {
+            fill: #ff006e;
+            animation: flowPath1 6s linear infinite;
+        }
+
+        .item-purple {
+            fill: #8b5cf6;
+            animation: flowPath2 6s linear infinite 0.5s;
+        }
+
+        .item-cyan {
+            fill: #00d4ff;
+            animation: flowPath3 6s linear infinite 1s;
+        }
+
+        .item-red2 {
+            fill: #ff3a44;
+            animation: flowPath4 6s linear infinite 1.5s;
+        }
+
+        /* Animation paths for items flowing through network */
+        @keyframes flowPath1 {
+            0% { cx: 70; cy: 70; opacity: 0; }
+            5% { opacity: 1; }
+            95% { opacity: 1; }
+            100% { cx: 170; cy: 100; opacity: 0; }
+        }
+
+        @keyframes flowPath2 {
+            0% { cx: 170; cy: 100; opacity: 0; }
+            5% { opacity: 1; }
+            95% { opacity: 1; }
+            100% { cx: 120; cy: 180; opacity: 0; }
+        }
+
+        @keyframes flowPath3 {
+            0% { cx: 120; cy: 180; opacity: 0; }
+            5% { opacity: 1; }
+            95% { opacity: 1; }
+            100% { cx: 50; cy: 140; opacity: 0; }
+        }
+
+        @keyframes flowPath4 {
+            0% { cx: 50; cy: 140; opacity: 0; }
+            5% { opacity: 1; }
+            95% { opacity: 1; }
+            100% { cx: 70; cy: 70; opacity: 0; }
         }
 
 
@@ -563,30 +612,33 @@
         <div class="login-visual">
             <div class="visual-content">
                 <div class="visual-icon">
-                    <svg viewBox="0 0 200 200" class="box-container">
+                    <svg viewBox="0 0 220 220" class="box-container">
                         <defs>
-                            <linearGradient id="boxTop" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#e8c87d;stop-opacity:1" />
-                                <stop offset="100%" style="stop-color:#c99854;stop-opacity:1" />
-                            </linearGradient>
-                            <linearGradient id="boxFront" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" style="stop-color:#d4a574;stop-opacity:1" />
-                                <stop offset="100%" style="stop-color:#b8956a;stop-opacity:1" />
-                            </linearGradient>
-                            <linearGradient id="boxRight" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" style="stop-color:#a67c5d;stop-opacity:1" />
-                                <stop offset="100%" style="stop-color:#8b6b4e;stop-opacity:1" />
+                            <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#ff006e;stop-opacity:1" />
+                                <stop offset="50%" style="stop-color:#8b5cf6;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:1" />
                             </linearGradient>
                         </defs>
 
-                        <!-- RIGHT SIDE (darkest) -->
-                        <polygon points="120,70 155,50 155,115 120,135" fill="url(#boxRight)" stroke="#6b5745" stroke-width="1.5" />
+                        <!-- NETWORK LINES (connections) -->
+                        <line x1="70" y1="70" x2="170" y2="100" class="network-line" />
+                        <line x1="170" y1="100" x2="120" y2="180" class="network-line" />
+                        <line x1="120" y1="180" x2="50" y2="140" class="network-line" />
+                        <line x1="50" y1="140" x2="70" y2="70" class="network-line" />
+                        <line x1="70" y1="70" x2="120" y2="180" class="network-line" />
 
-                        <!-- FRONT FACE -->
-                        <polygon points="50,135 50,70 120,70 120,135" fill="url(#boxFront)" stroke="#6b5745" stroke-width="1.5" />
+                        <!-- NETWORK NODES -->
+                        <circle cx="70" cy="70" r="6" class="network-node" />
+                        <circle cx="170" cy="100" r="6" class="network-node" />
+                        <circle cx="120" cy="180" r="6" class="network-node" />
+                        <circle cx="50" cy="140" r="6" class="network-node" />
 
-                        <!-- TOP FACE (brightest) -->
-                        <polygon points="50,70 85,45 155,50 120,70" fill="url(#boxTop)" stroke="#6b5745" stroke-width="1.5" />
+                        <!-- FLOWING ITEMS (animated components) -->
+                        <circle cx="70" cy="70" class="flow-item item-red" />
+                        <circle cx="170" cy="100" class="flow-item item-purple" />
+                        <circle cx="120" cy="180" class="flow-item item-cyan" />
+                        <circle cx="50" cy="140" class="flow-item item-red2" />
                     </svg>
                 </div>
 
