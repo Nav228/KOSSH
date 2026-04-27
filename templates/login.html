@@ -120,11 +120,11 @@
             text-align: center;
         }
 
-        /* ===== SIMPLE CARDBOARD BOX ANIMATION ===== */
+        /* ===== 3D CARDBOARD BOX ANIMATION ===== */
         .visual-icon {
             position: relative;
-            width: 200px;
-            height: 200px;
+            width: 220px;
+            height: 220px;
             margin-bottom: 30px;
             display: flex;
             align-items: center;
@@ -133,101 +133,129 @@
 
         .box-container {
             position: relative;
-            width: 140px;
-            height: 140px;
+            width: 100%;
+            height: 100%;
         }
 
-        /* Box body (brown cardboard) */
-        .box-body {
-            fill: #c99854;
-            stroke: #a67c4d;
-            stroke-width: 2;
+        /* Box front face (main body) */
+        .box-front {
+            fill: #d4a574;
+            stroke: #9d7e54;
+            stroke-width: 2.5;
         }
 
-        /* Box flaps */
-        .box-flap {
-            fill: #c99854;
-            stroke: #a67c4d;
-            stroke-width: 2;
-            transform-origin: center top;
+        /* Box top face (shows 3D depth) */
+        .box-top {
+            fill: #e6b88a;
+            stroke: #9d7e54;
+            stroke-width: 2.5;
         }
 
+        /* Box right side (shadow/depth) */
+        .box-right {
+            fill: #b8956a;
+            stroke: #9d7e54;
+            stroke-width: 2.5;
+        }
+
+        /* Left flap - opens outward and upward */
         .flap-left {
-            animation: flapSwingLeft 4s ease-in-out infinite;
+            fill: #d4a574;
+            stroke: #9d7e54;
+            stroke-width: 2.5;
+            transform-origin: 70px 70px;
+            animation: flapOpen 5s ease-in-out infinite;
         }
 
+        /* Right flap - opens outward and upward */
         .flap-right {
-            animation: flapSwingRight 4s ease-in-out infinite;
+            fill: #d4a574;
+            stroke: #9d7e54;
+            stroke-width: 2.5;
+            transform-origin: 150px 70px;
+            animation: flapOpen 5s ease-in-out infinite;
         }
 
-        @keyframes flapSwingLeft {
-            0% { transform: rotateZ(0deg); }
-            20% { transform: rotateZ(-90deg); }
-            50% { transform: rotateZ(-90deg); }
-            70% { transform: rotateZ(0deg); }
-            100% { transform: rotateZ(0deg); }
+        @keyframes flapOpen {
+            0% {
+                transform: rotateX(0deg) rotateZ(0deg);
+                opacity: 1;
+            }
+            20% {
+                transform: rotateX(-85deg) rotateZ(0deg);
+                opacity: 0.8;
+            }
+            45% {
+                transform: rotateX(-85deg) rotateZ(0deg);
+                opacity: 0.8;
+            }
+            65% {
+                transform: rotateX(0deg) rotateZ(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: rotateX(0deg) rotateZ(0deg);
+                opacity: 1;
+            }
         }
 
-        @keyframes flapSwingRight {
-            0% { transform: rotateZ(0deg); }
-            20% { transform: rotateZ(90deg); }
-            50% { transform: rotateZ(90deg); }
-            70% { transform: rotateZ(0deg); }
-            100% { transform: rotateZ(0deg); }
-        }
-
-        /* Logo falling into box */
+        /* Logo descending into box */
         .logo-inside-box {
             position: absolute;
-            top: 50%;
+            top: 0;
             left: 50%;
-            transform: translate(-50%, -50%) scale(1);
-            font-size: 50px;
+            transform: translate(-50%, -60px) scale(1);
+            font-size: 48px;
             font-weight: 900;
             background: linear-gradient(135deg, #ff006e, #ff3a44);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: logoDropIn 4s ease-in-out infinite;
-            z-index: 20;
+            animation: logoFallIn 5s ease-in-out infinite;
+            z-index: 15;
             pointer-events: none;
         }
 
-        @keyframes logoDropIn {
+        @keyframes logoFallIn {
             0% {
                 opacity: 0;
-                transform: translate(-50%, -80px) scale(0.5);
+                transform: translate(-50%, -80px) scale(0.3);
             }
-            18% {
+            15% {
                 opacity: 1;
                 transform: translate(-50%, -80px) scale(1);
             }
-            35% {
+            30% {
                 opacity: 1;
                 transform: translate(-50%, 0px) scale(1);
             }
-            50% {
+            45% {
+                opacity: 1;
+                transform: translate(-50%, 15px) scale(0.9);
+            }
+            65% {
                 opacity: 0;
-                transform: translate(-50%, 0px) scale(1);
+                transform: translate(-50%, 15px) scale(0.8);
             }
             100% {
                 opacity: 0;
-                transform: translate(-50%, -80px) scale(0.5);
+                transform: translate(-50%, -80px) scale(0.3);
             }
         }
 
-        /* Tape on box (appears when closed) */
-        .box-tape {
+        /* Tape that seals box */
+        .seal-tape {
             fill: none;
-            stroke: #8b7355;
-            stroke-width: 1.5;
-            animation: tapeAppear 4s ease-in-out infinite;
+            stroke: #a89968;
+            stroke-width: 3;
+            stroke-linecap: round;
+            animation: tapeSeal 5s ease-in-out infinite;
         }
 
-        @keyframes tapeAppear {
-            0%, 50% { opacity: 0; }
-            70% { opacity: 1; }
-            100% { opacity: 1; }
+        @keyframes tapeSeal {
+            0%, 45% { opacity: 0; stroke-dasharray: 120 120; stroke-dashoffset: 120; }
+            55% { opacity: 1; stroke-dasharray: 120 120; stroke-dashoffset: 0; }
+            100% { opacity: 1; stroke-dasharray: 120 120; stroke-dashoffset: 0; }
         }
 
         .visual-text h2 {
@@ -634,28 +662,34 @@
         <div class="login-visual">
             <div class="visual-content">
                 <div class="visual-icon">
-                    <svg viewBox="0 0 140 140" class="box-container">
-                        <!-- BOX BODY (closed bottom part) -->
-                        <rect x="20" y="60" width="100" height="70" rx="4" class="box-body" />
+                    <svg viewBox="0 0 220 220" class="box-container">
+                        <!-- RIGHT SIDE FACE (depth - darker) -->
+                        <polygon points="150,70 180,85 180,155 150,140" class="box-right" />
 
-                        <!-- LEFT FLAP (animated - swings left) -->
+                        <!-- FRONT FACE (main box) -->
+                        <rect x="70" y="70" width="80" height="70" rx="5" class="box-front" />
+
+                        <!-- TOP FACE (shows 3D, lighter) -->
+                        <polygon points="70,70 100,50 180,85 150,70" class="box-top" />
+
+                        <!-- LEFT FLAP (animated - swings open) -->
                         <g class="flap-left">
-                            <rect x="20" y="25" width="50" height="35" rx="3" class="box-flap" />
+                            <polygon points="70,70 70,50 100,40 100,60" />
                         </g>
 
-                        <!-- RIGHT FLAP (animated - swings right) -->
+                        <!-- RIGHT FLAP (animated - swings open) -->
                         <g class="flap-right">
-                            <rect x="70" y="25" width="50" height="35" rx="3" class="box-flap" />
+                            <polygon points="150,70 180,85 180,65 150,50" />
                         </g>
 
-                        <!-- CENTER DIVIDING LINE -->
-                        <line x1="70" y1="25" x2="70" y2="60" stroke="#a67c4d" stroke-width="1.5" />
+                        <!-- CENTER LINE where flaps meet -->
+                        <line x1="110" y1="50" x2="110" y2="70" stroke="#9d7e54" stroke-width="1.5" opacity="0.6" />
 
-                        <!-- TAPE across center (appears when closed) -->
-                        <line x1="20" y1="32" x2="120" y2="32" class="box-tape" />
+                        <!-- TAPE that seals (animated) -->
+                        <line x1="70" y1="65" x2="150" y2="65" class="seal-tape" />
                     </svg>
 
-                    <!-- Logo that drops into box -->
+                    <!-- Logo descending into box -->
                     <div class="logo-inside-box">क</div>
                 </div>
 
