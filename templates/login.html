@@ -564,16 +564,29 @@
             <div class="visual-content">
                 <div class="visual-icon">
                     <svg viewBox="0 0 200 200" class="box-container">
-                        <!-- CENTERED 3D ISOMETRIC BOX (static, no animation) -->
+                        <defs>
+                            <linearGradient id="boxTop" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#e8c87d;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#c99854;stop-opacity:1" />
+                            </linearGradient>
+                            <linearGradient id="boxFront" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#d4a574;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#b8956a;stop-opacity:1" />
+                            </linearGradient>
+                            <linearGradient id="boxRight" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:#a67c5d;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#8b6b4e;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+
+                        <!-- RIGHT SIDE (darkest) -->
+                        <polygon points="120,70 155,50 155,115 120,135" fill="url(#boxRight)" stroke="#6b5745" stroke-width="1.5" />
 
                         <!-- FRONT FACE -->
-                        <polygon points="60,120 60,70 120,70 120,120" class="box-front" />
+                        <polygon points="50,135 50,70 120,70 120,135" fill="url(#boxFront)" stroke="#6b5745" stroke-width="1.5" />
 
-                        <!-- TOP FACE -->
-                        <polygon points="60,70 90,50 150,50 120,70" class="box-top" />
-
-                        <!-- RIGHT SIDE FACE -->
-                        <polygon points="120,70 150,50 150,100 120,120" class="box-right" />
+                        <!-- TOP FACE (brightest) -->
+                        <polygon points="50,70 85,45 155,50 120,70" fill="url(#boxTop)" stroke="#6b5745" stroke-width="1.5" />
                     </svg>
                 </div>
 
