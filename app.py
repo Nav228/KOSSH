@@ -2728,12 +2728,17 @@ def login():
                 # Record login notification for all users except super admin (kanav)
                 if user['userlogin'].lower() != 'kanav':
                     try:
+                        # Capture client IP address
+                        client_ip = request.remote_addr
+                        if request.headers.get('X-Forwarded-For'):
+                            client_ip = request.headers.get('X-Forwarded-For').split(',')[0].strip()
+
                         cursor.execute("""
                             INSERT INTO pcb_inventory."tblLoginNotifications"
-                            (user_id, username, full_name, login_time, seen)
-                            VALUES (%s, %s, %s, CURRENT_TIMESTAMP AT TIME ZONE 'America/New_York', FALSE)
-                        """, (user['id'], user['userlogin'], user['username']))
-                        logger.info(f"Login notification recorded for user: {username}")
+                            (user_id, username, full_name, login_time, ip_address, seen)
+                            VALUES (%s, %s, %s, CURRENT_TIMESTAMP AT TIME ZONE 'America/New_York', %s, FALSE)
+                        """, (user['id'], user['userlogin'], user['username'], client_ip))
+                        logger.info(f"Login notification recorded for user: {username} from IP: {client_ip}")
                     except Exception as notif_error:
                         logger.error(f"Failed to record login notification: {notif_error}")
 
@@ -2787,6 +2792,200 @@ def logout():
     session.clear()
     logger.info(f"User logged out: {username}")
     return redirect(url_for('login'))
+
+@app.route('/signup', methods=['GET', 'POST'])
+@limiter.limit("20 per minute", methods=["POST"])  # Rate-limit signup attempts
+def signup():
+    """Public signup page - create new user account."""
+    # If already logged in, redirect to dashboard
+    if 'user_id' in session:
+        return redirect(url_for('index'))
+
+    # For GET requests, render the signup form
+    if request.method == 'GET':
+        return render_template('signup.html')
+
+    if request.method == 'POST':
+        fullname = request.form.get('fullname', '').strip()
+        username = request.form.get('username', '').strip()
+        password = request.form.get('password', '')
+        confirm = request.form.get('confirm', '')
+
+        # Validation
+        if not fullname or not username or not password or not confirm:
+            flash('All fields are required.', 'danger')
+            return render_template('signup.html')
+
+        if len(username) < 3 or len(username) > 50:
+            flash('Username must be between 3 and 50 characters.', 'danger')
+            return render_template('signup.html')
+
+        if len(password) < 6:
+            flash('Password must be at least 6 characters long.', 'danger')
+            return render_template('signup.html')
+
+        if password != confirm:
+            flash('Passwords do not match.', 'danger')
+            return render_template('signup.html')
+
+        # Check if username already exists
+        conn = None
+        try:
+            conn = db_manager.get_connection()
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
+
+            # Check for existing user
+            cursor.execute("""
+                SELECT id FROM pcb_inventory."tblUser"
+                WHERE userlogin = %s
+            """, (username,))
+
+            if cursor.fetchone():
+                flash('Username already exists. Please choose a different one.', 'danger')
+                return render_template('signup.html')
+
+            # Hash password with bcrypt
+            hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt(rounds=12)).decode('utf-8')
+
+            # Create new user with 'User' role by default
+            cursor.execute("""
+                INSERT INTO pcb_inventory."tblUser"
+                (userid, username, userlogin, password, usersecurity, created_at)
+                VALUES (%s, %s, %s, %s, %s, CURRENT_TIMESTAMP AT TIME ZONE 'America/New_York')
+                RETURNING id, userid, username, userlogin, usersecurity
+            """, (username, fullname, username, hashed_password, 'User'))
+
+            new_user = cursor.fetchone()
+            conn.commit()
+
+            # Capture client IP
+            client_ip = request.remote_addr
+            if request.headers.get('X-Forwarded-For'):
+                client_ip = request.headers.get('X-Forwarded-For').split(',')[0].strip()
+
+            # Record signup notification for admin
+            try:
+                cursor.execute("""
+                    INSERT INTO pcb_inventory."tblLoginNotifications"
+                    (user_id, username, full_name, login_time, ip_address, event_type, seen)
+                    VALUES (%s, %s, %s, CURRENT_TIMESTAMP AT TIME ZONE 'America/New_York', %s, 'SIGNUP', FALSE)
+                """, (new_user['id'], username, fullname, client_ip))
+                conn.commit()
+                logger.info(f"New user signup: {username} ({fullname}) from IP: {client_ip}")
+            except Exception as notif_error:
+                logger.error(f"Failed to record signup notification: {notif_error}")
+
+            flash('Account created successfully! Please log in.', 'success')
+            return redirect(url_for('login'))
+
+        except Exception as e:
+            if conn:
+                conn.rollback()
+            logger.error(f"Signup error: {e}")
+            flash('An error occurred during signup. Please try again.', 'danger')
+            return render_template('signup.html')
+        finally:
+            if conn:
+                db_manager.return_connection(conn)
+
+    return render_template('signup.html')
+
+@app.route('/admin/notifications')
+def admin_notifications():
+    """Admin notifications - shows all logins, signups, and user actions."""
+    if not is_admin_user():
+        flash('Access denied. Admin privileges required.', 'danger')
+        return redirect(url_for('index'))
+
+    conn = None
+    try:
+        conn = db_manager.get_connection()
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
+
+        # Get login and signup notifications
+        cursor.execute("""
+            SELECT
+                id,
+                user_id,
+                username,
+                full_name,
+                login_time,
+                ip_address,
+                COALESCE(event_type, 'LOGIN') as event_type,
+                seen
+            FROM pcb_inventory."tblLoginNotifications"
+            ORDER BY login_time DESC
+            LIMIT 500
+        """)
+
+        notifications = cursor.fetchall()
+
+        # Get activity log
+        cursor.execute("""
+            SELECT
+                id,
+                user_id,
+                username,
+                full_name,
+                action_type,
+                description,
+                action_time,
+                ip_address
+            FROM pcb_inventory."tblActivityLog"
+            ORDER BY action_time DESC
+            LIMIT 500
+        """)
+
+        activities = cursor.fetchall()
+
+        # Mark all notifications as seen
+        try:
+            cursor.execute("""
+                UPDATE pcb_inventory."tblLoginNotifications"
+                SET seen = TRUE
+                WHERE seen = FALSE
+            """)
+            conn.commit()
+        except:
+            pass
+
+        return render_template('admin_notifications.html',
+                             notifications=notifications,
+                             activities=activities)
+
+    except Exception as e:
+        logger.error(f"Error loading activity log: {e}")
+        flash('Error loading activity log.', 'danger')
+        return redirect(url_for('index'))
+    finally:
+        if conn:
+            db_manager.return_connection(conn)
+
+@app.route('/api/notifications/count')
+def get_notifications_count():
+    """Get unread notification count for admin."""
+    if not is_admin_user():
+        return jsonify({'count': 0, 'error': 'Unauthorized'}), 401
+
+    conn = None
+    try:
+        conn = db_manager.get_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            SELECT COUNT(*) FROM pcb_inventory."tblLoginNotifications"
+            WHERE seen = FALSE
+        """)
+
+        count = cursor.fetchone()[0]
+        return jsonify({'count': count})
+
+    except Exception as e:
+        logger.error(f"Error getting notification count: {e}")
+        return jsonify({'count': 0, 'error': str(e)}), 500
+    finally:
+        if conn:
+            db_manager.return_connection(conn)
 
 @app.route('/')
 def index():

@@ -41,6 +41,9 @@
 - **User Management** — Role-based access control with permission inheritance
 - **Location Management** — Configurable warehouse location codes
 - **Label Generation** — ZPL barcode labels with print-ready formatting
+- **Public Signup** — Open user registration with admin activity tracking
+- **Login Notifications** — Real-time admin notifications with IP address tracking for security monitoring
+- **Activity Logging** — Complete audit trail of all user logins, signups, and actions
 
 ## 🛠️ Tech Stack
 
@@ -69,10 +72,43 @@ cp .env.example .env
 # Start all services (postgres, flask, nginx)
 docker compose up --build
 
+# In another terminal, run database migrations
+docker exec kosh-database psql -U stockpick_user -d kosh -f /tmp/migrations.sql
+
 # Open browser to http://localhost:5002
+# Sign up or log in at http://localhost:5002/login
 ```
 
 **Requirements:** [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+
+### Database Migrations
+
+After first startup, run migrations to set up IP tracking and notification features:
+
+```bash
+# Copy migrations into the container
+docker cp migrations/. kosh-database:/tmp/
+
+# Run migrations
+docker exec kosh-database psql -U stockpick_user -d kosh -c "
+CREATE TABLE IF NOT EXISTS pcb_inventory.\"tblLoginNotifications\" (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER,
+    username VARCHAR(255),
+    full_name VARCHAR(255),
+    login_time TIMESTAMP WITH TIME ZONE,
+    ip_address VARCHAR(45),
+    event_type VARCHAR(50) DEFAULT 'LOGIN',
+    seen BOOLEAN DEFAULT FALSE
+);
+
+ALTER TABLE pcb_inventory.\"tblLoginNotifications\"
+ADD COLUMN IF NOT EXISTS ip_address VARCHAR(45);
+
+ALTER TABLE pcb_inventory.\"tblLoginNotifications\"
+ADD COLUMN IF NOT EXISTS event_type VARCHAR(50) DEFAULT 'LOGIN';
+"
+```
 
 ### Environment Configuration
 

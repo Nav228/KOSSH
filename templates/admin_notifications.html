@@ -1,232 +1,379 @@
-{% extends "base.html" %}
-{% block title %}Notifications - Admin{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity Log - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-{% block page_header %}
-<div style="background: linear-gradient(135deg, #5b21b6 0%, #8b5cf6 100%); color: white; border-radius: 12px; padding: 20px 25px; margin: 0 0 20px 0;">
-    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-        <div style="display: flex; align-items: center; gap: 15px;">
-            <div style="width: 50px; height: 50px; background: rgba(255,255,255,0.15); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0;">
-                <i class="bi bi-bell-fill" style="color: white !important;"></i>
-            </div>
-            <div>
-                <h2 class="mb-0" style="font-size: 1.6rem; font-weight: 600; color: white !important;">Notifications{% if unseen_count > 0 %}<span class="badge bg-danger ms-2" style="font-size: 0.7rem;">{{ unseen_count }} new</span>{% endif %}</h2>
-                <p class="mb-0" style="color: rgba(255,255,255,0.85) !important; font-size: 0.9rem;">All user activity — logins, stock, pick, restock, PCN, and more</p>
+        body {
+            font-family: 'Sora', sans-serif;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a0f2e 50%, #0f1a2e 100%);
+            min-height: 100vh;
+            color: #e2e8f0;
+        }
+
+        .navbar {
+            background: rgba(10, 10, 15, 0.95) !important;
+            border-bottom: 1px solid rgba(255, 0, 110, 0.2);
+            backdrop-filter: blur(30px);
+            padding: 1rem 2rem;
+        }
+
+        .navbar-brand {
+            font-size: 24px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ff006e, #ff3a44, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .container-main {
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #f8fafc;
+        }
+
+        .tabs-wrapper {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 0, 110, 0.1);
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            color: #cbd5e1;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            color: #ff006e;
+            border-bottom-color: #ff006e;
+        }
+
+        .tab-btn:hover {
+            color: #ff006e;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .table-wrapper {
+            background: rgba(10, 10, 15, 0.8);
+            border: 1px solid rgba(255, 0, 110, 0.2);
+            border-radius: 16px;
+            overflow: hidden;
+            backdrop-filter: blur(30px);
+        }
+
+        .table {
+            margin: 0;
+            color: #e2e8f0;
+        }
+
+        .table thead {
+            background: rgba(255, 0, 110, 0.05);
+            border-bottom: 1px solid rgba(255, 0, 110, 0.2);
+        }
+
+        .table th {
+            padding: 16px;
+            font-weight: 600;
+            color: #f8fafc;
+            font-size: 14px;
+            letter-spacing: 0.2px;
+        }
+
+        .table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(255, 0, 110, 0.1);
+            font-size: 14px;
+        }
+
+        .table tbody tr:hover {
+            background: rgba(255, 0, 110, 0.05);
+        }
+
+        .badge-event {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-login {
+            background: rgba(34, 197, 94, 0.15);
+            color: #86efac;
+        }
+
+        .badge-signup {
+            background: rgba(59, 130, 246, 0.15);
+            color: #93c5fd;
+        }
+
+        .badge-logout {
+            background: rgba(168, 85, 247, 0.15);
+            color: #d8b4fe;
+        }
+
+        .ip-address {
+            font-family: 'Courier New', monospace;
+            color: #cbd5e1;
+            font-size: 13px;
+        }
+
+        .timestamp {
+            color: #94a3b8;
+            font-size: 13px;
+        }
+
+        .username-cell {
+            font-weight: 600;
+            color: #f8fafc;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #cbd5e1;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            color: #64748b;
+            margin-bottom: 20px;
+        }
+
+        .btn-back {
+            padding: 10px 20px;
+            background: rgba(255, 0, 110, 0.1);
+            border: 1px solid rgba(255, 0, 110, 0.3);
+            color: #ff006e;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 0, 110, 0.2);
+            color: #ff006e;
+        }
+
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 24px;
+            }
+
+            .table {
+                font-size: 12px;
+            }
+
+            .table th, .table td {
+                padding: 10px 8px;
+            }
+
+            .tabs-wrapper {
+                gap: 5px;
+            }
+
+            .tab-btn {
+                padding: 10px 16px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <i class="bi bi-shield-lock"></i> KOSSH Admin
+            </a>
+            <div class="ms-auto">
+                <a href="{{ url_for('logout') }}" class="btn btn-sm btn-outline-danger">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </a>
             </div>
         </div>
-        <div style="display: flex; gap: 10px; align-items: center; flex-shrink: 0;">
-            <!-- No buttons -->
-        </div>
-    </div>
-</div>
-{% endblock %}
+    </nav>
 
-{% block content %}
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0"><i class="bi bi-list-ul me-2"></i>All Notifications</h5>
-                <div>
-                    <button class="btn btn-sm btn-primary me-2" id="markSeenBtn" onclick="markAllSeen()" {% if unseen_count == 0 %}disabled{% endif %}>
-                        <i class="bi bi-check2-all me-1"></i>Mark All as Read{% if unseen_count > 0 %} ({{ unseen_count }}){% endif %}
-                    </button>
-                    <button class="btn btn-sm btn-outline-secondary" onclick="clearOldNotifications()">
-                        <i class="bi bi-trash me-1"></i>Clear Old (7+ days)
-                    </button>
-                </div>
-            </div>
-            <div class="card-body">
-                {% if notifications %}
-                <div class="table-responsive">
-                    <table class="table table-hover table-striped">
-                        <thead class="table-light">
+    <!-- Main Content -->
+    <div class="container-main">
+        <a href="{{ url_for('index') }}" class="btn-back">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
+        </a>
+
+        <h1 class="page-title">Activity Log</h1>
+
+        <!-- Tabs -->
+        <div class="tabs-wrapper">
+            <button class="tab-btn active" data-tab="logins">
+                <i class="bi bi-door-open"></i> Logins & Signups ({{ notifications|length }})
+            </button>
+            <button class="tab-btn" data-tab="activities">
+                <i class="bi bi-activity"></i> User Actions ({{ activities|length }})
+            </button>
+        </div>
+
+        <!-- Logins & Signups Tab -->
+        <div id="logins" class="tab-content active">
+            {% if notifications %}
+                <div class="table-wrapper">
+                    <table class="table">
+                        <thead>
                             <tr>
-                                <th style="width: 40px;"></th>
-                                <th>Activity</th>
-                                <th>User</th>
-                                <th>Description</th>
-                                <th>Time</th>
-                                <th>Status</th>
+                                <th><i class="bi bi-person"></i> Username</th>
+                                <th><i class="bi bi-person-check"></i> Full Name</th>
+                                <th><i class="bi bi-calendar-event"></i> Timestamp</th>
+                                <th><i class="bi bi-network"></i> IP Address</th>
+                                <th><i class="bi bi-tag"></i> Event Type</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for n in notifications %}
-                            <tr class="{% if not n.seen %}table-info{% endif %}">
-                                <td>
-                                    {% if not n.seen %}
-                                    <span class="badge bg-primary rounded-pill">New</span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if n.action_type == 'LOGIN' %}
-                                        <span class="badge bg-success"><i class="bi bi-box-arrow-in-right me-1"></i>Login</span>
-                                    {% elif n.action_type == 'LOGOUT' %}
-                                        <span class="badge bg-secondary"><i class="bi bi-box-arrow-right me-1"></i>Logout</span>
-                                    {% elif n.action_type == 'STOCK' %}
-                                        <span class="badge bg-primary"><i class="bi bi-plus-circle me-1"></i>Stock</span>
-                                    {% elif n.action_type == 'PICK' %}
-                                        <span class="badge bg-warning text-dark"><i class="bi bi-dash-circle me-1"></i>Pick</span>
-                                    {% elif n.action_type == 'RESTOCK' %}
-                                        <span class="badge bg-info text-dark"><i class="bi bi-arrow-repeat me-1"></i>Restock</span>
-                                    {% elif n.action_type == 'PCN_GENERATE' %}
-                                        <span class="badge bg-purple"><i class="bi bi-upc-scan me-1"></i>PCN Generate</span>
-                                    {% elif n.action_type == 'SHORTAGE_REPORT' %}
-                                        <span class="badge bg-danger"><i class="bi bi-exclamation-triangle me-1"></i>Shortage Report</span>
-                                    {% elif n.action_type == 'PART_NUMBER_CHANGE' %}
-                                        <span class="badge bg-dark"><i class="bi bi-pencil-square me-1"></i>Part # Change</span>
-                                    {% elif n.action_type == 'BOM_UPLOAD' %}
-                                        <span class="badge bg-teal"><i class="bi bi-file-earmark-arrow-up me-1"></i>BOM Upload</span>
-                                    {% elif n.action_type == 'PRINT_LABEL' %}
-                                        <span class="badge bg-secondary"><i class="bi bi-printer me-1"></i>Print Label</span>
-                                    {% elif n.action_type == 'OTHER' %}
-                                        <span class="badge bg-secondary"><i class="bi bi-gear me-1"></i>Other</span>
-                                    {% else %}
-                                        <span class="badge bg-secondary"><i class="bi bi-activity me-1"></i>{{ n.action_type }}</span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <strong>{{ n.username }}</strong>
-                                    {% if n.full_name %}<br><small class="text-muted">{{ n.full_name }}</small>{% endif %}
-                                </td>
-                                <td>
-                                    {{ n.description or '-' }}
-                                    {% if n.details %}<br><small class="text-muted">{{ n.details }}</small>{% endif %}
-                                </td>
-                                <td>
-                                    <i class="bi bi-clock me-1 text-muted"></i>
-                                    {{ n.created_at.strftime('%m/%d/%Y %I:%M %p') if n.created_at else '-' }}
-                                </td>
-                                <td>
-                                    {% if n.seen %}
-                                    <span class="badge bg-secondary">
-                                        <i class="bi bi-eye me-1"></i>Seen
-                                    </span>
-                                    {% else %}
-                                    <span class="badge bg-success">
-                                        <i class="bi bi-exclamation-circle me-1"></i>Unseen
-                                    </span>
-                                    {% endif %}
-                                </td>
-                            </tr>
+                            {% for notif in notifications %}
+                                <tr>
+                                    <td class="username-cell">@{{ notif.username }}</td>
+                                    <td>{{ notif.full_name }}</td>
+                                    <td class="timestamp">{{ notif.login_time|datetimeformat }}</td>
+                                    <td class="ip-address">{{ notif.ip_address or 'Unknown' }}</td>
+                                    <td>
+                                        {% if notif.event_type == 'SIGNUP' %}
+                                            <span class="badge-event badge-signup">
+                                                <i class="bi bi-person-plus"></i> New Signup
+                                            </span>
+                                        {% elif notif.event_type == 'LOGIN' %}
+                                            <span class="badge-event badge-login">
+                                                <i class="bi bi-door-open"></i> Login
+                                            </span>
+                                        {% else %}
+                                            <span class="badge-event badge-logout">
+                                                {{ notif.event_type }}
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
-                {% else %}
-                <div class="text-center py-5">
-                    <i class="bi bi-bell-slash display-1 text-muted"></i>
-                    <h4 class="mt-3 text-muted">No Notifications</h4>
-                    <p class="text-muted">All user activity (logins, stock, pick, restock, etc.) will appear here.</p>
+            {% else %}
+                <div class="empty-state">
+                    <i class="bi bi-inbox"></i>
+                    <h3>No login activity yet</h3>
+                    <p>Login and signup events will appear here</p>
                 </div>
-                {% endif %}
-            </div>
+            {% endif %}
+        </div>
+
+        <!-- User Actions Tab -->
+        <div id="activities" class="tab-content">
+            {% if activities %}
+                <div class="table-wrapper">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th><i class="bi bi-person"></i> Username</th>
+                                <th><i class="bi bi-person-check"></i> Full Name</th>
+                                <th><i class="bi bi-lightning-fill"></i> Action</th>
+                                <th><i class="bi bi-chat-dots"></i> Description</th>
+                                <th><i class="bi bi-calendar-event"></i> Timestamp</th>
+                                <th><i class="bi bi-network"></i> IP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for activity in activities %}
+                                <tr>
+                                    <td class="username-cell">@{{ activity.username }}</td>
+                                    <td>{{ activity.full_name }}</td>
+                                    <td>
+                                        <span class="badge-event badge-login" style="background: rgba(139, 92, 246, 0.15); color: #d8b4fe;">
+                                            {{ activity.action_type }}
+                                        </span>
+                                    </td>
+                                    <td>{{ activity.description }}</td>
+                                    <td class="timestamp">{{ activity.action_time|datetimeformat }}</td>
+                                    <td class="ip-address">{{ activity.ip_address or '-' }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <i class="bi bi-inbox"></i>
+                    <h3>No user actions yet</h3>
+                    <p>User actions will be logged and appear here</p>
+                </div>
+            {% endif %}
         </div>
     </div>
-</div>
 
-<!-- Statistics Cards -->
-<div class="row mt-4">
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-body text-center">
-                <i class="bi bi-activity display-4 text-primary mb-2"></i>
-                <h3>{{ notifications|length }}</h3>
-                <p class="text-muted mb-0">Total Notifications</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-body text-center">
-                <i class="bi bi-bell-fill display-4 text-danger mb-2"></i>
-                <h3>{{ unseen_count }}</h3>
-                <p class="text-muted mb-0">Unseen Notifications</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-body text-center">
-                <i class="bi bi-check-circle-fill display-4 text-success mb-2"></i>
-                <h3>{{ notifications|length - unseen_count }}</h3>
-                <p class="text-muted mb-0">Reviewed</p>
-            </div>
-        </div>
-    </div>
-</div>
+    <script>
+        // Tab switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const tabName = this.getAttribute('data-tab');
 
-<style>
-.bg-purple {
-    background-color: #7c3aed !important;
-    color: white !important;
-}
-.bg-teal {
-    background-color: #14b8a6 !important;
-    color: white !important;
-}
-</style>
-{% endblock %}
+                // Hide all tabs
+                document.querySelectorAll('.tab-content').forEach(tab => {
+                    tab.classList.remove('active');
+                });
 
-{% block extra_js %}
-<script>
-    // Get CSRF token for API calls
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                // Remove active from all buttons
+                document.querySelectorAll('.tab-btn').forEach(b => {
+                    b.classList.remove('active');
+                });
 
-    function markAllSeen() {
-        const btn = document.getElementById('markSeenBtn');
-        const originalContent = btn.innerHTML;
-        btn.innerHTML = '<i class="bi bi-arrow-clockwise spin me-1"></i>Processing...';
-        btn.disabled = true;
-
-        fetch('/admin/notifications/mark-seen', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                showSuccess('All notifications marked as seen');
-                setTimeout(() => location.reload(), 1000);
-            } else {
-                showError('Failed to mark notifications: ' + (data.error || 'Unknown error'));
-                btn.innerHTML = originalContent;
-                btn.disabled = false;
-            }
-        })
-        .catch(error => {
-            showError('Error: ' + error.message);
-            btn.innerHTML = originalContent;
-            btn.disabled = false;
+                // Show selected tab and mark button active
+                document.getElementById(tabName).classList.add('active');
+                this.classList.add('active');
+            });
         });
-    }
 
-    function clearOldNotifications() {
-        if (!confirm('This will delete notifications older than 7 days. Continue?')) {
-            return;
-        }
-
-        fetch('/admin/notifications/clear', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                showSuccess(data.message);
-                setTimeout(() => location.reload(), 1000);
-            } else {
-                showError('Failed to clear notifications: ' + (data.error || 'Unknown error'));
-            }
-        })
-        .catch(error => {
-            showError('Error: ' + error.message);
-        });
-    }
-</script>
-{% endblock %}
+        // Poll for new notifications every 10 seconds
+        setInterval(function() {
+            fetch('{{ url_for("get_notifications_count") }}')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.count > 0) {
+                        // You could add a visual notification badge here
+                    }
+                })
+                .catch(e => console.log('Notification check failed:', e));
+        }, 10000);
+    </script>
+</body>
+</html>

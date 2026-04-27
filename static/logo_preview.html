@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>KOSSH — C variants</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #09090b; font-family: 'Inter', sans-serif; padding: 48px 32px; color: #fff; }
+  h1 { text-align: center; color: #2d2d2d; font-size: 10px; letter-spacing: 6px; text-transform: uppercase; margin-bottom: 48px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; max-width: 960px; margin: 0 auto; }
+  .card {
+    background: #0d0d0d;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid #1a1a1a;
+    transition: border-color 0.2s, transform 0.15s;
+    cursor: pointer;
+  }
+  .card:hover { border-color: #2e2e2e; transform: translateY(-3px); }
+  .label {
+    padding: 12px 20px 0;
+    font-size: 9px; letter-spacing: 4px; color: #222; text-transform: uppercase;
+  }
+  .block { padding: 28px 22px 22px; border-bottom: 1px solid #111; display:flex; align-items:center; gap:16px; }
+  .note { padding: 10px 20px 14px; font-size: 10px; color: #222; letter-spacing: 1px; }
+</style>
+</head>
+<body>
+<h1>KOSSH — large free-standing क · 6 colorways</h1>
+<div class="grid">
+
+  <!-- 1: Teal + Gold -->
+  <div class="card">
+    <div class="label">1 · Teal + Gold</div>
+    <div class="block" style="background:#080d0e;">
+      <div style="font-family:serif; font-size:58px; line-height:0.9; flex-shrink:0;
+        background:linear-gradient(160deg,#2dd4bf,#0891b2);
+        -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">क</div>
+      <div style="padding-left:4px;">
+        <div style="font-size:1.15rem; font-weight:900; letter-spacing:5px;
+          background:linear-gradient(90deg,#fbbf24,#f59e0b);
+          -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">KOSSH</div>
+        <div style="font-size:0.5rem; color:#134e4a; letter-spacing:5px; text-transform:uppercase; margin-top:5px;">Inventory System</div>
+      </div>
+    </div>
+    <div class="note">Teal Sanskrit mark · gold wordmark · deep sea bg</div>
+  </div>
+
+  <!-- 2: Crimson + Cream -->
+  <div class="card">
+    <div class="label">2 · Crimson + Cream</div>
+    <div class="block" style="background:#0c0505;">
+      <div style="font-family:serif; font-size:58px; line-height:0.9; flex-shrink:0;
+        background:linear-gradient(160deg,#ef4444,#dc2626);
+        -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">क</div>
+      <div style="width:1px; height:38px; background:#1f0808; margin:0 4px;"></div>
+      <div>
+        <div style="font-size:1.15rem; font-weight:900; letter-spacing:5px; color:#fef2f2;">KOSSH</div>
+        <div style="font-size:0.5rem; color:#450a0a; letter-spacing:5px; text-transform:uppercase; margin-top:5px;">Inventory System</div>
+      </div>
+    </div>
+    <div class="note">Crimson Sanskrit mark · cream text · thin divider</div>
+  </div>
+
+  <!-- 3: Electric Lime -->
+  <div class="card">
+    <div class="label">3 · Electric Lime</div>
+    <div class="block" style="background:#050a02;">
+      <div style="font-family:serif; font-size:58px; line-height:0.9; flex-shrink:0;
+        background:linear-gradient(160deg,#a3e635,#84cc16);
+        -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">क</div>
+      <div>
+        <div style="font-size:1.15rem; font-weight:900; letter-spacing:5px; color:#f7fee7;">KOSSH</div>
+        <div style="font-size:0.5rem; letter-spacing:5px; text-transform:uppercase; margin-top:5px;
+          background:linear-gradient(90deg,#a3e635,#4d7c0f);
+          -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">Inventory System</div>
+      </div>
+    </div>
+    <div class="note">Electric lime · near-black bg · sharp contrast</div>
+  </div>
+
+  <!-- 4: Cobalt Blue + White -->
+  <div class="card">
+    <div class="label">4 · Cobalt + White</div>
+    <div class="block" style="background:#03060f;">
+      <div style="position:relative; flex-shrink:0;">
+        <div style="font-family:serif; font-size:58px; line-height:0.9;
+          background:linear-gradient(160deg,#3b82f6,#6366f1);
+          -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">क</div>
+        <!-- small dot accent below -->
+        <div style="width:5px; height:5px; border-radius:50%; background:#6366f1;
+          position:absolute; bottom:-4px; left:50%; transform:translateX(-50%);"></div>
+      </div>
+      <div style="padding-left:4px;">
+        <div style="font-size:1.15rem; font-weight:900; letter-spacing:5px; color:#fff;">KOSSH</div>
+        <div style="font-size:0.5rem; color:#1e3a8a; letter-spacing:5px; text-transform:uppercase; margin-top:5px;">Inventory System</div>
+      </div>
+    </div>
+    <div class="note">Cobalt-indigo Sanskrit · pure white wordmark · subtle dot</div>
+  </div>
+
+  <!-- 5: Copper / Bronze -->
+  <div class="card">
+    <div class="label">5 · Copper / Bronze</div>
+    <div class="block" style="background:#0a0703; flex-direction:column; align-items:flex-start; gap:2px;">
+      <!-- horizontal layout but stacked feel -->
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div style="font-family:serif; font-size:52px; line-height:0.9; flex-shrink:0;
+          background:linear-gradient(160deg,#f59e0b,#b45309,#92400e);
+          -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">क</div>
+        <div>
+          <div style="font-size:1.15rem; font-weight:900; letter-spacing:5px;
+            background:linear-gradient(90deg,#fcd34d,#d97706);
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">KOSSH</div>
+          <!-- thin copper underline -->
+          <div style="height:1.5px; background:linear-gradient(90deg,#b45309,transparent); margin-top:4px; border-radius:1px;"></div>
+        </div>
+      </div>
+      <div style="font-size:0.5rem; color:#292524; letter-spacing:6px; text-transform:uppercase; padding-left:64px;">Inventory System</div>
+    </div>
+    <div class="note">Bronze-to-copper gradient · dark oxidised bg · metallic feel</div>
+  </div>
+
+  <!-- 6: Neon Violet + Dark -->
+  <div class="card">
+    <div class="label">6 · Neon Violet</div>
+    <div class="block" style="background:#07030f;">
+      <div style="font-family:serif; font-size:58px; line-height:0.9; flex-shrink:0;
+        background:linear-gradient(160deg,#e879f9,#a855f7);
+        -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">क</div>
+      <div>
+        <div style="font-size:1.15rem; font-weight:900; letter-spacing:5px; color:#fdf4ff;">KOSSH</div>
+        <div style="
+          display:flex; align-items:center; gap:5px; margin-top:5px;">
+          <div style="width:16px; height:1px; background:#581c87;"></div>
+          <div style="font-size:0.5rem; color:#3b0764; letter-spacing:4px; text-transform:uppercase;">Inventory System</div>
+        </div>
+      </div>
+    </div>
+    <div class="note">Neon fuchsia Sanskrit · near-black bg · line accent</div>
+  </div>
+
+</div>
+</body>
+</html>
