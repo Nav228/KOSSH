@@ -120,15 +120,128 @@
             text-align: center;
         }
 
+        /* ===== ANIMATED BOX LOGO ===== */
         .visual-icon {
-            font-size: 120px;
+            position: relative;
+            width: 180px;
+            height: 180px;
             margin-bottom: 30px;
-            animation: floatIcon 4s ease-in-out infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        @keyframes floatIcon {
-            0%, 100% { transform: translateY(0px) scale(1); }
-            50% { transform: translateY(-20px) scale(1.05); }
+        /* SVG Box container */
+        .box-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Box lines - stroke animation */
+        .box-line {
+            stroke: url(#gradientStroke);
+            stroke-width: 3;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* Left flap - opens outward */
+        .box-flap-left {
+            transform-origin: 30px 50px;
+            animation: flapLeftOpen 4s ease-in-out infinite;
+        }
+
+        @keyframes flapLeftOpen {
+            0% {
+                transform: rotateZ(0deg);
+                opacity: 1;
+            }
+            20% {
+                transform: rotateZ(-90deg);
+                opacity: 0.7;
+            }
+            40% {
+                transform: rotateZ(-90deg);
+                opacity: 0.7;
+            }
+            60% {
+                transform: rotateZ(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: rotateZ(0deg);
+                opacity: 1;
+            }
+        }
+
+        /* Right flap - opens outward */
+        .box-flap-right {
+            transform-origin: 150px 50px;
+            animation: flapRightOpen 4s ease-in-out infinite;
+        }
+
+        @keyframes flapRightOpen {
+            0% {
+                transform: rotateZ(0deg);
+                opacity: 1;
+            }
+            20% {
+                transform: rotateZ(90deg);
+                opacity: 0.7;
+            }
+            40% {
+                transform: rotateZ(90deg);
+                opacity: 0.7;
+            }
+            60% {
+                transform: rotateZ(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: rotateZ(0deg);
+                opacity: 1;
+            }
+        }
+
+        /* Logo inside box */
+        .logo-inside-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            font-size: 60px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ff006e, #ff3a44);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: itemInsideBox 4s ease-in-out infinite;
+            z-index: 10;
+        }
+
+        @keyframes itemInsideBox {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.4) translateY(-40px);
+            }
+            20% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(0.8) translateY(0px);
+            }
+            40% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(0.75) translateY(0px);
+            }
+            60% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(0.8) translateY(0px);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.4) translateY(-40px);
+            }
         }
 
         .visual-text h2 {
@@ -534,7 +647,50 @@
         <!-- Visual Element Side -->
         <div class="login-visual">
             <div class="visual-content">
-                <div class="visual-icon">📦</div>
+                <div class="visual-icon">
+                    <svg viewBox="0 0 180 180" class="box-container">
+                        <defs>
+                            <linearGradient id="gradientStroke" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#ff006e;stop-opacity:1" />
+                                <stop offset="50%" style="stop-color:#8b5cf6;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+
+                        <!-- Box bottom -->
+                        <rect x="30" y="90" width="120" height="65" rx="8" class="box-line" />
+
+                        <!-- Box left side -->
+                        <line x1="30" y1="90" x2="30" y2="50" class="box-line" />
+
+                        <!-- Box right side -->
+                        <line x1="150" y1="90" x2="150" y2="50" class="box-line" />
+
+                        <!-- Box back -->
+                        <line x1="30" y1="50" x2="150" y2="50" class="box-line" />
+
+                        <!-- Left flap (animated) -->
+                        <g class="box-flap-left">
+                            <line x1="30" y1="50" x2="30" y2="30" class="box-line" />
+                            <line x1="30" y1="30" x2="90" y2="30" class="box-line" />
+                            <line x1="90" y1="30" x2="90" y2="50" class="box-line" />
+                        </g>
+
+                        <!-- Right flap (animated) -->
+                        <g class="box-flap-right">
+                            <line x1="150" y1="50" x2="150" y2="30" class="box-line" />
+                            <line x1="150" y1="30" x2="90" y2="30" class="box-line" />
+                            <line x1="90" y1="30" x2="90" y2="50" class="box-line" />
+                        </g>
+
+                        <!-- Front bottom line -->
+                        <line x1="30" y1="90" x2="150" y2="90" class="box-line" />
+                    </svg>
+
+                    <!-- Logo inside box -->
+                    <div class="logo-inside-box">क</div>
+                </div>
+
                 <div class="visual-text">
                     <h2>Inventory at Speed</h2>
                     <p>Manage thousands of components with real-time visibility</p>
