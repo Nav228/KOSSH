@@ -120,53 +120,78 @@
             text-align: center;
         }
 
-        /* ===== ANIMATED BOX LOGO ===== */
+        /* ===== ANIMATED ISOMETRIC BOX ===== */
         .visual-icon {
             position: relative;
-            width: 180px;
-            height: 180px;
+            width: 200px;
+            height: 200px;
             margin-bottom: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
+            perspective: 1000px;
         }
 
-        /* SVG Box container */
         .box-container {
             position: absolute;
             width: 100%;
             height: 100%;
+            transform-style: preserve-3d;
         }
 
-        /* Box lines - stroke animation */
-        .box-line {
+        /* Isometric box base (front face) */
+        .box-front {
+            fill: rgba(30, 25, 40, 0.8);
             stroke: url(#gradientStroke);
-            stroke-width: 3;
-            fill: none;
-            stroke-linecap: round;
-            stroke-linejoin: round;
+            stroke-width: 2.5;
         }
 
-        /* Left flap - opens outward */
-        .box-flap-left {
-            transform-origin: 30px 50px;
-            animation: flapLeftOpen 4s ease-in-out infinite;
+        /* Isometric top face */
+        .box-top {
+            fill: rgba(30, 25, 40, 0.5);
+            stroke: url(#gradientStroke);
+            stroke-width: 2.5;
         }
 
-        @keyframes flapLeftOpen {
+        /* Isometric right face */
+        .box-right {
+            fill: rgba(30, 25, 40, 0.3);
+            stroke: url(#gradientStroke);
+            stroke-width: 2.5;
+        }
+
+        /* Left flap */
+        .flap-left {
+            fill: rgba(30, 25, 40, 0.7);
+            stroke: url(#gradientStroke);
+            stroke-width: 2.5;
+            transform-origin: 85px 60px;
+            animation: flapOpenLeft 4.5s ease-in-out infinite;
+        }
+
+        /* Right flap */
+        .flap-right {
+            fill: rgba(30, 25, 40, 0.7);
+            stroke: url(#gradientStroke);
+            stroke-width: 2.5;
+            transform-origin: 115px 60px;
+            animation: flapOpenRight 4.5s ease-in-out infinite;
+        }
+
+        @keyframes flapOpenLeft {
             0% {
                 transform: rotateZ(0deg);
                 opacity: 1;
             }
-            20% {
-                transform: rotateZ(-90deg);
-                opacity: 0.7;
+            15% {
+                transform: rotateZ(-75deg) translateX(-30px);
+                opacity: 0.8;
             }
-            40% {
-                transform: rotateZ(-90deg);
-                opacity: 0.7;
+            35% {
+                transform: rotateZ(-75deg) translateX(-30px);
+                opacity: 0.8;
             }
-            60% {
+            55% {
                 transform: rotateZ(0deg);
                 opacity: 1;
             }
@@ -176,26 +201,20 @@
             }
         }
 
-        /* Right flap - opens outward */
-        .box-flap-right {
-            transform-origin: 150px 50px;
-            animation: flapRightOpen 4s ease-in-out infinite;
-        }
-
-        @keyframes flapRightOpen {
+        @keyframes flapOpenRight {
             0% {
                 transform: rotateZ(0deg);
                 opacity: 1;
             }
-            20% {
-                transform: rotateZ(90deg);
-                opacity: 0.7;
+            15% {
+                transform: rotateZ(75deg) translateX(30px);
+                opacity: 0.8;
             }
-            40% {
-                transform: rotateZ(90deg);
-                opacity: 0.7;
+            35% {
+                transform: rotateZ(75deg) translateX(30px);
+                opacity: 0.8;
             }
-            60% {
+            55% {
                 transform: rotateZ(0deg);
                 opacity: 1;
             }
@@ -205,42 +224,47 @@
             }
         }
 
-        /* Logo inside box */
+        /* Logo that goes into box */
         .logo-inside-box {
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) scale(0.8);
-            font-size: 60px;
+            transform: translate(-50%, -50%) scale(0);
+            font-size: 55px;
             font-weight: 900;
             background: linear-gradient(135deg, #ff006e, #ff3a44);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: itemInsideBox 4s ease-in-out infinite;
-            z-index: 10;
+            animation: dropIntoBox 4.5s ease-in-out infinite;
+            z-index: 20;
+            pointer-events: none;
         }
 
-        @keyframes itemInsideBox {
+        @keyframes dropIntoBox {
             0% {
                 opacity: 0;
-                transform: translate(-50%, -50%) scale(0.4) translateY(-40px);
+                transform: translate(-50%, -60%) scale(0.3);
             }
-            20% {
+            15% {
                 opacity: 1;
-                transform: translate(-50%, -50%) scale(0.8) translateY(0px);
+                transform: translate(-50%, -60%) scale(1);
             }
-            40% {
+            25% {
                 opacity: 1;
-                transform: translate(-50%, -50%) scale(0.75) translateY(0px);
+                transform: translate(-50%, -20%) scale(0.95);
             }
-            60% {
+            35% {
                 opacity: 1;
-                transform: translate(-50%, -50%) scale(0.8) translateY(0px);
+                transform: translate(-50%, 0%) scale(0.9);
+            }
+            55% {
+                opacity: 0;
+                transform: translate(-50%, 0%) scale(0);
             }
             100% {
                 opacity: 0;
-                transform: translate(-50%, -50%) scale(0.4) translateY(-40px);
+                transform: translate(-50%, -60%) scale(0.3);
             }
         }
 
@@ -648,7 +672,7 @@
         <div class="login-visual">
             <div class="visual-content">
                 <div class="visual-icon">
-                    <svg viewBox="0 0 180 180" class="box-container">
+                    <svg viewBox="0 0 200 200" class="box-container">
                         <defs>
                             <linearGradient id="gradientStroke" x1="0%" y1="0%" x2="100%" y2="100%">
                                 <stop offset="0%" style="stop-color:#ff006e;stop-opacity:1" />
@@ -657,37 +681,34 @@
                             </linearGradient>
                         </defs>
 
-                        <!-- Box bottom -->
-                        <rect x="30" y="90" width="120" height="65" rx="8" class="box-line" />
+                        <!-- ISOMETRIC BOX - 3D PERSPECTIVE -->
 
-                        <!-- Box left side -->
-                        <line x1="30" y1="90" x2="30" y2="50" class="box-line" />
+                        <!-- Right side face (dark) -->
+                        <polygon points="130,65 160,80 160,140 130,125" class="box-right" />
 
-                        <!-- Box right side -->
-                        <line x1="150" y1="90" x2="150" y2="50" class="box-line" />
+                        <!-- Front face (medium) -->
+                        <polygon points="70,65 130,65 130,125 70,125" class="box-front" />
 
-                        <!-- Box back -->
-                        <line x1="30" y1="50" x2="150" y2="50" class="box-line" />
+                        <!-- Top face (light) -->
+                        <polygon points="70,65 100,45 160,80 130,65" class="box-top" />
 
-                        <!-- Left flap (animated) -->
-                        <g class="box-flap-left">
-                            <line x1="30" y1="50" x2="30" y2="30" class="box-line" />
-                            <line x1="30" y1="30" x2="90" y2="30" class="box-line" />
-                            <line x1="90" y1="30" x2="90" y2="50" class="box-line" />
-                        </g>
+                        <!-- Left flap (animated) - swings left -->
+                        <polygon points="70,65 100,45 100,35 70,55" class="flap-left" />
 
-                        <!-- Right flap (animated) -->
-                        <g class="box-flap-right">
-                            <line x1="150" y1="50" x2="150" y2="30" class="box-line" />
-                            <line x1="150" y1="30" x2="90" y2="30" class="box-line" />
-                            <line x1="90" y1="30" x2="90" y2="50" class="box-line" />
-                        </g>
+                        <!-- Right flap (animated) - swings right -->
+                        <polygon points="130,65 160,80 160,70 130,55" class="flap-right" />
 
-                        <!-- Front bottom line -->
-                        <line x1="30" y1="90" x2="150" y2="90" class="box-line" />
+                        <!-- Box top edge -->
+                        <line x1="70" y1="65" x2="130" y2="65" stroke="url(#gradientStroke)" stroke-width="2.5" opacity="0.6" />
+
+                        <!-- Box left edge -->
+                        <line x1="70" y1="65" x2="70" y2="125" stroke="url(#gradientStroke)" stroke-width="2.5" opacity="0.6" />
+
+                        <!-- Box bottom edge -->
+                        <line x1="70" y1="125" x2="130" y2="125" stroke="url(#gradientStroke)" stroke-width="2.5" opacity="0.6" />
                     </svg>
 
-                    <!-- Logo inside box -->
+                    <!-- Devanagari logo that drops into box -->
                     <div class="logo-inside-box">क</div>
                 </div>
 
