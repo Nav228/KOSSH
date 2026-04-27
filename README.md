@@ -4,6 +4,8 @@
 
 > Enterprise-grade PCB and warehouse inventory management system built with modern web technologies. Designed for electronics manufacturers who need **real-time inventory visibility, intelligent job tracking, and automated shortage detection**.
 
+🎨 **Beautiful Modern UI** — Premium glassmorphic design, particle animations, professional landing page, and smooth login experience.
+
 ## ✨ What Makes KOSSH Different
 
 - **Purpose-Built for Electronics** — Handles MSD tracking, date codes, and PCN barcode management out of the box
@@ -11,7 +13,8 @@
 - **Shortage Intelligence** — Automatically compare BOM requirements against on-hand inventory and generate reports
 - **Barcode-Driven Workflow** — PCN scanning from any page for seamless pick/stock operations
 - **Role-Based Access** — 5 permission levels (Super User, Manager, User, Operator, ITAR) for enterprise deployments
-- **Modern UI** — Beautiful, responsive design with dark mode support and glassmorphic aesthetics
+- **Modern Premium UI** — Beautiful, responsive glassmorphic design with particle animations, professional landing page, and smooth login flow
+- **Devanagari Branding** — Sanskrit character (क) logo with multi-color gradient aesthetic (red → purple → cyan)
 
 ## 🚀 Core Features
 
@@ -129,10 +132,11 @@ KOSSH/
 - **Supply Chain Teams** — Automated shortage detection and BOM-to-inventory comparison
 - **Quality Assurance** — Complete audit trail for regulatory compliance
 
-## 🔗 Links
+## 🔗 Links & Demo
 
 - **GitHub:** [Nav228/KOSSH](https://github.com/Nav228/KOSSH)
-- **Live Demo:** Coming soon (Docker or cloud deployment)
+- **Live Demo:** [kossh.vercel.app](https://kossh.vercel.app) — See the landing page and modern UI in action
+- **Login Page:** [kossh.vercel.app/login](https://kossh.vercel.app/login)
 - **Author:** [Kanav Sharma](https://linkedin.com/in/kanav-sharma) | [GitHub](https://github.com/Nav228)
 
 ## 📄 License
