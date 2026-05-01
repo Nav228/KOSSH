@@ -2859,13 +2859,25 @@ def signup():
             # Hash password with bcrypt
             hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt(rounds=12)).decode('utf-8')
 
-            # Create new user with 'User' role by default
+            # First-user auto-promotion: if no admin exists yet, this user becomes Super User
+            cursor.execute("""
+                SELECT COUNT(*) AS admin_count
+                FROM pcb_inventory."tblUser"
+                WHERE usersecurity IN ('Super User', 'Admin')
+            """)
+            admin_count_row = cursor.fetchone()
+            admin_count = admin_count_row['admin_count'] if admin_count_row else 0
+            assigned_role = 'Super User' if admin_count == 0 else 'User'
+            if admin_count == 0:
+                logger.info(f"First admin created via signup: {username}")
+
+            # Create new user with assigned role
             cursor.execute("""
                 INSERT INTO pcb_inventory."tblUser"
                 (userid, username, userlogin, password, usersecurity)
                 VALUES (%s, %s, %s, %s, %s)
                 RETURNING id, userid, username, userlogin, usersecurity
-            """, (username, fullname, username, hashed_password, 'User'))
+            """, (username, fullname, username, hashed_password, assigned_role))
 
             new_user = cursor.fetchone()
             conn.commit()

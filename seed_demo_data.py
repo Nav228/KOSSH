@@ -225,7 +225,7 @@ def seed_schema(conn):
     """)
 
     run(conn, f"""
-        CREATE TABLE IF NOT EXISTS {SCHEMA}."users" (
+        CREATE TABLE IF NOT EXISTS {SCHEMA}."tblUser" (
             id SERIAL PRIMARY KEY,
             userid VARCHAR(100) UNIQUE,
             username VARCHAR(200),
