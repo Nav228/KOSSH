@@ -66,13 +66,38 @@
         border-radius: 8px;
         padding: 16px;
         margin-bottom: 16px;
+        color: #1e293b;
     }
+    .instruction-card h6 { color: #5b21b6; }
+    .instruction-card ol,
+    .instruction-card li,
+    .instruction-card strong { color: #1e293b; }
     .warning-card {
         background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
         border-left: 4px solid #f59e0b;
         border-radius: 8px;
         padding: 16px;
+        color: #1e293b;
     }
+    .warning-card h6 { color: #92400e; }
+    .warning-card ul,
+    .warning-card li,
+    .warning-card strong { color: #1e293b; }
+    /* Keep these cards readable regardless of global dark theme */
+    [data-theme="dark"] .instruction-card,
+    [data-theme="dark"] .warning-card {
+        color: #1e293b !important;
+    }
+    [data-theme="dark"] .instruction-card h6,
+    [data-theme="dark"] .instruction-card ol,
+    [data-theme="dark"] .instruction-card li,
+    [data-theme="dark"] .instruction-card strong { color: #1e293b !important; }
+    [data-theme="dark"] .instruction-card h6 { color: #5b21b6 !important; }
+    [data-theme="dark"] .warning-card h6,
+    [data-theme="dark"] .warning-card ul,
+    [data-theme="dark"] .warning-card li,
+    [data-theme="dark"] .warning-card strong { color: #1e293b !important; }
+    [data-theme="dark"] .warning-card h6 { color: #92400e !important; }
     .label-preview-box {
         background: white;
         border: 2px solid #d1d5db;
@@ -163,12 +188,12 @@
 {% endblock %}
 
 {% block page_header %}
-<div class="row align-items-center mb-4 p-3 bg-gradient rounded-3 shadow-sm" style="background: linear-gradient(135deg, #8b5cf6 0%, #5b21b6 100%); color: white;">
+<div class="row align-items-center mb-4 p-3 rounded-3 shadow-sm" style="background-image: linear-gradient(135deg, #8b5cf6 0%, #5b21b6 100%); color: #ffffff;">
     <div class="col-12">
-        <h1 class="h2 mb-2">
+        <h1 class="h2 mb-2" style="color: #ffffff;">
             <i class="bi bi-upc-scan me-2"></i> Generate Label
         </h1>
-        <p class="mb-0 fs-6">Create a lot number with auto-assigned 5-digit identifier and printable barcode label</p>
+        <p class="mb-0 fs-6" style="color: rgba(255,255,255,0.9);">Create a lot number with auto-assigned 5-digit identifier and printable barcode label</p>
     </div>
 </div>
 {% endblock %}
