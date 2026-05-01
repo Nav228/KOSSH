@@ -60,52 +60,13 @@
             <i class="bi bi-speedometer2"></i> Dashboard
         </a>
 
-        <a class="sidebar-link {% if request.endpoint in ['jobs_list','job_detail','bom_loader'] %}active{% endif %}"
-           href="{{ url_for('jobs_list') }}">
-            <i class="bi bi-briefcase"></i> Jobs
-        </a>
-
-        <a class="sidebar-link {% if request.endpoint and request.endpoint.startswith('shortage') %}active{% endif %}"
-           href="{{ url_for('shortage_report') }}">
-            <i class="bi bi-clipboard-data"></i> Shortage Reports
-        </a>
-
-        <div class="sidebar-section">
-            <div class="sidebar-section-label">Operations</div>
-        </div>
-
-        <a class="sidebar-link {% if request.endpoint == 'generate_pcn' %}active{% endif %}"
-           href="{{ url_for('generate_pcn') }}">
-            <i class="bi bi-upc-scan"></i> Generate Label
-        </a>
-
-        <a class="sidebar-link {% if request.endpoint == 'stock' %}active{% endif %}"
-           href="{{ url_for('stock') }}">
-            <i class="bi bi-plus-circle"></i> Stock Items
-        </a>
-
-        <a class="sidebar-link {% if request.endpoint == 'pick' %}active{% endif %}"
-           href="{{ url_for('pick') }}">
-            <i class="bi bi-dash-circle"></i> Pick Items
-        </a>
-
-        <a class="sidebar-link {% if request.endpoint == 'restock' %}active{% endif %}"
-           href="{{ url_for('restock') }}">
-            <i class="bi bi-arrow-counterclockwise"></i> Restock
-        </a>
-
-        <a class="sidebar-link {% if request.endpoint == 'part_number_change' %}active{% endif %}"
-           href="{{ url_for('part_number_change') }}">
-            <i class="bi bi-pencil-square"></i> Part Number Change
-        </a>
-
         <div class="sidebar-section">
             <div class="sidebar-section-label">Inventory</div>
         </div>
 
         <a class="sidebar-link {% if request.endpoint == 'pcb_inventory' %}active{% endif %}"
            href="{{ url_for('pcb_inventory') }}">
-            <i class="bi bi-cpu"></i> Parts Inventory
+            <i class="bi bi-boxes"></i> Items
         </a>
 
         <a class="sidebar-link {% if request.endpoint == 'warehouse_inventory' %}active{% endif %}"
@@ -113,13 +74,29 @@
             <i class="bi bi-building"></i> Warehouse
         </a>
 
-        <a class="sidebar-link" href="#" onclick="openPrintLabelModal(); return false;">
-            <i class="bi bi-printer"></i> Print Label
+        <a class="sidebar-link {% if request.endpoint == 'stock' %}active{% endif %}"
+           href="{{ url_for('stock') }}">
+            <i class="bi bi-plus-circle"></i> Stock In
+        </a>
+
+        <a class="sidebar-link {% if request.endpoint == 'pick' %}active{% endif %}"
+           href="{{ url_for('pick') }}">
+            <i class="bi bi-dash-circle"></i> Stock Out
+        </a>
+
+        <a class="sidebar-link {% if request.endpoint == 'restock' %}active{% endif %}"
+           href="{{ url_for('restock') }}">
+            <i class="bi bi-arrow-counterclockwise"></i> Restock
         </a>
 
         <div class="sidebar-section">
-            <div class="sidebar-section-label">History & Reports</div>
+            <div class="sidebar-section-label">Tracking</div>
         </div>
+
+        <a class="sidebar-link {% if request.endpoint == 'generate_pcn' %}active{% endif %}"
+           href="{{ url_for('generate_pcn') }}">
+            <i class="bi bi-upc-scan"></i> Generate Label
+        </a>
 
         <a class="sidebar-link {% if request.endpoint == 'pcn_history' %}active{% endif %}"
            href="{{ url_for('pcn_history') }}">
@@ -131,6 +108,24 @@
             <i class="bi bi-receipt"></i> Order History
         </a>
 
+        <div class="sidebar-section">
+            <div class="sidebar-section-label">Planning</div>
+        </div>
+
+        <a class="sidebar-link {% if request.endpoint in ['jobs_list','job_detail','bom_loader'] %}active{% endif %}"
+           href="{{ url_for('jobs_list') }}">
+            <i class="bi bi-briefcase"></i> Jobs
+        </a>
+
+        <a class="sidebar-link {% if request.endpoint and request.endpoint.startswith('shortage') %}active{% endif %}"
+           href="{{ url_for('shortage_report') }}">
+            <i class="bi bi-clipboard-data"></i> Shortage Reports
+        </a>
+
+        <div class="sidebar-section">
+            <div class="sidebar-section-label">Insights</div>
+        </div>
+
         <a class="sidebar-link {% if request.endpoint == 'reports' %}active{% endif %}"
            href="{{ url_for('reports') }}">
             <i class="bi bi-bar-chart"></i> Reports
@@ -140,11 +135,6 @@
         <div class="sidebar-section">
             <div class="sidebar-section-label">Manage</div>
         </div>
-
-        <a class="sidebar-link {% if request.endpoint == 'aci_numbers' %}active{% endif %}"
-           href="{{ url_for('aci_numbers') }}">
-            <i class="bi bi-hash"></i> Part Numbers
-        </a>
 
         <a class="sidebar-link {% if request.endpoint == 'admin_locations' %}active{% endif %}"
            href="{{ url_for('admin_locations') }}">
