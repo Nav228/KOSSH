@@ -8,8 +8,8 @@
                 <i class="bi bi-plus-circle-fill" style="color: white !important;"></i>
             </div>
             <div>
-                <h2 class="mb-0" style="font-size: 1.6rem; font-weight: 600; color: white !important;">Stock Electronic Parts</h2>
-                <p class="mb-0" style="color: rgba(255,255,255,0.85) !important; font-size: 0.9rem;">Add components to inventory • Manage stock levels • Track locations</p>
+                <h2 class="mb-0" style="font-size: 1.6rem; font-weight: 600; color: white !important;">Stock Items</h2>
+                <p class="mb-0" style="color: rgba(255,255,255,0.85) !important; font-size: 0.9rem;">Add items to inventory • Manage stock levels • Track locations</p>
             </div>
         </div>
         <div style="display: flex; gap: 10px; align-items: center; flex-shrink: 0;">
@@ -17,7 +17,7 @@
                 <i class="bi bi-table"></i> View Inventory
             </a>
             <a href="{{ url_for('pick') }}" class="btn btn-lg fw-bold" style="background: rgba(255,255,255,0.2) !important; color: white !important; border: 2px solid rgba(255,255,255,0.6); white-space: nowrap;">
-                <i class="bi bi-dash-circle" style="color: white !important;"></i> Pick Parts
+                <i class="bi bi-dash-circle" style="color: white !important;"></i> Pick Items
             </a>
         </div>
     </div>
@@ -59,10 +59,10 @@
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="pcnInput" class="form-label fw-semibold text-dark">PCN Number</label>
+                                <label for="pcnInput" class="form-label fw-semibold text-dark">Lot Number</label>
                                 <input type="text" class="form-control form-control-lg border-2" id="pcnInput" name="pcn_number" placeholder="e.g., 00001, 00523">
                                 <div class="form-text text-muted">
-                                    <i class="bi bi-upc-scan"></i> Part Control Number (optional)
+                                    <i class="bi bi-upc-scan"></i> Lot tracking number (optional)
                                 </div>
                             </div>
                         </div>
@@ -78,7 +78,7 @@
                                     </div>
                                 {% endif %}
                                 <div class="form-text text-muted">
-                                    <i class="bi bi-cpu"></i> Manufacturing Part Number from supplier
+                                    <i class="bi bi-cpu"></i> Supplier or vendor part number
                                 </div>
                             </div>
                         </div>
@@ -114,7 +114,7 @@
                                     </div>
                                 {% endif %}
                                 <div class="form-text text-muted">
-                                    <i class="bi bi-receipt"></i> Purchase Order number (optional)
+                                    <i class="bi bi-receipt"></i> Order reference number (optional)
                                 </div>
                             </div>
                         </div>
@@ -124,7 +124,7 @@
                     <div class="row mb-4">
                         <div class="col-12">
                             <h6 class="text-primary border-bottom pb-2 mb-3">
-                                <i class="bi bi-cpu-fill me-2"></i> Component Specifications
+                                <i class="bi bi-cpu-fill me-2"></i> Item Details
                             </h6>
                         </div>
                         <div class="col-md-12">
@@ -142,7 +142,7 @@
                                     </div>
                                 {% endif %}
                                 <div class="form-text text-muted">
-                                    <i class="bi bi-plus-circle"></i> Number of parts to add to inventory
+                                    <i class="bi bi-plus-circle"></i> Number of items to add to inventory
                                 </div>
                             </div>
                         </div>
@@ -175,7 +175,7 @@
                         <div class="col-md-8">
                             <div class="mb-3">
                                 {{ form.msd.label(class="form-label fw-semibold text-dark") }}
-                                {{ form.msd(class="form-control border-2", placeholder="e.g., Level 3, 168hrs@30°C/60%RH") }}
+                                {{ form.msd(class="form-control border-2", placeholder="e.g., Level 3, Fragile, Hazmat") }}
                                 {% if form.msd.errors %}
                                     <div class="invalid-feedback d-block">
                                         {% for error in form.msd.errors %}
@@ -184,7 +184,7 @@
                                     </div>
                                 {% endif %}
                                 <div class="form-text text-muted">
-                                    <i class="bi bi-droplet"></i> Moisture sensitivity device level
+                                    <i class="bi bi-droplet"></i> Sensitivity level (e.g., moisture, temperature, ESD)
                                 </div>
                             </div>
                         </div>
@@ -289,7 +289,7 @@
                                 <div class="d-flex align-items-start">
                                     <div class="badge bg-primary rounded-pill me-3 p-2">2</div>
                                     <div>
-                                        <h6 class="mb-1">Component Details</h6>
+                                        <h6 class="mb-1">Item Details</h6>
                                         <p class="text-muted mb-0 small">Specify type & quantity</p>
                                     </div>
                                 </div>
@@ -861,7 +861,7 @@ function loadRecentStockOperations() {
 
             if (data.success && data.data.length > 0) {
                 let html = '<div class="table-responsive"><table class="table table-hover"><thead class="table-light"><tr>';
-                html += '<th>Item</th><th>PCN</th><th>MPN</th><th>On Hand Qty</th><th>Location</th><th>PO</th></tr></thead><tbody>';
+                html += '<th>Item</th><th>Lot #</th><th>Supplier PN</th><th>On Hand Qty</th><th>Location</th><th>Order Ref</th></tr></thead><tbody>';
 
                 data.data.forEach(item => {
                     html += `<tr>

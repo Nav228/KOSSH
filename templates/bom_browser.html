@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 
-{% block title %}BOM Browser - Kosh{% endblock %}
+{% block title %}Requirements Browser - KOSSH{% endblock %}
 
 {% block page_header %}
 <div class="row align-items-center mb-4 p-3 bg-gradient rounded-3 shadow-sm" style="background: linear-gradient(135deg, #5b21b6 0%, #8b5cf6 100%); color: white;">
     <div class="col-12">
         <h1 class="h2 mb-2">
-            <i class="bi bi-list-columns-reverse me-2"></i> BOM Browser
+            <i class="bi bi-list-columns-reverse me-2"></i> Requirements Browser
         </h1>
-        <p class="mb-0 fs-6">View and search Bill of Materials for all jobs</p>
+        <p class="mb-0 fs-6">View and search job requirements (parts list) for all jobs</p>
     </div>
 </div>
 {% endblock %}
@@ -20,7 +20,7 @@
         <div class="card shadow-sm">
             <div class="card-header">
                 <h5 class="mb-0">
-                    <i class="bi bi-search"></i> Search BOM
+                    <i class="bi bi-search"></i> Search Requirements
                 </h5>
             </div>
             <div class="card-body">
@@ -30,8 +30,8 @@
                         <input type="text" class="form-control" id="searchJob" placeholder="Enter job number (e.g., 7789)">
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label fw-bold">MPN</label>
-                        <input type="text" class="form-control" id="searchMPN" placeholder="Manufacturer Part Number">
+                        <label class="form-label fw-bold">Supplier PN</label>
+                        <input type="text" class="form-control" id="searchMPN" placeholder="Supplier or vendor part number">
                     </div>
                     <div class="col-md-3">
                         <label class="form-label fw-bold">Customer</label>
@@ -47,13 +47,13 @@
         </div>
     </div>
 
-    <!-- BOM Summary Section -->
+    <!-- Requirements Summary Section -->
     <div class="col-12" id="bomSummarySection" style="display: none;">
         <div class="card shadow-sm border-success">
             <div class="card-header">
                 <div class="d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">
-                        <i class="bi bi-info-circle"></i> BOM Summary
+                        <i class="bi bi-info-circle"></i> Requirements Summary
                     </h5>
                     <button class="btn btn-sm btn-success" onclick="exportBOMToExcel()">
                         <i class="bi bi-file-earmark-excel"></i> Export to Excel
@@ -82,7 +82,7 @@
                     </div>
                     <div class="col-md-3">
                         <div class="border rounded p-3 bg-light">
-                            <div class="text-muted small">Total Cost (per board)</div>
+                            <div class="text-muted small">Total Cost (per unit)</div>
                             <div class="h4 mb-0" id="summaryCost">$0.00</div>
                         </div>
                     </div>
@@ -91,26 +91,26 @@
         </div>
     </div>
 
-    <!-- BOM Details Table -->
+    <!-- Requirements Details Table -->
     <div class="col-12">
         <div class="card shadow-sm">
             <div class="card-header">
                 <h5 class="mb-0">
-                    <i class="bi bi-list-ul"></i> BOM Line Items
+                    <i class="bi bi-list-ul"></i> Required Items
                 </h5>
             </div>
             <div class="card-body">
                 <!-- Loading State -->
                 <div id="loadingState" class="text-center py-5" style="display: none;">
                     <div class="spinner-border text-success" role="status"></div>
-                    <p class="text-muted mt-2">Loading BOM...</p>
+                    <p class="text-muted mt-2">Loading requirements...</p>
                 </div>
 
                 <!-- Empty State -->
                 <div id="emptyState" class="text-center py-5">
                     <i class="bi bi-inbox display-4 text-muted"></i>
-                    <h5 class="text-muted mt-3">No BOM Data</h5>
-                    <p class="text-muted">Enter a job number above to view BOM details</p>
+                    <h5 class="text-muted mt-3">No Requirements Data</h5>
+                    <p class="text-muted">Enter a job number above to view requirements</p>
                 </div>
 
                 <!-- Results Table -->
@@ -122,7 +122,7 @@
                                     <th style="width: 50px;">Line</th>
                                     <th>Description</th>
                                     <th>Manufacturer</th>
-                                    <th>MPN</th>
+                                    <th>Supplier PN</th>
                                     <th style="width: 80px;">Qty</th>
                                     <th style="width: 100px;">Unit Cost</th>
                                     <th style="width: 100px;">Ext Cost</th>

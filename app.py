@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Dockerized Flask web application for Stock and Pick PCB inventory management.
+Dockerized Flask web application for Stock and Pick inventory management.
 All database connections use container networking.
 """
 
@@ -42,7 +42,7 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 # Use environment variable for secret key, fallback to a consistent key
 # IMPORTANT: In production, always set SECRET_KEY environment variable
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'kosh-pcb-inventory-secret-key-2025-production-v1')
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'kosh-inventory-secret-key-2025-production-v1')
 
 # Session Configuration
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=14)  # 14 hour session timeout
@@ -68,9 +68,9 @@ compress = Compress(app)
 # Column definitions for shortage/job report exports
 SHORTAGE_EXPORT_COLUMNS = [
     {'key': 'line_no',      'label': 'LINE #',       'width': 8,  'default': False},
-    {'key': 'aci_pn',       'label': 'ACI PN',       'width': 15, 'default': True},
-    {'key': 'pcn',          'label': 'PCN',           'width': 12, 'default': True},
-    {'key': 'mpn',          'label': 'MPN',           'width': 25, 'default': True},
+    {'key': 'aci_pn',       'label': 'INTERNAL PN',   'width': 15, 'default': True},
+    {'key': 'pcn',          'label': 'LOT NUMBER',    'width': 12, 'default': True},
+    {'key': 'mpn',          'label': 'SUPPLIER PN',   'width': 25, 'default': True},
     {'key': 'manufacturer', 'label': 'MANUFACTURER',  'width': 20, 'default': False},
     {'key': 'description',  'label': 'DESCRIPTION',   'width': 30, 'default': False},
     {'key': 'qty',          'label': 'QTY',           'width': 8,  'default': True},
@@ -465,58 +465,58 @@ def validate_location_field(form, field):
         raise ValidationError('Location must be exactly 7 digits (e.g. 1101101) or a standard location.')
 
 class StockForm(FlaskForm):
-    """Form for stocking electronic parts."""
-    pcn_number = StringField('PCN Number', validators=[Length(max=10)])
+    """Form for stocking inventory items."""
+    pcn_number = StringField('Lot Number', validators=[Length(max=10)])
     job = StringField('Job Number (Item)', validators=[Length(max=50)])  # Optional - will use part_number if not provided
-    mpn = StringField('MPN (Manufacturing Part Number)', validators=[Length(max=50)])
+    mpn = StringField('Supplier Part Number', validators=[Length(max=50)])
     part_number = StringField('Part Number', validators=[DataRequired(), Length(min=1, max=50)])  # Now required - serves as job identifier
-    po = StringField('PO (Purchase Order)', validators=[Length(max=50)])
+    po = StringField('Order Reference', validators=[Length(max=50)])
     work_order = StringField('Work Order Number', validators=[Length(max=50)])
-    pcb_type = StringField('Component Type', validators=[Length(max=50)], default='Bare')
-    dc = StringField('Date Code (DC)', validators=[Length(max=50)])
-    msd = StringField('Moisture Sensitive Device (MSD)', validators=[Length(max=50)])
+    pcb_type = StringField('Item Type', validators=[Length(max=50)], default='Bare')
+    dc = StringField('Date Code', validators=[Length(max=50)])
+    msd = StringField('Sensitivity Level', validators=[Length(max=50)])
     quantity = IntegerField('Quantity', validators=[DataRequired(), NumberRange(min=1)])
     location_from = StringField('Location From', validators=[DataRequired(), Length(min=1, max=50), validate_location_field], default='Receiving Area')
     location_to = StringField('Location To', validators=[DataRequired(), Length(min=1, max=50), validate_location_field])
-    submit = SubmitField('Stock Parts')
+    submit = SubmitField('Stock Items')
 
 class PickForm(FlaskForm):
-    """Form for picking electronic parts."""
-    pcn = IntegerField('PCN Number', validators=[Optional(), NumberRange(min=0)])  # Optional - when specified, pick from that specific PCN only
+    """Form for picking inventory items."""
+    pcn = IntegerField('Lot Number', validators=[Optional(), NumberRange(min=0)])  # Optional - when specified, pick from that specific lot only
     job = StringField('Job Number (Item)', validators=[Length(max=50)])  # Optional - will use part_number if not provided
-    mpn = StringField('MPN (Manufacturing Part Number)', validators=[Length(max=50)])
+    mpn = StringField('Supplier Part Number', validators=[Length(max=50)])
     part_number = StringField('Part Number', validators=[DataRequired(), Length(min=1, max=50)])  # Now required - serves as job identifier
     po = StringField('Job Number', validators=[Length(max=50)])
     work_order = StringField('Work Order Number', validators=[Length(max=50)])
-    pcb_type = StringField('Component Type', validators=[Length(max=50)], default='Bare')
-    dc = StringField('Date Code (DC)', validators=[Length(max=50)])
-    msd = StringField('Moisture Sensitive Device (MSD)', validators=[Length(max=50)])
+    pcb_type = StringField('Item Type', validators=[Length(max=50)], default='Bare')
+    dc = StringField('Date Code', validators=[Length(max=50)])
+    msd = StringField('Sensitivity Level', validators=[Length(max=50)])
     quantity = IntegerField('Quantity', validators=[InputRequired(), NumberRange(min=0)])
-    submit = SubmitField('Pick Parts')
+    submit = SubmitField('Pick Items')
 
 class RestockForm(FlaskForm):
     """Form for restocking parts from Count Area to specified location."""
-    pcn = StringField('PCN Number', validators=[Optional(), Length(max=50)])
+    pcn = StringField('Lot Number', validators=[Optional(), Length(max=50)])
     item = StringField('Item Number', validators=[Optional(), Length(max=50)])
-    po = StringField('PO Number', validators=[Optional(), Length(max=50)])
+    po = StringField('Order Reference', validators=[Optional(), Length(max=50)])
     quantity = IntegerField('Quantity to Restock', validators=[DataRequired(), NumberRange(min=1)])
     location_from = StringField('Source Location', validators=[Optional(), Length(max=50), validate_location_field], default='Count Area')
     location_to = StringField('Destination Location (Optional)', validators=[Optional(), Length(max=50), validate_location_field])
     submit = SubmitField('Restock Parts')
 
     def validate(self, extra_validators=None):
-        """Custom validation to ensure either PCN or Item is provided."""
+        """Custom validation to ensure either Lot Number or Item is provided."""
         if not super().validate(extra_validators):
             return False
 
         if not self.pcn.data and not self.item.data:
-            self.pcn.errors.append('Either PCN or Item Number is required')
-            self.item.errors.append('Either PCN or Item Number is required')
+            self.pcn.errors.append('Either Lot Number or Item Number is required')
+            self.item.errors.append('Either Lot Number or Item Number is required')
             return False
 
         return True
 
-# User authentication now handled by ACI Dashboard
+# User authentication handled by application
 
 _IS_VERCEL = bool(os.environ.get('VERCEL'))
 
@@ -6441,15 +6441,20 @@ def api_bom_parse():
             logger.error(f"Failed to parse Excel file: {e}")
             return jsonify({'success': False, 'error': 'Invalid or corrupted Excel file. Please check the file and try again.'}), 400
 
-        # Check for "BOM to Load" sheet
-        if "BOM to Load" not in wb.sheetnames:
-            return jsonify({'success': False, 'error': 'File must contain "BOM to Load" sheet'}), 400
+        # Check for "Parts List" or "BOM to Load" sheet (backward compatible)
+        sheet_name = None
+        for candidate in ("Parts List", "BOM to Load"):
+            if candidate in wb.sheetnames:
+                sheet_name = candidate
+                break
+        if not sheet_name:
+            return jsonify({'success': False, 'error': 'File must contain a "Parts List" or "BOM to Load" sheet'}), 400
 
-        ws = wb["BOM to Load"]
+        ws = wb[sheet_name]
 
         # Validate sheet has enough rows (header + at least 1 data row)
         if ws.max_row < 2:
-            return jsonify({'success': False, 'error': 'BOM sheet appears empty or incomplete.'}), 400
+            return jsonify({'success': False, 'error': 'Sheet appears empty or incomplete.'}), 400
 
         # Row 1 has column headers
         col_map = {}

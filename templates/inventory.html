@@ -9,7 +9,7 @@
             </div>
             <div>
                 <h2 class="mb-0" style="font-size: 1.6rem; font-weight: 600; color: white !important;">Inventory Browser</h2>
-                <p class="mb-0" style="color: rgba(255,255,255,0.85) !important; font-size: 0.9rem;">Search, filter, and manage your PCB inventory</p>
+                <p class="mb-0" style="color: rgba(255,255,255,0.85) !important; font-size: 0.9rem;">Search, filter, and manage your parts inventory</p>
             </div>
         </div>
         <div style="display: flex; gap: 10px; align-items: center; flex-shrink: 0;">
@@ -17,7 +17,7 @@
                 <i class="bi bi-plus-circle"></i> Add Stock
             </a>
             <a href="{{ url_for('pick') }}" class="btn btn-lg fw-bold" style="background: rgba(255,255,255,0.2) !important; color: white !important; border: 2px solid rgba(255,255,255,0.6); white-space: nowrap;">
-                <i class="bi bi-dash-circle" style="color: white !important;"></i> Pick Parts
+                <i class="bi bi-dash-circle" style="color: white !important;"></i> Pick Items
             </a>
         </div>
     </div>
@@ -92,7 +92,7 @@
                 <small class="text-muted">Comma-separated for multiple</small>
             </div>
             <div class="col-md-3">
-                <label for="pcb_type" class="form-label">PCB Type</label>
+                <label for="pcb_type" class="form-label">Item Type</label>
                 <select class="form-select" id="pcb_type" name="pcb_type">
                     <option value="">All Types</option>
                     {% for value, label in pcb_types %}
@@ -114,9 +114,9 @@
                 </select>
             </div>
             <div class="col-md-3">
-                <label for="pcn" class="form-label">PCN Number</label>
+                <label for="pcn" class="form-label">Lot Number</label>
                 <input type="text" class="form-control" id="pcn" name="pcn"
-                       value="{{ search_pcn }}" placeholder="Search by PCN">
+                       value="{{ search_pcn }}" placeholder="Search by lot #">
                 <small class="text-muted">Part Control Number</small>
             </div>
             <div class="col-md-3">
@@ -197,7 +197,7 @@
                                 {% endif %}
                             </th>
                             <th class="sortable" data-sort="pcb_type">
-                                PCB Type
+                                Item Type
                                 <i class="bi bi-arrow-up-down"></i>
                                 {% if sort_by == 'pcb_type' %}
                                     <i class="bi bi-arrow-{{ 'up' if sort_order == 'asc' else 'down' }} text-primary"></i>
@@ -217,7 +217,7 @@
                                     <i class="bi bi-arrow-{{ 'up' if sort_order == 'asc' else 'down' }} text-primary"></i>
                                 {% endif %}
                             </th>
-                            <th>PCN</th>
+                            <th>Lot #</th>
                             <th>Date Code</th>
                             <th>Expiration Status</th>
                             <th class="sortable" data-sort="updated_at">
@@ -258,7 +258,7 @@
                                 {% else %}
                                     <button class="btn btn-sm btn-outline-secondary"
                                             onclick="assignPCN('{{ item.job }}', '{{ item.pcb_type }}')"
-                                            title="Assign PCN">
+                                            title="Assign Lot #">
                                         <i class="bi bi-plus-circle"></i> Assign
                                     </button>
                                 {% endif %}
@@ -386,9 +386,9 @@
                         <a href="{{ url_for('pcb_inventory') }}">view all items</a>
                     </p>
                 {% else %}
-                    <p class="text-muted">Get started by stocking your first PCB</p>
+                    <p class="text-muted">Get started by stocking your first item</p>
                     <a href="{{ url_for('stock') }}" class="btn btn-success">
-                        <i class="bi bi-plus-circle"></i> Stock First PCB
+                        <i class="bi bi-plus-circle"></i> Stock First Item
                     </a>
                 {% endif %}
             </div>
@@ -418,7 +418,7 @@
     <div class="col-md-3 col-lg-15">
         <div class="card text-center h-100">
             <div class="card-body">
-                <h5 class="card-title text-muted mb-3">PCB Types</h5>
+                <h5 class="card-title text-muted mb-3">Item Types</h5>
                 <h3 class="text-info">{{ inventory | map(attribute='pcb_type') | unique | list | length }}</h3>
             </div>
         </div>
@@ -642,7 +642,7 @@ function calculateValue() {
 
 // ========== PCN ASSIGNMENT ==========
 function assignPCN(job, pcbType) {
-    if (!confirm(`Assign a new PCN to Job ${job} (${pcbType})?`)) {
+    if (!confirm(`Assign a new Lot Number to Job ${job} (${pcbType})?`)) {
         return;
     }
 
@@ -661,15 +661,15 @@ function assignPCN(job, pcbType) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert(`PCN ${data.pcn} successfully assigned to Job ${job} (${pcbType})`);
+            alert(`Lot ${data.pcn} successfully assigned to Job ${job} (${pcbType})`);
             window.location.reload();
         } else {
-            alert(`Failed to assign PCN: ${data.error}`);
+            alert(`Failed to assign Lot Number: ${data.error}`);
             document.getElementById('loading-overlay')?.remove();
         }
     })
     .catch(error => {
-        alert('Error assigning PCN. Please try again.');
+        alert('Error assigning Lot Number. Please try again.');
         console.error('Error:', error);
         document.getElementById('loading-overlay')?.remove();
     });

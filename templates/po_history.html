@@ -4,9 +4,9 @@
 <div class="row align-items-center mb-4 p-3 bg-gradient rounded-3 shadow-sm" style="background: linear-gradient(135deg, #5b21b6 0%, #8b5cf6 100%); color: white;">
     <div class="col-12">
         <h1 class="h2 mb-2 text-white">
-            <i class="bi bi-receipt me-2"></i> PO History Lookup
+            <i class="bi bi-receipt me-2"></i> Order History Lookup
         </h1>
-        <p class="mb-0 fs-6 text-white">Search and view purchase order receipt history</p>
+        <p class="mb-0 fs-6 text-white">Search and view order receipt history</p>
     </div>
 </div>
 {% endblock %}
@@ -23,9 +23,9 @@
         <form method="get" action="{{ url_for('po_history') }}">
             <div class="row g-3">
                 <div class="col-md-3">
-                    <label for="po" class="form-label">PO Number</label>
+                    <label for="po" class="form-label">Order Reference</label>
                     <input type="text" class="form-control" id="po" name="po"
-                           value="{{ search_po }}" placeholder="Enter PO">
+                           value="{{ search_po }}" placeholder="Enter order ref">
                 </div>
                 <div class="col-md-3">
                     <label for="item" class="form-label">Item Number</label>
@@ -33,14 +33,14 @@
                            value="{{ search_item }}" placeholder="Enter item">
                 </div>
                 <div class="col-md-3">
-                    <label for="mpn" class="form-label">MPN</label>
+                    <label for="mpn" class="form-label">Supplier PN</label>
                     <input type="text" class="form-control" id="mpn" name="mpn"
-                           value="{{ search_mpn }}" placeholder="Enter MPN">
+                           value="{{ search_mpn }}" placeholder="Enter supplier PN">
                 </div>
                 <div class="col-md-3">
-                    <label for="pcn" class="form-label">PCN</label>
+                    <label for="pcn" class="form-label">Lot Number</label>
                     <input type="number" class="form-control" id="pcn" name="pcn"
-                           value="{{ search_pcn }}" placeholder="Enter PCN">
+                           value="{{ search_pcn }}" placeholder="Enter lot #">
                 </div>
                 <div class="col-md-3">
                     <label for="date_from" class="form-label">Date From</label>
@@ -82,11 +82,11 @@
                 <thead class="table-dark">
                     <tr>
                         <th>Date</th>
-                        <th>PO Number</th>
-                        <th>PCN</th>
+                        <th>Order Ref</th>
+                        <th>Lot #</th>
                         <th>Type</th>
                         <th>Item</th>
-                        <th>MPN</th>
+                        <th>Supplier PN</th>
                         <th>Date Code</th>
                         <th>Quantity</th>
                         <th>From</th>
@@ -109,7 +109,7 @@
                         <td>
                             <span class="badge
                                 {% if receipt.transaction_type == 'Receipt' %}bg-success
-                                {% elif receipt.transaction_type == 'PCN Generation' %}bg-primary
+                                {% elif receipt.transaction_type == 'PCN Generation' or receipt.transaction_type == 'Lot Generation' %}bg-primary
                                 {% elif receipt.transaction_type == 'INDF' %}bg-info
                                 {% elif receipt.transaction_type == 'VEND' %}bg-warning
                                 {% else %}bg-secondary

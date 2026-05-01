@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Generate PCN - Kosh{% endblock %}
+{% block title %}Generate Label - KOSSH{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -166,21 +166,21 @@
 <div class="row align-items-center mb-4 p-3 bg-gradient rounded-3 shadow-sm" style="background: linear-gradient(135deg, #8b5cf6 0%, #5b21b6 100%); color: white;">
     <div class="col-12">
         <h1 class="h2 mb-2">
-            <i class="bi bi-upc-scan me-2"></i> Generate PCN
+            <i class="bi bi-upc-scan me-2"></i> Generate Label
         </h1>
-        <p class="mb-0 fs-6">Create Part Control Number with auto-assigned 5-digit identifier and printable barcode label</p>
+        <p class="mb-0 fs-6">Create a lot number with auto-assigned 5-digit identifier and printable barcode label</p>
     </div>
 </div>
 {% endblock %}
 
 {% block content %}
 <div class="row g-4">
-    <!-- PCN Generation Form -->
+    <!-- Label Generation Form -->
     <div class="col-xl-7">
         <div class="card pcn-card shadow-lg border-0">
             <div class="card-header border-0">
                 <h5 class="mb-0">
-                    <i class="bi bi-file-earmark-plus me-2" style="color: #ffffff !important;"></i> PCN Information Form
+                    <i class="bi bi-file-earmark-plus me-2" style="color: #ffffff !important;"></i> Label Information Form
                 </h5>
             </div>
             <div class="card-body p-4">
@@ -209,18 +209,18 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="mpnInput" class="form-label">
-                                        <i class="bi bi-gear-wide-connected me-1"></i> MPN
+                                        <i class="bi bi-gear-wide-connected me-1"></i> Supplier PN
                                     </label>
                                     <select class="form-select form-select-lg" id="mpnInput" name="mpn">
-                                        <option value="">Select MPN or type custom...</option>
+                                        <option value="">Select supplier part or type custom...</option>
                                     </select>
                                     <input type="text" class="form-control form-control-lg mt-2" id="mpnCustomInput"
-                                           name="mpn_custom" placeholder="Or enter custom MPN..." style="display:none;">
+                                           name="mpn_custom" placeholder="Or enter custom supplier PN..." style="display:none;">
                                     <div class="form-text text-muted">
                                         <span id="mpnLoadingText" style="display:none;">
-                                            <i class="bi bi-hourglass-split"></i> Loading MPNs from BOM...
+                                            <i class="bi bi-hourglass-split"></i> Loading from requirements...
                                         </span>
-                                        <span id="mpnHelpText">Manufacturer Part Number - Select from BOM or enter custom</span>
+                                        <span id="mpnHelpText">Supplier or vendor part number — select from requirements or enter custom</span>
                                     </div>
                                 </div>
                             </div>
@@ -230,12 +230,12 @@
                             <div class="col-md-12">
                                 <div class="mb-3">
                                     <label for="poNumberInput" class="form-label">
-                                        <i class="bi bi-receipt-cutoff me-1"></i> PO Number
+                                        <i class="bi bi-receipt-cutoff me-1"></i> Order Reference
                                     </label>
                                     <input type="text" class="form-control" id="poNumberInput" name="po_number"
-                                           placeholder="e.g., PO-2024-001">
+                                           placeholder="e.g., PO-2024-001, ORD-12345">
                                     <div class="form-text text-muted">
-                                        <i class="bi bi-arrow-right"></i> Purchase Order Number
+                                        <i class="bi bi-arrow-right"></i> Purchase order or order reference number
                                     </div>
                                 </div>
                             </div>
@@ -259,7 +259,7 @@
                                                placeholder="e.g., 100">
                                         <span class="input-group-text">units</span>
                                     </div>
-                                    <div class="form-text text-muted">Number of parts</div>
+                                    <div class="form-text text-muted">Number of items</div>
                                 </div>
                             </div>
 
@@ -270,7 +270,7 @@
                                     </label>
                                     <input type="text" class="form-control" id="dateCodeInput" name="date_code"
                                            placeholder="e.g., 2024WK12">
-                                    <div class="form-text text-muted">Manufacturing date code</div>
+                                    <div class="form-text text-muted">Batch / manufacture date code</div>
                                 </div>
                             </div>
                         </div>
@@ -279,15 +279,15 @@
                     <!-- Additional Information -->
                     <div class="mb-4">
                         <h6 class="text-warning border-bottom pb-2 mb-3">
-                            <i class="bi bi-droplet-fill me-2" style="color: #ffffff !important;"></i> Moisture & Sensitivity
+                            <i class="bi bi-droplet-fill me-2" style="color: #ffffff !important;"></i> Sensitivity & Handling
                         </h6>
 
                         <div class="mb-3">
                             <label for="msdInput" class="form-label">
-                                <i class="bi bi-shield-check me-1"></i> MSD Level
+                                <i class="bi bi-shield-check me-1"></i> Sensitivity Level
                             </label>
                             <select class="form-select form-select-lg" id="msdInput" name="msd">
-                                <option value="">Select MSD Level (optional)</option>
+                                <option value="">Select sensitivity level (optional)</option>
                                 <option value="Level 1">Level 1 - Unlimited floor life</option>
                                 <option value="Level 2">Level 2 - 1 year floor life</option>
                                 <option value="Level 3">Level 3 - 168 hours</option>
@@ -298,7 +298,7 @@
                                 <option value="Custom">Custom Level</option>
                             </select>
                             <div class="form-text text-warning">
-                                <i class="bi bi-exclamation-triangle me-1"></i> Moisture sensitivity classification
+                                <i class="bi bi-exclamation-triangle me-1"></i> Sensitivity / handling classification
                             </div>
                         </div>
                     </div>
@@ -307,7 +307,7 @@
                     <hr class="my-4">
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-primary btn-lg shadow-sm">
-                            <i class="bi bi-printer-fill me-2" style="color: #ffffff !important;"></i> Generate PCN & Print Label
+                            <i class="bi bi-printer-fill me-2" style="color: #ffffff !important;"></i> Generate Lot Number & Print Label
                         </button>
                         <div class="row g-2">
                             <div class="col-6">
@@ -327,18 +327,18 @@
         </div>
     </div>
 
-    <!-- PCN Preview & Print Section -->
+    <!-- Label Preview & Print Section -->
     <div class="col-xl-5">
         <div class="card pcn-preview-card shadow-lg border-0 sticky-top" style="top: 80px;">
             <div class="card-header border-0">
                 <h5 class="mb-0">
-                    <i class="bi bi-eye-fill me-2" style="color: #ffffff !important;"></i> PCN Preview & Print
+                    <i class="bi bi-eye-fill me-2" style="color: #ffffff !important;"></i> Label Preview & Print
                 </h5>
             </div>
             <div class="card-body p-4">
                 <div id="pcnPreview" style="display: none;">
                     <div class="pcn-preview text-center mb-3">
-                        <p class="text-muted mb-2 small text-uppercase fw-bold">Generated PCN Number</p>
+                        <p class="text-muted mb-2 small text-uppercase fw-bold">Generated Lot Number</p>
                         <div class="pcn-number-display mb-3" id="displayPCN">-----</div>
                         <div class="badge bg-success fs-6 px-3 py-2 mb-3">
                             <i class="bi bi-check-circle me-1"></i> Successfully Saved
@@ -361,7 +361,7 @@
                             </div>
                             <div class="col-6">
                                 <button id="deletePCNBtn" class="btn btn-outline-danger w-100">
-                                    <i class="bi bi-trash-fill me-2" style="color: #ffffff !important;"></i> Delete PCN
+                                    <i class="bi bi-trash-fill me-2" style="color: #ffffff !important;"></i> Delete Lot
                                 </button>
                             </div>
                         </div>
@@ -371,14 +371,14 @@
                 <div id="pcnInstructions">
                     <div class="instruction-card mb-3">
                         <h6 class="text-primary mb-3">
-                            <i class="bi bi-lightbulb-fill me-2" style="color: #ffffff !important;"></i> How to Generate PCN
+                            <i class="bi bi-lightbulb-fill me-2" style="color: #ffffff !important;"></i> How to Generate a Label
                         </h6>
                         <ol class="mb-0 ps-3 small">
                             <li class="mb-2">Enter the required <strong>Part Number</strong> (job number)</li>
-                            <li class="mb-2">Add optional fields like PO, MPN, Quantity, Date Code</li>
-                            <li class="mb-2">Select MSD level if applicable</li>
-                            <li class="mb-2">Click <strong>"Generate PCN & Print Label"</strong></li>
-                            <li class="mb-2">System auto-assigns next 5-digit PCN number</li>
+                            <li class="mb-2">Add optional fields like Order Reference, Supplier PN, Quantity, Date Code</li>
+                            <li class="mb-2">Select sensitivity level if applicable</li>
+                            <li class="mb-2">Click <strong>"Generate Lot Number & Print Label"</strong></li>
+                            <li class="mb-2">System auto-assigns next 5-digit lot number</li>
                             <li>Print dialog opens automatically - select your printer and print!</li>
                         </ol>
                     </div>
@@ -388,8 +388,8 @@
                             <i class="bi bi-exclamation-triangle-fill me-2" style="color: #ffffff !important;"></i> Important Notes
                         </h6>
                         <ul class="mb-0 ps-3 small">
-                            <li class="mb-1">PCN numbers are <strong>auto-incremented</strong> starting from 00001</li>
-                            <li class="mb-1">Each PCN is <strong>unique</strong> and cannot be reused</li>
+                            <li class="mb-1">Lot numbers are <strong>auto-incremented</strong> starting from 00001</li>
+                            <li class="mb-1">Each lot number is <strong>unique</strong> and cannot be reused</li>
                             <li>Labels include CODE128 barcode for scanner compatibility</li>
                         </ul>
                     </div>
@@ -406,7 +406,7 @@
             <div class="card-header border-0">
                 <div class="d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">
-                        <i class="bi bi-clock-history me-2"></i> PCN History & Database
+                        <i class="bi bi-clock-history me-2"></i> Lot History & Database
                     </h5>
                     <button class="btn btn-light btn-sm" onclick="loadPCNHistory()">
                         <i class="bi bi-arrow-clockwise me-1"></i> Refresh

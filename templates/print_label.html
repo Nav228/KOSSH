@@ -203,7 +203,7 @@
         <!-- Top section: PCN, Barcode, QTY -->
         <div class="label-top">
             <div class="pcn-section">
-                PCN: {{ data.pcn_number }}
+                LOT: {{ data.pcn_number }}
             </div>
             <div class="barcode-section">
                 <svg id="labelBarcode"></svg>
@@ -216,13 +216,13 @@
 
         <!-- Bottom section: Item details in 4-column, 2-row grid -->
         <div class="label-details">
-            <!-- Row 1: Job, MPN, DCC, MSD -->
+            <!-- Row 1: Job, Supplier PN, Date, Sensitivity -->
             <div class="detail-line"><strong>Job:</strong> {{ data.item or '-' }}</div>
-            <div class="detail-line" style="grid-column: span 2;"><strong>MPN:</strong> {{ data.mpn or '-' }}</div>
-            <div class="detail-line"><strong>DCC:</strong> {{ data.date_code or '-' }}</div>
-            <!-- Row 2: PO, MSD -->
-            <div class="detail-line" style="grid-column: span 2;"><strong>PO:</strong> {{ data.po_number or '-' }}</div>
-            <div class="detail-line"><strong>MSD:</strong> {{ data.msd.replace('Level ', '') if data.msd and 'Level' in data.msd else (data.msd or '-') }}</div>
+            <div class="detail-line" style="grid-column: span 2;"><strong>PN:</strong> {{ data.mpn or '-' }}</div>
+            <div class="detail-line"><strong>Date:</strong> {{ data.date_code or '-' }}</div>
+            <!-- Row 2: Order Ref, Sensitivity -->
+            <div class="detail-line" style="grid-column: span 2;"><strong>Order:</strong> {{ data.po_number or '-' }}</div>
+            <div class="detail-line"><strong>Sens:</strong> {{ data.msd.replace('Level ', '') if data.msd and 'Level' in data.msd else (data.msd or '-') }}</div>
         </div>
     </div>
 

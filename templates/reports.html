@@ -82,7 +82,7 @@
 
         /* Add report title */
         body::before {
-            content: "PCB Inventory Report";
+            content: "Inventory Report";
             display: block;
             font-size: 24px;
             font-weight: bold;
@@ -238,7 +238,7 @@
                         <table class="table table-striped">
                             <thead class="table-dark">
                                 <tr>
-                                    <th>PCB Type</th>
+                                    <th>Item Type</th>
                                     <th>Location</th>
                                     <th>Jobs Count</th>
                                     <th>Total Quantity</th>
@@ -323,7 +323,7 @@
             <div class="card-body">
                 <i class="bi bi-cpu display-4"></i>
                 <h4 class="mt-2">{{ summary | map(attribute='pcb_type') | unique | list | length }}</h4>
-                <p class="card-text">PCB Types</p>
+                <p class="card-text">Item Types</p>
             </div>
         </div>
     </div>
@@ -381,7 +381,7 @@
                                     <th>Timestamp</th>
                                     <th>Operation</th>
                                     <th>Job</th>
-                                    <th>PCB Type</th>
+                                    <th>Item Type</th>
                                     <th>Quantity Change</th>
                                     <th>New Qty</th>
                                     <th>Location</th>
@@ -613,7 +613,7 @@ function displayExpirationReport(stats, totalItems, totalQuantity) {
                     <tr>
                         <th>Status</th>
                         <th>Job</th>
-                        <th>PCB Type</th>
+                        <th>Item Type</th>
                         <th>Quantity</th>
                         <th>Date Code</th>
                         <th>Expiration Info</th>
@@ -815,7 +815,7 @@ function exportToCSV() {
 }
 
 function convertToCSV(data) {
-    const header = ['Job', 'PCB Type', 'Quantity', 'Location', 'Created At', 'Updated At'];
+    const header = ['Job', 'Item Type', 'Quantity', 'Location', 'Created At', 'Updated At'];
     const rows = data.map(item => [
         item.job,
         item.pcb_type,

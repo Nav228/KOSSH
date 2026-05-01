@@ -8,7 +8,7 @@
             <i class="bi bi-clipboard-data me-2"></i>
             Shortage Report
         </h1>
-        <p class="mb-0" style="color: rgba(255,255,255,0.85) !important;">Compare BOM requirements against inventory to identify parts shortages</p>
+        <p class="mb-0" style="color: rgba(255,255,255,0.85) !important;">Compare requirements against inventory to identify shortages</p>
     </div>
 </div>
 {% endblock %}
@@ -34,7 +34,7 @@
                             <option value="{{ job }}">
                             {% endfor %}
                         </datalist>
-                        <div class="form-text">Select a job that has a BOM loaded</div>
+                        <div class="form-text">Select a job that has requirements loaded</div>
                     </div>
 
                     <div class="mb-3">
@@ -69,10 +69,10 @@
             <div class="card-body">
                 <h6><i class="bi bi-info-circle me-2 text-primary"></i>How it works</h6>
                 <ul class="mb-0 small">
-                    <li>Select a job number that has a BOM loaded</li>
+                    <li>Select a job number that has requirements loaded</li>
                     <li>Enter the Order Qty (how many units the job requires)</li>
-                    <li><strong>REQ</strong> = BOM QTY &times; Order Qty (total parts needed)</li>
-                    <li>Only parts where On Hand Qty &lt; REQ are shown (shortages)</li>
+                    <li><strong>REQ</strong> = Required QTY &times; Order Qty (total items needed)</li>
+                    <li>Only items where On Hand Qty &lt; REQ are shown (shortages)</li>
                     <li>Export to Excel for sharing or printing</li>
                 </ul>
             </div>

@@ -78,9 +78,9 @@
     <div class="card-body" style="padding: 1.25rem;">
         <form method="GET" class="row g-3">
             <div class="col-md-2">
-                <label for="search_pcn" class="form-label small fw-semibold mb-2" style="color: #475569;">PCN</label>
+                <label for="search_pcn" class="form-label small fw-semibold mb-2" style="color: #475569;">Lot Number</label>
                 <input type="text" class="form-control" id="search_pcn" name="search_pcn"
-                       value="{{ request.args.get('search_pcn', '') }}" placeholder="Enter PCN number" style="border-radius: 6px;">
+                       value="{{ request.args.get('search_pcn', '') }}" placeholder="Enter lot #" style="border-radius: 6px;">
             </div>
             <div class="col-md-2">
                 <label for="search_item" class="form-label small fw-semibold mb-2" style="color: #475569;">Item Number</label>
@@ -88,9 +88,9 @@
                        value="{{ request.args.get('search_item', '') }}" placeholder="Search by item..." style="border-radius: 6px;">
             </div>
             <div class="col-md-2">
-                <label for="search_mpn" class="form-label small fw-semibold mb-2" style="color: #475569;">MPN</label>
+                <label for="search_mpn" class="form-label small fw-semibold mb-2" style="color: #475569;">Supplier PN</label>
                 <input type="text" class="form-control" id="search_mpn" name="search_mpn"
-                       value="{{ request.args.get('search_mpn', '') }}" placeholder="Search MPN..." style="border-radius: 6px;">
+                       value="{{ request.args.get('search_mpn', '') }}" placeholder="Search supplier PN..." style="border-radius: 6px;">
             </div>
             <div class="col-md-2">
                 <label for="search_location" class="form-label small fw-semibold mb-2" style="color: #475569;">Location</label>
@@ -148,16 +148,16 @@
             <table class="table table-hover table-striped mb-0">
                 <thead style="background: linear-gradient(135deg, #5b21b6 0%, #8b5cf6 100%); color: white;">
                     <tr>
-                        <th style="border: none; font-weight: 600; padding: 14px;">PCN</th>
+                        <th style="border: none; font-weight: 600; padding: 14px;">Lot #</th>
                         <th style="border: none; font-weight: 600; padding: 14px;">Item Number</th>
-                        <th style="border: none; font-weight: 600; padding: 14px;">MPN</th>
-                        <th style="border: none; font-weight: 600; padding: 14px;">DC</th>
+                        <th style="border: none; font-weight: 600; padding: 14px;">Supplier PN</th>
+                        <th style="border: none; font-weight: 600; padding: 14px;">Date Code</th>
                         <th style="border: none; font-weight: 600; padding: 14px;">On Hand Qty</th>
                         <th style="border: none; font-weight: 600; padding: 14px;">Loc From</th>
                         <th style="border: none; font-weight: 600; padding: 14px;">Loc To</th>
                         <th style="border: none; font-weight: 600; padding: 14px;">MFG Qty</th>
-                        <th style="border: none; font-weight: 600; padding: 14px;">MSD</th>
-                        <th style="border: none; font-weight: 600; padding: 14px;">PO</th>
+                        <th style="border: none; font-weight: 600; padding: 14px;">Sensitivity</th>
+                        <th style="border: none; font-weight: 600; padding: 14px;">Order Ref</th>
                         <th style="border: none; font-weight: 600; padding: 14px;">Cost</th>
                         <th class="text-center" style="border: none; font-weight: 600; padding: 14px;">Actions</th>
                     </tr>
@@ -305,7 +305,7 @@
                     <input type="hidden" id="edit_id" value="">
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label for="edit_pcn" class="form-label fw-semibold">PCN</label>
+                            <label for="edit_pcn" class="form-label fw-semibold">Lot Number</label>
                             <input type="text" class="form-control bg-light" id="edit_pcn" readonly>
                             <small class="text-muted">Cannot be changed</small>
                         </div>
@@ -315,7 +315,7 @@
                             <small class="text-muted">Cannot be changed</small>
                         </div>
                         <div class="col-md-12">
-                            <label for="edit_mpn" class="form-label fw-semibold">MPN (Manufacturer Part Number)</label>
+                            <label for="edit_mpn" class="form-label fw-semibold">Supplier Part Number</label>
                             <input type="text" class="form-control bg-light" id="edit_mpn" readonly>
                             <small class="text-muted">Cannot be changed</small>
                         </div>
@@ -341,11 +341,11 @@
                             <small class="text-muted">Cannot be changed</small>
                         </div>
                         <div class="col-md-6">
-                            <label for="edit_msd" class="form-label fw-semibold">MSD (Moisture Sensitive)</label>
+                            <label for="edit_msd" class="form-label fw-semibold">Sensitivity Level</label>
                             <input type="text" class="form-control" id="edit_msd">
                         </div>
                         <div class="col-md-6">
-                            <label for="edit_po" class="form-label fw-semibold">PO (Purchase Order)</label>
+                            <label for="edit_po" class="form-label fw-semibold">Order Reference</label>
                             <input type="text" class="form-control" id="edit_po">
                         </div>
                         <div class="col-md-12">
@@ -355,7 +355,7 @@
                     </div>
                     <div class="alert alert-warning mt-3 mb-0">
                         <i class="bi bi-exclamation-triangle me-2"></i>
-                        <strong>Note:</strong> PCN, Item Number, MPN, and MFG Quantity cannot be modified. MFG Quantity is managed through Stock/Pick/Restock operations.
+                        <strong>Note:</strong> Lot Number, Item Number, Supplier PN, and MFG Quantity cannot be modified. MFG Quantity is managed through Stock/Pick/Restock operations.
                     </div>
                 </form>
             </div>
@@ -487,7 +487,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Print label from warehouse inventory
 function printItemLabel(pcn) {
     if (!pcn || pcn === '-') {
-        alert('No PCN available for this item.');
+        alert('No lot number available for this item.');
         return;
     }
     window.open('/print-label/' + encodeURIComponent(pcn), 'printLabel', 'width=500,height=350,toolbar=no,menubar=no,scrollbars=no');

@@ -178,7 +178,7 @@
             <div class="card-body stat-card">
                 <div class="stat-icon-wrap"><i class="bi bi-currency-dollar"></i></div>
                 <div class="stat-value">${{ "%.2f"|format(report.total_cost|float) }}</div>
-                <div class="stat-label">Total BOM Cost</div>
+                <div class="stat-label">Total Requirements Cost</div>
             </div>
         </div>
     </div>
@@ -214,9 +214,9 @@
             <table class="table table-hover table-striped mb-0" id="shortageTable">
                 <thead class="table-dark">
                     <tr>
-                        <th>ACI PN</th>
-                        <th>PCN</th>
-                        <th>MPN</th>
+                        <th>Internal PN</th>
+                        <th>Lot #</th>
+                        <th>Supplier PN</th>
                         <th class="text-center">QTY</th>
                         <th class="text-center">ORDER QTY</th>
                         <th class="text-center">REQ</th>

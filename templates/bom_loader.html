@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}BOM Loader - KOSSH{% endblock %}
+{% block title %}Requirements Loader - KOSSH{% endblock %}
 
 {% block content %}
 <div class="container-fluid py-4">
     <div class="row">
         <div class="col-12">
-            <h2><i class="bi bi-file-earmark-arrow-up-fill"></i> BOM Loader</h2>
-            <p class="text-muted">Upload and load Bill of Materials from Excel files <span class="badge bg-success">v5.0</span></p>
+            <h2><i class="bi bi-file-earmark-arrow-up-fill"></i> Requirements Loader</h2>
+            <p class="text-muted">Upload and load job requirements (parts list) from Excel files <span class="badge bg-success">v5.0</span></p>
         </div>
     </div>
 
@@ -16,7 +16,7 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="mb-0">Upload BOM File</h5>
+                    <h5 class="mb-0">Upload Requirements File</h5>
                 </div>
                 <div class="card-body">
                     <form id="bomUploadForm">
@@ -25,7 +25,7 @@
                         <div class="mb-3">
                             <label for="bomFile" class="form-label">Select Excel File (.xlsx)</label>
                             <input type="file" class="form-control" id="bomFile" name="file" accept=".xlsx,.xls" required>
-                            <div class="form-text">File must contain "BOM to Load" sheet</div>
+                            <div class="form-text">File must contain a sheet named "Parts List" or "BOM to Load"</div>
                         </div>
 
                         <button type="submit" class="btn btn-primary" id="uploadBtn">
@@ -47,7 +47,7 @@
                 <div class="card-body">
                     <div class="mb-3">
                         <h6 class="text-primary"><i class="bi bi-1-circle-fill me-2"></i>Upload Your File</h6>
-                        <p class="text-muted small mb-2">Choose an Excel file (.xlsx) with a sheet named <strong>"BOM to Load"</strong></p>
+                        <p class="text-muted small mb-2">Choose an Excel file (.xlsx) with a sheet named <strong>"Parts List"</strong> (or legacy "BOM to Load")</p>
                     </div>
                     <div class="mb-3">
                         <h6 class="text-primary"><i class="bi bi-2-circle-fill me-2"></i>Review the Data</h6>
@@ -55,12 +55,12 @@
                     </div>
                     <div class="mb-3">
                         <h6 class="text-primary"><i class="bi bi-3-circle-fill me-2"></i>Save to Database</h6>
-                        <p class="text-muted small mb-0">Click "Load to Database" to import the BOM into KOSSH</p>
+                        <p class="text-muted small mb-0">Click "Load to Database" to import the requirements into KOSSH</p>
                     </div>
                     <hr>
                     <div class="alert alert-warning py-2 mb-0">
                         <i class="bi bi-exclamation-triangle me-2"></i>
-                        <small><strong>Note:</strong> Uploading a BOM will replace any existing records for the same job number.</small>
+                        <small><strong>Note:</strong> Uploading requirements will replace any existing records for the same job number.</small>
                     </div>
                 </div>
             </div>
@@ -81,26 +81,26 @@
                         <small class="text-muted">Status: <span id="existingJobStatus" class="badge bg-primary"></span></small><br>
                         <small class="text-muted">Customer: <span id="existingJobCustomer"></span></small>
                     </div>
-                    <p>Would you like to <strong>reload the BOM</strong> (replace existing data) or <strong>view the job</strong>?</p>
+                    <p>Would you like to <strong>reload the requirements</strong> (replace existing data) or <strong>view the job</strong>?</p>
                 </div>
                 <div class="modal-footer">
                     <a id="viewJobLink" href="#" class="btn btn-primary">
                         <i class="bi bi-eye me-1"></i>View Job
                     </a>
                     <button type="button" class="btn btn-warning" data-bs-dismiss="modal">
-                        <i class="bi bi-arrow-repeat me-1"></i>Reload BOM
+                        <i class="bi bi-arrow-repeat me-1"></i>Reload Requirements
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- BOM Preview Section -->
+    <!-- Requirements Preview Section -->
     <div class="row mt-4" id="previewSection" style="display: none;">
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">BOM Preview</h5>
+                    <h5 class="mb-0">Requirements Preview</h5>
                     <button class="btn btn-sm btn-success" id="loadBtn">
                         <i class="bi bi-database-add"></i> Load to Database
                     </button>
@@ -160,8 +160,8 @@
                                     <th>Line</th>
                                     <th>Description</th>
                                     <th>Manufacturer</th>
-                                    <th>MPN</th>
-                                    <th>ACI P/N</th>
+                                    <th>Supplier PN</th>
+                                    <th>Internal PN</th>
                                     <th>Qty</th>
                                     <th>POU</th>
                                     <th>Location</th>
@@ -270,7 +270,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
 
-                showStatus(`Successfully parsed ${result.total_items} items from BOM`, 'success');
+                showStatus(`Successfully parsed ${result.total_items} items from requirements file`, 'success');
             } else {
                 showStatus('Error: ' + result.error, 'danger');
                 resetForm();
@@ -287,11 +287,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     loadBtn.addEventListener('click', async function() {
         if (!parsedBomData) {
-            showStatus('No data to load. Please upload a BOM file first.', 'danger');
+            showStatus('No data to load. Please upload a requirements file first.', 'danger');
             return;
         }
 
-        if (!confirm(`Load BOM for Job ${parsedBomData.metadata.job}?\n\nThis will DELETE existing BOM records for this job.`)) {
+        if (!confirm(`Load requirements for Job ${parsedBomData.metadata.job}?\n\nThis will DELETE existing records for this job.`)) {
             return;
         }
 

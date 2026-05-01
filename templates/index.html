@@ -22,7 +22,7 @@
             <i class="bi bi-plus-circle"></i> Add Stock
         </a>
         <a href="{{ url_for('pick') }}" class="btn btn-ghost">
-            <i class="bi bi-dash-circle"></i> Pick Parts
+            <i class="bi bi-dash-circle"></i> Pick Items
         </a>
         <a href="{{ url_for('restock') }}" class="btn btn-ghost">
             <i class="bi bi-arrow-counterclockwise"></i> Restock
@@ -112,25 +112,25 @@
                     <div class="col-6 col-md-4 col-lg-2">
                         <a href="{{ url_for('stock') }}" class="quick-action">
                             <i class="bi bi-plus-circle quick-action-icon"></i>
-                            <span class="quick-action-label">Stock Parts</span>
+                            <span class="quick-action-label">Stock Items</span>
                         </a>
                     </div>
                     <div class="col-6 col-md-4 col-lg-2">
                         <a href="{{ url_for('pick') }}" class="quick-action">
                             <i class="bi bi-dash-circle quick-action-icon"></i>
-                            <span class="quick-action-label">Pick Parts</span>
+                            <span class="quick-action-label">Pick Items</span>
                         </a>
                     </div>
                     <div class="col-6 col-md-4 col-lg-2">
                         <a href="{{ url_for('generate_pcn') }}" class="quick-action">
                             <i class="bi bi-upc-scan quick-action-icon"></i>
-                            <span class="quick-action-label">Generate PCN</span>
+                            <span class="quick-action-label">Generate Label</span>
                         </a>
                     </div>
                     <div class="col-6 col-md-4 col-lg-2">
                         <a href="{{ url_for('bom_loader') }}" class="quick-action">
                             <i class="bi bi-upload quick-action-icon"></i>
-                            <span class="quick-action-label">Load BOM</span>
+                            <span class="quick-action-label">Load Requirements</span>
                         </a>
                     </div>
                     <div class="col-6 col-md-4 col-lg-2">
@@ -168,7 +168,7 @@
                     <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-search"></i></span>
                         <input type="text" id="inventorySearch" class="form-control"
-                               placeholder="Search by description, MPN, or location…">
+                               placeholder="Search by description, supplier PN, or location…">
                         <button class="btn btn-outline-secondary btn-sm" id="clearSearch" type="button">
                             <i class="bi bi-x"></i>
                         </button>
@@ -178,7 +178,7 @@
                     <table class="modern-table" id="inventoryTable">
                         <thead>
                             <tr>
-                                <th>MPN / Part</th>
+                                <th>Part / Item</th>
                                 <th>Location</th>
                                 <th>Qty</th>
                             </tr>

@@ -76,17 +76,17 @@
 
         <a class="sidebar-link {% if request.endpoint == 'generate_pcn' %}active{% endif %}"
            href="{{ url_for('generate_pcn') }}">
-            <i class="bi bi-upc-scan"></i> Generate PCN
+            <i class="bi bi-upc-scan"></i> Generate Label
         </a>
 
         <a class="sidebar-link {% if request.endpoint == 'stock' %}active{% endif %}"
            href="{{ url_for('stock') }}">
-            <i class="bi bi-plus-circle"></i> Stock Parts
+            <i class="bi bi-plus-circle"></i> Stock Items
         </a>
 
         <a class="sidebar-link {% if request.endpoint == 'pick' %}active{% endif %}"
            href="{{ url_for('pick') }}">
-            <i class="bi bi-dash-circle"></i> Pick Parts
+            <i class="bi bi-dash-circle"></i> Pick Items
         </a>
 
         <a class="sidebar-link {% if request.endpoint == 'restock' %}active{% endif %}"
@@ -105,7 +105,7 @@
 
         <a class="sidebar-link {% if request.endpoint == 'pcb_inventory' %}active{% endif %}"
            href="{{ url_for('pcb_inventory') }}">
-            <i class="bi bi-cpu"></i> PCB Inventory
+            <i class="bi bi-cpu"></i> Parts Inventory
         </a>
 
         <a class="sidebar-link {% if request.endpoint == 'warehouse_inventory' %}active{% endif %}"
@@ -123,12 +123,12 @@
 
         <a class="sidebar-link {% if request.endpoint == 'pcn_history' %}active{% endif %}"
            href="{{ url_for('pcn_history') }}">
-            <i class="bi bi-clock-history"></i> PCN History
+            <i class="bi bi-clock-history"></i> Lot History
         </a>
 
         <a class="sidebar-link {% if request.endpoint == 'po_history' %}active{% endif %}"
            href="{{ url_for('po_history') }}">
-            <i class="bi bi-receipt"></i> PO History
+            <i class="bi bi-receipt"></i> Order History
         </a>
 
         <a class="sidebar-link {% if request.endpoint == 'reports' %}active{% endif %}"

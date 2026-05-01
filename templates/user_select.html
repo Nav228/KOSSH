@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}User Authentication - Stock and Pick PCB Inventory{% endblock %}
+{% block title %}User Authentication - KOSSH Inventory{% endblock %}
 
 {% block content %}
 <div class="container-fluid mt-4">
@@ -10,24 +10,24 @@
                 <div class="card-header">
                     <h4 class="mb-0">
                         <i class="bi bi-person-check"></i>
-                        ACI Dashboard Authentication
+                        Application Authentication
                     </h4>
                 </div>
                 <div class="card-body">
                     <div class="alert alert-info">
                         <i class="bi bi-info-circle"></i>
-                        <strong>Demo Mode:</strong> This simulates authentication from the ACI Dashboard. 
-                        Select a user to see how ITAR access control works.
+                        <strong>Demo Mode:</strong> This simulates user authentication.
+                        Select a user to see how restricted-access control works.
                     </div>
 
                     <form method="POST">
                         {{ form.hidden_tag() }}
-                        
+
                         <div class="mb-3">
                             {{ form.username.label(class="form-label") }}
                             {{ form.username(class="form-select") }}
                             <div class="form-text">
-                                Select a user to simulate login from ACI Dashboard
+                                Select a user to simulate sign-in
                             </div>
                         </div>
                         
@@ -47,7 +47,7 @@
                                         <tr>
                                             <th>Username</th>
                                             <th>Role</th>
-                                            <th>ITAR Access</th>
+                                            <th>Restricted Access</th>
                                             <th>Description</th>
                                         </tr>
                                     </thead>
@@ -75,7 +75,7 @@
                                                 {% if user.role == 'Super User' %}
                                                     Full access to all items
                                                 {% elif user.role == 'ITAR' %}
-                                                    Can see ITAR controlled items
+                                                    Can see restricted/controlled items
                                                 {% elif user.role == 'Manager' %}
                                                     Management level access
                                                 {% elif user.role == 'Operator' %}
@@ -95,11 +95,11 @@
                     <div class="mt-4">
                         <div class="alert alert-warning">
                             <i class="bi bi-shield-exclamation"></i>
-                            <strong>ITAR Security Notice:</strong>
+                            <strong>Restricted Access Notice:</strong>
                             <ul class="mb-0">
-                                <li>ITAR items are only visible to authorized users</li>
+                                <li>Restricted items are only visible to authorized users</li>
                                 <li>All access is logged for audit purposes</li>
-                                <li>Export control restrictions apply</li>
+                                <li>Access restrictions may apply</li>
                             </ul>
                         </div>
                     </div>
