@@ -6898,6 +6898,68 @@ def clear_notifications():
         if conn:
             db_manager.return_connection(conn)
 
+@app.route('/api/notifications/recent')
+@require_auth
+def get_recent_notifications():
+    """Return the most recent activity notifications for the bell dropdown."""
+    is_theresa = session.get('username', '').lower() in MANAGE_AUTHORIZED_USERS
+    if not is_admin_user() and not is_theresa:
+        return jsonify({'notifications': [], 'unseen_count': 0})
+
+    conn = None
+    try:
+        conn = db_manager.get_connection()
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
+
+        if is_theresa and not is_admin_user():
+            cursor.execute("""
+                SELECT id, username, full_name, action_type, description, created_at, seen
+                FROM pcb_inventory."tblActivityLog"
+                WHERE username = 'admin'
+                ORDER BY created_at DESC
+                LIMIT 10
+            """)
+        else:
+            cursor.execute("""
+                SELECT id, username, full_name, action_type, description, created_at, seen
+                FROM pcb_inventory."tblActivityLog"
+                ORDER BY created_at DESC
+                LIMIT 10
+            """)
+        rows = cursor.fetchall()
+
+        notifications = []
+        for r in rows:
+            notifications.append({
+                'id': r['id'],
+                'username': r['username'] or '',
+                'full_name': r['full_name'] or '',
+                'action_type': r['action_type'] or 'EVENT',
+                'description': r['description'] or '',
+                'created_at': r['created_at'].isoformat() if r['created_at'] else '',
+                'seen': r['seen'],
+            })
+
+        if is_theresa and not is_admin_user():
+            cursor.execute("""
+                SELECT COUNT(*) as count FROM pcb_inventory."tblActivityLog"
+                WHERE seen = FALSE AND username = 'admin'
+            """)
+        else:
+            cursor.execute("""
+                SELECT COUNT(*) as count FROM pcb_inventory."tblActivityLog" WHERE seen = FALSE
+            """)
+        unseen = cursor.fetchone()['count']
+
+        return jsonify({'notifications': notifications, 'unseen_count': unseen})
+
+    except Exception as e:
+        logger.error(f"Error getting recent notifications: {e}")
+        return jsonify({'notifications': [], 'unseen_count': 0})
+    finally:
+        if conn:
+            db_manager.return_connection(conn)
+
 @app.route('/api/notifications/count')
 @app.route('/api/admin/notification-count')
 @require_auth

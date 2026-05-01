@@ -333,7 +333,8 @@
             position: relative;
         }
 
-        .form-control {
+        .form-control,
+        input.form-control {
             width: 100%;
             padding: 14px 16px 14px 48px;
             font-size: 15px;
@@ -341,8 +342,10 @@
             border-radius: 12px;
             background: rgba(30, 25, 40, 0.8);
             transition: all 0.3s ease;
-            color: #e2e8f0;
+            color: #e2e8f0 !important;
             font-weight: 500;
+            -webkit-text-fill-color: #e2e8f0;
+            caret-color: #ff006e;
         }
 
         .form-control:focus {
@@ -350,10 +353,24 @@
             border-color: #ff006e;
             background: rgba(30, 25, 40, 1);
             box-shadow: 0 0 0 3px rgba(255, 0, 110, 0.1);
+            color: #e2e8f0 !important;
+            -webkit-text-fill-color: #e2e8f0;
         }
 
         .form-control::placeholder {
             color: #64748b;
+        }
+
+        /* Fix browser autofill (Chrome/Edge) showing black-on-yellow */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active {
+            -webkit-text-fill-color: #e2e8f0 !important;
+            -webkit-box-shadow: 0 0 0 1000px rgba(30, 25, 40, 0.95) inset !important;
+            box-shadow: 0 0 0 1000px rgba(30, 25, 40, 0.95) inset !important;
+            caret-color: #ff006e !important;
+            transition: background-color 5000s ease-in-out 0s;
         }
 
         .input-icon {

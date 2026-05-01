@@ -200,10 +200,31 @@
         <div class="topbar-right">
             <!-- Notifications -->
             {% if is_admin or can_manage %}
-            <a href="{{ url_for('admin_notifications') }}" class="topbar-btn" title="Notifications">
-                <i class="bi bi-bell"></i>
-                <span class="notif-badge" id="topbarNotifBadge" style="display:none;"></span>
-            </a>
+            <div class="dropdown notif-dropdown">
+                <button type="button" class="topbar-btn" id="notifDropdownBtn"
+                        data-bs-toggle="dropdown" data-bs-auto-close="outside"
+                        aria-expanded="false" title="Notifications">
+                    <i class="bi bi-bell"></i>
+                    <span class="notif-badge" id="topbarNotifBadge" style="display:none;"></span>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end notif-panel" aria-labelledby="notifDropdownBtn">
+                    <div class="notif-panel-header">
+                        <strong>Notifications</strong>
+                        <button type="button" class="btn btn-link btn-sm p-0" id="notifMarkAllSeen"
+                                title="Mark all as read">
+                            <i class="bi bi-check2-all"></i> Mark all read
+                        </button>
+                    </div>
+                    <div class="notif-panel-list" id="notifPanelList">
+                        <div class="notif-panel-empty">
+                            <i class="bi bi-hourglass-split"></i> Loading…
+                        </div>
+                    </div>
+                    <a href="{{ url_for('admin_notifications') }}" class="notif-panel-footer">
+                        View all notifications <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
             {% endif %}
 
             <!-- User menu -->
@@ -376,15 +397,96 @@ function updateNotifCount() {
         .then(r => r.ok ? r.json() : null)
         .then(d => {
             if (!d) return;
-            const count = d.unseen_count || 0;
+            const count = d.count != null ? d.count : (d.unseen_count || 0);
             const topBadge = document.getElementById('topbarNotifBadge');
             const sideBadge = document.getElementById('sidebarNotifBadge');
-            if (topBadge)  { topBadge.style.display  = count > 0 ? 'block' : 'none'; }
-            if (sideBadge) { sideBadge.style.display  = count > 0 ? 'inline' : 'none'; sideBadge.textContent = count; }
+            if (topBadge)  {
+                topBadge.style.display = count > 0 ? 'flex' : 'none';
+                topBadge.textContent = count > 99 ? '99+' : count;
+            }
+            if (sideBadge) {
+                sideBadge.style.display = count > 0 ? 'inline' : 'none';
+                sideBadge.textContent = count;
+            }
         }).catch(() => {});
 }
 updateNotifCount();
 setInterval(updateNotifCount, 30000);
+
+// ---- Notification dropdown panel ----
+function loadRecentNotifications() {
+    const list = document.getElementById('notifPanelList');
+    if (!list) return;
+    list.innerHTML = '<div class="notif-panel-empty"><i class="bi bi-hourglass-split"></i> Loading…</div>';
+
+    fetch('/api/notifications/recent', { credentials: 'same-origin' })
+        .then(r => r.ok ? r.json() : null)
+        .then(d => {
+            if (!d) {
+                list.innerHTML = '<div class="notif-panel-empty"><i class="bi bi-exclamation-circle"></i> Could not load</div>';
+                return;
+            }
+            const items = d.notifications || [];
+            if (items.length === 0) {
+                list.innerHTML = '<div class="notif-panel-empty"><i class="bi bi-inbox"></i> No notifications yet</div>';
+                return;
+            }
+            const iconFor = (t) => {
+                const k = (t || '').toUpperCase();
+                if (k.includes('LOGIN')) return 'box-arrow-in-right';
+                if (k.includes('SIGNUP')) return 'person-plus';
+                if (k.includes('STOCK')) return 'plus-circle';
+                if (k.includes('PICK')) return 'dash-circle';
+                if (k.includes('DELETE')) return 'trash';
+                return 'bell';
+            };
+            const timeAgo = (iso) => {
+                if (!iso) return '';
+                const d = new Date(iso);
+                const s = Math.floor((Date.now() - d.getTime()) / 1000);
+                if (s < 60) return 'just now';
+                if (s < 3600) return Math.floor(s / 60) + 'm ago';
+                if (s < 86400) return Math.floor(s / 3600) + 'h ago';
+                return Math.floor(s / 86400) + 'd ago';
+            };
+            list.innerHTML = items.map(n => `
+                <div class="notif-item ${n.seen ? '' : 'unseen'}">
+                    <div class="notif-item-icon"><i class="bi bi-${iconFor(n.action_type)}"></i></div>
+                    <div class="notif-item-body">
+                        <div class="notif-item-title">${(n.full_name || n.username || 'System')} <span class="notif-item-tag">${n.action_type || ''}</span></div>
+                        <div class="notif-item-desc">${n.description || ''}</div>
+                        <div class="notif-item-time">${timeAgo(n.created_at)}</div>
+                    </div>
+                </div>
+            `).join('');
+        })
+        .catch(() => {
+            list.innerHTML = '<div class="notif-panel-empty"><i class="bi bi-exclamation-circle"></i> Could not load</div>';
+        });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const btn = document.getElementById('notifDropdownBtn');
+    if (btn) {
+        btn.addEventListener('click', loadRecentNotifications);
+    }
+    const markAll = document.getElementById('notifMarkAllSeen');
+    if (markAll) {
+        markAll.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            fetch('/admin/notifications/mark-seen', {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: csrf ? { 'X-CSRFToken': csrf } : {}
+            }).then(() => {
+                loadRecentNotifications();
+                updateNotifCount();
+            });
+        });
+    }
+});
 
 // ---- Auto dismiss alerts ----
 setTimeout(function() {
