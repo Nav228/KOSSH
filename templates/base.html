@@ -174,8 +174,83 @@
             <i class="bi bi-moon-fill" id="darkModeIcon"></i>
             <span id="darkModeText">Dark Mode</span>
         </button>
+        <button class="dark-mode-toggle w-100 mt-2" id="themeCustomizerToggle" type="button">
+            <i class="bi bi-palette-fill"></i>
+            <span>Customize</span>
+        </button>
     </div>
 </aside>
+
+<!-- ====== THEME CUSTOMIZER PANEL ====== -->
+<div class="theme-customizer" id="themeCustomizer" aria-hidden="true">
+    <div class="theme-customizer-header">
+        <div>
+            <h6 class="mb-1"><i class="bi bi-palette-fill me-2"></i>Customize Sidebar</h6>
+            <p class="mb-0 small text-muted">Pick a color or set your own</p>
+        </div>
+        <button type="button" class="theme-customizer-close" id="themeCustomizerClose" aria-label="Close">
+            <i class="bi bi-x-lg"></i>
+        </button>
+    </div>
+
+    <div class="theme-customizer-body">
+        <div class="theme-customizer-section-label">Presets</div>
+        <div class="theme-preset-grid">
+            <button type="button" class="theme-preset" data-bg="#0f172a" data-text="#94a3b8" data-active-text="#818cf8" title="Slate (default)">
+                <span class="theme-preset-swatch" style="background:#0f172a"></span>
+                <span class="theme-preset-name">Slate</span>
+            </button>
+            <button type="button" class="theme-preset" data-bg="#020617" data-text="#94a3b8" data-active-text="#a78bfa" title="Midnight">
+                <span class="theme-preset-swatch" style="background:#020617"></span>
+                <span class="theme-preset-name">Midnight</span>
+            </button>
+            <button type="button" class="theme-preset" data-bg="#1c1917" data-text="#a8a29e" data-active-text="#fbbf24" title="Charcoal">
+                <span class="theme-preset-swatch" style="background:#1c1917"></span>
+                <span class="theme-preset-name">Charcoal</span>
+            </button>
+            <button type="button" class="theme-preset" data-bg="#1e3a8a" data-text="#bfdbfe" data-active-text="#fbbf24" title="Royal Blue">
+                <span class="theme-preset-swatch" style="background:#1e3a8a"></span>
+                <span class="theme-preset-name">Royal Blue</span>
+            </button>
+            <button type="button" class="theme-preset" data-bg="#064e3b" data-text="#a7f3d0" data-active-text="#fde047" title="Forest">
+                <span class="theme-preset-swatch" style="background:#064e3b"></span>
+                <span class="theme-preset-name">Forest</span>
+            </button>
+            <button type="button" class="theme-preset" data-bg="#4c1d95" data-text="#ddd6fe" data-active-text="#fcd34d" title="Royal Purple">
+                <span class="theme-preset-swatch" style="background:#4c1d95"></span>
+                <span class="theme-preset-name">Purple</span>
+            </button>
+            <button type="button" class="theme-preset" data-bg="#7c2d12" data-text="#fed7aa" data-active-text="#fde047" title="Rust">
+                <span class="theme-preset-swatch" style="background:#7c2d12"></span>
+                <span class="theme-preset-name">Rust</span>
+            </button>
+            <button type="button" class="theme-preset" data-bg="#831843" data-text="#fbcfe8" data-active-text="#fde047" title="Crimson">
+                <span class="theme-preset-swatch" style="background:#831843"></span>
+                <span class="theme-preset-name">Crimson</span>
+            </button>
+            <button type="button" class="theme-preset" data-bg="#0c4a6e" data-text="#bae6fd" data-active-text="#fde047" title="Ocean">
+                <span class="theme-preset-swatch" style="background:#0c4a6e"></span>
+                <span class="theme-preset-name">Ocean</span>
+            </button>
+            <button type="button" class="theme-preset" data-bg="#f8fafc" data-text="#475569" data-active-text="#4f46e5" title="Light">
+                <span class="theme-preset-swatch" style="background:#f8fafc;border:1px solid #cbd5e1"></span>
+                <span class="theme-preset-name">Light</span>
+            </button>
+        </div>
+
+        <div class="theme-customizer-section-label mt-3">Custom Color</div>
+        <div class="theme-custom-row">
+            <input type="color" id="themeCustomColor" value="#0f172a" class="theme-color-input" />
+            <input type="text" id="themeCustomColorText" value="#0f172a" class="theme-color-text" maxlength="7" />
+            <button type="button" class="btn btn-sm btn-primary" id="themeApplyCustom">Apply</button>
+        </div>
+
+        <button type="button" class="btn btn-outline-secondary w-100 mt-3" id="themeResetBtn">
+            <i class="bi bi-arrow-counterclockwise me-1"></i> Reset to Default
+        </button>
+    </div>
+</div>
+<div class="theme-customizer-overlay" id="themeCustomizerOverlay"></div>
 
 <!-- ====== MAIN WRAPPER ====== -->
 <div class="main-wrapper">
@@ -494,6 +569,142 @@ setTimeout(function() {
         try { new bootstrap.Alert(a).close(); } catch(e) {}
     });
 }, 5000);
+
+// ---- Theme Customizer ----
+(function() {
+    const STORAGE_KEY = 'kossh.sidebarTheme';
+    const root = document.documentElement;
+
+    function pickContrast(hex) {
+        // Determine if a hex color is light enough that we need dark text on top
+        const h = hex.replace('#','');
+        if (h.length !== 6) return '#ffffff';
+        const r = parseInt(h.slice(0,2),16);
+        const g = parseInt(h.slice(2,4),16);
+        const b = parseInt(h.slice(4,6),16);
+        const yiq = (r*299 + g*587 + b*114) / 1000;
+        return yiq >= 160 ? '#1e293b' : '#ffffff';
+    }
+
+    function applyTheme(theme) {
+        if (!theme || !theme.bg) return;
+        const onLight = pickContrast(theme.bg) === '#1e293b';
+        const text = theme.text || (onLight ? '#475569' : '#94a3b8');
+        const textHover = onLight ? '#0f172a' : '#f1f5f9';
+        const activeText = theme.activeText || (onLight ? '#4f46e5' : '#a5b4fc');
+        const activeBg = onLight ? 'rgba(79, 70, 229, 0.10)' : 'rgba(255, 255, 255, 0.08)';
+        const border = onLight ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.06)';
+
+        root.style.setProperty('--sidebar-bg', theme.bg);
+        root.style.setProperty('--sidebar-text', text);
+        root.style.setProperty('--sidebar-text-hover', textHover);
+        root.style.setProperty('--sidebar-active-bg', activeBg);
+        root.style.setProperty('--sidebar-active-text', activeText);
+        root.style.setProperty('--sidebar-active-border', activeText);
+        root.style.setProperty('--sidebar-border', border);
+    }
+
+    function loadTheme() {
+        try {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
+                const theme = JSON.parse(stored);
+                applyTheme(theme);
+                return theme;
+            }
+        } catch(e) {}
+        return null;
+    }
+
+    function saveTheme(theme) {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(theme)); } catch(e) {}
+    }
+
+    function clearTheme() {
+        try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+        ['--sidebar-bg','--sidebar-text','--sidebar-text-hover',
+         '--sidebar-active-bg','--sidebar-active-text','--sidebar-active-border',
+         '--sidebar-border'].forEach(v => root.style.removeProperty(v));
+    }
+
+    // Apply saved theme as early as possible
+    loadTheme();
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const panel    = document.getElementById('themeCustomizer');
+        const overlay  = document.getElementById('themeCustomizerOverlay');
+        const openBtn  = document.getElementById('themeCustomizerToggle');
+        const closeBtn = document.getElementById('themeCustomizerClose');
+        const colorInp = document.getElementById('themeCustomColor');
+        const colorTxt = document.getElementById('themeCustomColorText');
+        const applyCst = document.getElementById('themeApplyCustom');
+        const resetBtn = document.getElementById('themeResetBtn');
+
+        if (!panel) return;
+
+        function open()  { panel.classList.add('open'); overlay.classList.add('open'); }
+        function close() { panel.classList.remove('open'); overlay.classList.remove('open'); }
+
+        openBtn  && openBtn.addEventListener('click', open);
+        closeBtn && closeBtn.addEventListener('click', close);
+        overlay  && overlay.addEventListener('click', close);
+
+        // Preset clicks
+        document.querySelectorAll('.theme-preset').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const theme = {
+                    bg: this.dataset.bg,
+                    text: this.dataset.text || null,
+                    activeText: this.dataset.activeText || null
+                };
+                applyTheme(theme);
+                saveTheme(theme);
+                document.querySelectorAll('.theme-preset').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Custom color sync
+        if (colorInp && colorTxt) {
+            colorInp.addEventListener('input', () => { colorTxt.value = colorInp.value; });
+            colorTxt.addEventListener('input', () => {
+                const v = colorTxt.value.trim();
+                if (/^#[0-9a-f]{6}$/i.test(v)) colorInp.value = v;
+            });
+        }
+
+        applyCst && applyCst.addEventListener('click', function() {
+            const v = (colorTxt.value || colorInp.value || '').trim();
+            if (!/^#[0-9a-f]{6}$/i.test(v)) {
+                alert('Please enter a valid hex color like #1e3a8a');
+                return;
+            }
+            const theme = { bg: v };
+            applyTheme(theme);
+            saveTheme(theme);
+            document.querySelectorAll('.theme-preset').forEach(b => b.classList.remove('active'));
+        });
+
+        resetBtn && resetBtn.addEventListener('click', function() {
+            clearTheme();
+            document.querySelectorAll('.theme-preset').forEach(b => b.classList.remove('active'));
+        });
+
+        // Reflect saved selection in UI
+        const saved = loadTheme();
+        if (saved) {
+            document.querySelectorAll('.theme-preset').forEach(b => {
+                if (b.dataset.bg && b.dataset.bg.toLowerCase() === (saved.bg || '').toLowerCase()) {
+                    b.classList.add('active');
+                }
+            });
+            if (colorInp && /^#[0-9a-f]{6}$/i.test(saved.bg || '')) {
+                colorInp.value = saved.bg;
+                if (colorTxt) colorTxt.value = saved.bg;
+            }
+        }
+    });
+})();
 </script>
 
 {% block extra_js %}{% endblock %}
