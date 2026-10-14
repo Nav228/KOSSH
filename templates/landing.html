@@ -3,11 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KOSSH - Inventory Management Reimagined</title>
+    <title>KOSSH | Inventory for electronics manufacturing</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50' y='65' font-size='70' font-family='Noto Sans Devanagari' text-anchor='middle' fill='%23b45309'%3E%E0%A4%95%3C/text%3E%3C/svg%3E">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&family=DM+Sans:wght@400;500;700;900&family=Playfair+Display:wght@700;900&family=Caveat:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Noto+Sans+Devanagari:wght@700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --font-display: 'Bricolage Grotesque', sans-serif;
+            --font-body: 'Geist', system-ui, sans-serif;
+            --font-mono: 'Geist Mono', ui-monospace, monospace;
+            --font-accent: 'Instrument Serif', serif;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -19,8 +26,10 @@
         }
 
         body {
-            font-family: 'Sora', sans-serif;
+            font-family: var(--font-body);
             background: #0a0a0f;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
             color: #e2e8f0;
             overflow-x: hidden;
             position: relative;
@@ -131,10 +140,10 @@
             align-items: center;
             gap: 12px;
             text-decoration: none;
-            font-size: 28px;
-            font-weight: 900;
-            font-family: 'DM Sans', sans-serif;
-            letter-spacing: -1px;
+            font-size: 26px;
+            font-weight: 800;
+            font-family: var(--font-display);
+            letter-spacing: -0.5px;
             background: linear-gradient(135deg, #ff006e, #ff3a44, #ff6b6b);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -150,9 +159,9 @@
         nav a {
             color: #cbd5e1;
             text-decoration: none;
-            font-size: 15px;
-            font-weight: 600;
-            margin-left: 40px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-left: 36px;
             transition: all 0.3s ease;
             position: relative;
         }
@@ -186,8 +195,9 @@
         .btn-nav {
             padding: 11px 22px;
             border-radius: 10px;
-            font-weight: 700;
+            font-weight: 600;
             font-size: 14px;
+            font-family: var(--font-body);
             cursor: pointer;
             border: none;
             transition: all 0.3s ease;
@@ -239,32 +249,55 @@
         }
 
         .hero-left h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 76px;
-            font-weight: 900;
-            line-height: 1.05;
-            margin-bottom: 32px;
-            letter-spacing: -1.5px;
+            font-family: var(--font-display);
+            font-size: 72px;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 28px;
+            letter-spacing: -0.04em;
             color: #f8fafc;
         }
 
         .hero-left h1 .highlight {
-            font-family: 'Caveat', cursive;
-            font-size: 78px;
+            font-family: var(--font-accent);
+            font-style: italic;
+            font-size: 1.12em;
+            letter-spacing: -0.01em;
             background: linear-gradient(135deg, #ff006e 0%, #ff3a44 50%, #ff006e 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            font-weight: 700;
+            font-weight: 400;
             display: block;
             line-height: 1;
-            margin: 8px 0;
+            margin: 6px 0 0;
+            padding-right: 0.08em;
             
+        }
+
+        .eyebrow {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #ff3a44;
+            margin-bottom: 24px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .eyebrow::before {
+            content: '';
+            width: 24px;
+            height: 1px;
+            background: currentColor;
         }
 
         .hero-left p {
             font-size: 18px;
-            line-height: 1.8;
+            line-height: 1.65;
             color: #cbd5e1;
             margin-bottom: 40px;
             max-width: 500px;
@@ -272,6 +305,7 @@
 
         .hero-buttons {
             display: flex;
+            align-items: center;
             gap: 16px;
             margin-bottom: 60px;
         }
@@ -279,14 +313,14 @@
         .btn-hero {
             padding: 18px 38px;
             font-size: 16px;
-            font-weight: 700;
+            font-weight: 600;
             border-radius: 12px;
             border: none;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             text-decoration: none;
             display: inline-block;
-            font-family: 'Sora', sans-serif;
+            font-family: var(--font-body);
         }
 
         .btn-hero-primary {
@@ -352,9 +386,10 @@
         }
 
         .hero-stat-text h3 {
-            font-family: 'DM Sans', sans-serif;
+            font-family: var(--font-display);
             font-size: 18px;
             font-weight: 700;
+            letter-spacing: -0.01em;
             color: #ff3a44;
             margin-bottom: 4px;
         }
@@ -421,13 +456,15 @@
         }
 
         .dashboard-title {
-            font-size: 14px;
+            font-family: var(--font-mono);
+            font-size: 13px;
             font-weight: 700;
             color: #ff006e;
             letter-spacing: 0.5px;
         }
 
         .dashboard-badge {
+            font-family: var(--font-mono);
             font-size: 11px;
             padding: 4px 10px;
             background: rgba(255, 0, 110, 0.25);
@@ -461,8 +498,9 @@
         }
 
         .stat-value {
-            font-size: 13px;
-            font-weight: 700;
+            font-family: var(--font-mono);
+            font-size: 18px;
+            font-weight: 600;
             color: #ff006e;
             line-height: 1.2;
         }
@@ -474,7 +512,8 @@
         }
 
         .dashboard-table {
-            font-size: 11px;
+            font-family: var(--font-mono);
+            font-size: 11.5px;
             flex: 1;
             position: relative;
             z-index: 1;
@@ -544,21 +583,23 @@
         }
 
         .section-label {
-            font-size: 13px;
+            font-family: var(--font-mono);
+            font-size: 12px;
             text-transform: uppercase;
-            letter-spacing: 3px;
+            letter-spacing: 0.14em;
             color: #8b5cf6;
-            font-weight: 700;
+            font-weight: 500;
             margin-bottom: 16px;
         }
 
         .features-header h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 56px;
-            font-weight: 900;
+            font-family: var(--font-display);
+            font-size: 54px;
+            font-weight: 800;
             color: #f8fafc;
             margin-bottom: 20px;
-            letter-spacing: -1.5px;
+            letter-spacing: -0.035em;
+            line-height: 1.05;
             background: linear-gradient(135deg, #8b5cf6, #a78bfa);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -634,11 +675,12 @@
         }
 
         .feature-card h3 {
-            font-family: 'DM Sans', sans-serif;
-            font-size: 24px;
-            font-weight: 800;
+            font-family: var(--font-display);
+            font-size: 22px;
+            font-weight: 700;
             color: #a78bfa;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
+            letter-spacing: -0.015em;
         }
 
         .feature-card p {
@@ -676,12 +718,12 @@
         }
 
         .cta h2 {
-            font-family: 'Playfair Display', serif;
+            font-family: var(--font-display);
             font-size: 52px;
-            font-weight: 900;
+            font-weight: 800;
             color: #f8fafc;
             margin-bottom: 24px;
-            letter-spacing: -1px;
+            letter-spacing: -0.035em;
             line-height: 1.15;
             background: linear-gradient(135deg, #00d4ff, #00ffff);
             -webkit-background-clip: text;
@@ -706,7 +748,8 @@
         .btn-cta {
             padding: 18px 38px;
             font-size: 16px;
-            font-weight: 700;
+            font-weight: 600;
+            font-family: var(--font-body);
             border-radius: 12px;
             border: none;
             cursor: pointer;
@@ -751,12 +794,12 @@
         }
 
         .contact-content h2 {
-            font-family: 'Playfair Display', serif;
+            font-family: var(--font-display);
             font-size: 48px;
-            font-weight: 900;
+            font-weight: 800;
             color: #f8fafc;
             margin-bottom: 20px;
-            letter-spacing: -1px;
+            letter-spacing: -0.035em;
             background: linear-gradient(135deg, #ff006e, #8b5cf6, #00d4ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -804,7 +847,8 @@
         }
 
         .contact-item a {
-            font-size: 16px;
+            font-family: var(--font-mono);
+            font-size: 15px;
             color: #ff006e;
             text-decoration: none;
             transition: all 0.3s ease;
@@ -936,11 +980,11 @@
             </a>
             <nav>
                 <a href="#features">Features</a>
-                <a href="#cta">Get Started</a>
+                <a href="#contact">Contact</a>
             </nav>
             <div class="nav-buttons">
-                <a href="/login" class="btn-nav btn-nav-outline">Sign In</a>
-                <a href="/signup" class="btn-nav btn-nav-solid">Start Free</a>
+                <a href="/login" class="btn-nav btn-nav-outline">Sign in</a>
+                <a href="/signup" class="btn-nav btn-nav-solid">Sign up</a>
             </div>
         </div>
     </header>
@@ -949,15 +993,16 @@
     <section class="hero">
         <div class="hero-content">
             <div class="hero-left">
+                <div class="eyebrow">PCB &amp; warehouse inventory</div>
                 <h1>
-                    Inventory at <span class="highlight">Speed</span>
+                    Every part, <span class="highlight">accounted for.</span>
                 </h1>
                 <p>
-                    Real-time tracking. Zero friction. Enterprise power without the complexity. Manage thousands of parts, locations, and jobs with precision that scales.
+                    KOSSH tracks every reel, tray, and loose part from receiving to the line. Scan to stock, scan to pick, and know about a shortage before the build starts.
                 </p>
                 <div class="hero-buttons">
-                    <a href="/signup" class="btn-hero btn-hero-primary">Get Started Now</a>
-                    <a href="#features" class="btn-hero btn-hero-secondary">Explore Features</a>
+                    <a href="/signup" class="btn-hero btn-hero-primary">Create an account</a>
+                    <a href="#features" class="btn-hero btn-hero-secondary">See how it works</a>
                 </div>
                 <div class="hero-stats">
                     <div class="hero-stat">
@@ -965,7 +1010,7 @@
                             <i class="bi bi-boxes"></i>
                         </div>
                         <div class="hero-stat-text">
-                            <h3>271K+ Items</h3>
+                            <h3>271K+ parts</h3>
                             <p>Tracked across 14 locations</p>
                         </div>
                     </div>
@@ -974,8 +1019,8 @@
                             <i class="bi bi-lightning-fill"></i>
                         </div>
                         <div class="hero-stat-text">
-                            <h3>Real-Time Sync</h3>
-                            <p>Instant inventory updates</p>
+                            <h3>Scan and done</h3>
+                            <p>Stock and pick with a single PCN scan</p>
                         </div>
                     </div>
                     <div class="hero-stat">
@@ -983,8 +1028,8 @@
                             <i class="bi bi-graph-up"></i>
                         </div>
                         <div class="hero-stat-text">
-                            <h3>Smart Analytics</h3>
-                            <p>Data-driven decisions</p>
+                            <h3>Shortages up front</h3>
+                            <p>BOMs checked against what's on the shelf</p>
                         </div>
                     </div>
                 </div>
@@ -994,14 +1039,14 @@
                 <div class="hero-visual">
                     <div class="dashboard-preview">
                         <div class="dashboard-header">
-                            <div class="dashboard-title">KOSSH Dashboard</div>
+                            <div class="dashboard-title">kossh / warehouse</div>
                             <div class="dashboard-badge">● Live</div>
                         </div>
 
                         <div class="dashboard-stats">
                             <div class="stat-card">
                                 <div class="stat-value">271K</div>
-                                <div class="stat-label">Items</div>
+                                <div class="stat-label">Parts</div>
                             </div>
                             <div class="stat-card">
                                 <div class="stat-value">14</div>
@@ -1009,30 +1054,30 @@
                             </div>
                             <div class="stat-card">
                                 <div class="stat-value">35</div>
-                                <div class="stat-label">Jobs</div>
+                                <div class="stat-label">Open jobs</div>
                             </div>
                         </div>
 
                         <div class="dashboard-table">
                             <div class="table-header">
-                                <div>Item</div>
+                                <div>PCN</div>
                                 <div>Qty</div>
                                 <div>Status</div>
                             </div>
                             <div class="table-row">
-                                <div>SKU-A100</div>
+                                <div>PCN 104822</div>
                                 <div class="value-highlight">5,240</div>
                                 <div>✓ Ready</div>
                             </div>
                             <div class="table-row">
-                                <div>PRT-2805</div>
+                                <div>PCN 104823</div>
                                 <div class="value-highlight">1,820</div>
-                                <div>✓ Ready</div>
+                                <div>MSL 3</div>
                             </div>
                             <div class="table-row">
-                                <div>ITM-100</div>
-                                <div class="value-highlight">8,640</div>
-                                <div>✓ Ready</div>
+                                <div>PCN 104824</div>
+                                <div class="value-highlight">240</div>
+                                <div>⚠ Short</div>
                             </div>
                         </div>
                     </div>
@@ -1044,9 +1089,9 @@
     <!-- FEATURES SECTION -->
     <section class="features" id="features">
         <div class="features-header">
-            <div class="section-label">CAPABILITIES</div>
-            <h2>Built for Precision</h2>
-            <p>Everything you need to manage inventory like a pro</p>
+            <div class="section-label">What it does</div>
+            <h2>Built for the stockroom floor</h2>
+            <p>Made for electronics manufacturing, where a single missing part can stall a whole build.</p>
         </div>
 
         <div class="features-grid">
@@ -1054,48 +1099,48 @@
                 <div class="feature-icon">
                     <i class="bi bi-speedometer2"></i>
                 </div>
-                <h3>Real-Time Tracking</h3>
-                <p>Live inventory visibility across all warehouses. Instant updates, zero delays.</p>
+                <h3>Live stock</h3>
+                <p>Every stock, pick, and restock updates counts immediately and lands in the transaction log.</p>
             </div>
 
             <div class="feature-card">
                 <div class="feature-icon">
                     <i class="bi bi-graph-up"></i>
                 </div>
-                <h3>Smart Analytics</h3>
-                <p>Data-driven insights. Shortage detection. Actionable intelligence at your fingertips.</p>
+                <h3>Shortage reports</h3>
+                <p>Load a BOM and see what's missing for the build quantity, then export the list for purchasing.</p>
             </div>
 
             <div class="feature-card">
                 <div class="feature-icon">
                     <i class="bi bi-shield-check"></i>
                 </div>
-                <h3>Enterprise Security</h3>
-                <p>Bank-grade encryption. Secure access. Complete audit trails for compliance.</p>
+                <h3>Roles and audit trail</h3>
+                <p>Five permission levels, including ITAR, plus a full record of who touched what and when.</p>
             </div>
 
             <div class="feature-card">
                 <div class="feature-icon">
                     <i class="bi bi-diagram-3"></i>
                 </div>
-                <h3>Requirements Management</h3>
-                <p>Streamlined parts lists. Item matching. Automated shortage alerts.</p>
+                <h3>BOMs and jobs</h3>
+                <p>Drop in an Excel BOM and columns are detected automatically. Track revisions and build quantities per job.</p>
             </div>
 
             <div class="feature-card">
                 <div class="feature-icon">
-                    <i class="bi bi-cloud-check"></i>
+                    <i class="bi bi-droplet-half"></i>
                 </div>
-                <h3>Cloud Native</h3>
-                <p>Deploy anywhere. Zero downtime. Access from any device, anytime.</p>
+                <h3>Moisture and date codes</h3>
+                <p>MSL levels, date codes, and shelf life tracked on every part, with expiring stock flagged early.</p>
             </div>
 
             <div class="feature-card">
                 <div class="feature-icon">
-                    <i class="bi bi-file-earmark-pdf"></i>
+                    <i class="bi bi-upc-scan"></i>
                 </div>
-                <h3>Export & Reports</h3>
-                <p>Professional reports. Multiple formats. Built-in compliance templates.</p>
+                <h3>Barcode labels</h3>
+                <p>Generate PCNs and print ZPL labels straight to the printer. Scan them from any page.</p>
             </div>
         </div>
     </section>
@@ -1103,11 +1148,11 @@
     <!-- CTA SECTION -->
     <section class="cta" id="cta">
         <div class="cta-content">
-            <h2>Ready to Transform Your Inventory?</h2>
-            <p>Join teams that trust KOSSH for mission-critical inventory operations.</p>
+            <h2>Stop counting by hand.</h2>
+            <p>Sign in to pick up where you left off, or create an account and load your first BOM in a few minutes.</p>
             <div class="cta-buttons">
-                <a href="/login" class="btn-cta btn-cta-primary">Access Dashboard</a>
-                <a href="#features" class="btn-cta btn-cta-secondary">Learn More</a>
+                <a href="/login" class="btn-cta btn-cta-primary">Sign in</a>
+                <a href="#features" class="btn-cta btn-cta-secondary">Back to features</a>
             </div>
         </div>
     </section>
@@ -1115,9 +1160,9 @@
     <!-- CONTACT SECTION -->
     <section class="contact" id="contact">
         <div class="contact-content">
-            <div class="section-label">GET IN TOUCH</div>
-            <h2>Questions? Let's Connect</h2>
-            <p>Have feedback, feature requests, or just want to chat about KOSSH? I'd love to hear from you.</p>
+            <div class="section-label">Get in touch</div>
+            <h2>Have a question?</h2>
+            <p>Feedback, a feature you need, or just curious how KOSSH works. Send me a note and I'll get back to you.</p>
 
             <div class="contact-card">
                 <div class="contact-item">
@@ -1133,7 +1178,7 @@
 
     <!-- FOOTER -->
     <footer>
-        <p>&copy; 2025 KOSSH. All rights reserved. | Intelligent Inventory Management System</p>
+        <p>&copy; 2026 KOSSH &middot; Inventory for electronics manufacturing</p>
     </footer>
 
     <script>
