@@ -2558,6 +2558,38 @@ def _ensure_aci_partnumbers_table():
 threading.Thread(target=_ensure_aci_partnumbers_table, daemon=True).start()
 
 
+def _ensure_transaction_columns():
+    """Add columns that newer code reads/writes on tblTransaction but older or demo databases lack."""
+    needed = {'vendor': 'VARCHAR(200)', 'record_no': 'INTEGER'}
+    conn = None
+    try:
+        conn = db_manager.get_connection()
+        cur = conn.cursor()
+        cur.execute("""
+            SELECT column_name FROM information_schema.columns
+            WHERE table_schema = 'pcb_inventory' AND table_name = 'tblTransaction'
+        """)
+        existing = {row[0] for row in cur.fetchall()}
+        if not existing:
+            return  # table not created yet
+        missing = [c for c in needed if c not in existing]
+        for col in missing:
+            cur.execute(f'ALTER TABLE pcb_inventory."tblTransaction" ADD COLUMN IF NOT EXISTS {col} {needed[col]}')
+        if missing:
+            conn.commit()
+            logger.info(f"tblTransaction: added missing columns {missing}")
+    except Exception as e:
+        logger.error(f"Failed to ensure tblTransaction columns: {e}")
+    finally:
+        if conn:
+            try:
+                db_manager.return_connection(conn)
+            except:
+                pass
+
+threading.Thread(target=_ensure_transaction_columns, daemon=True).start()
+
+
 def _do_log_activity(user_id, username, full_name, action_type, description, details):
     """Background worker that inserts a row into tblActivityLog."""
     conn = None
