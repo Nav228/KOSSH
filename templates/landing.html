@@ -4,625 +4,281 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KOSSH | Inventory for electronics manufacturing</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50' y='65' font-size='70' font-family='Noto Sans Devanagari' text-anchor='middle' fill='%23b45309'%3E%E0%A4%95%3C/text%3E%3C/svg%3E">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Noto+Sans+Devanagari:wght@700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50' y='65' font-size='70' font-family='Noto Sans Devanagari' text-anchor='middle' fill='%23ff3a44'%3E%E0%A4%95%3C/text%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Noto+Sans+Devanagari:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
+            --bg: #0b0b0c;
+            --surface: #111113;
+            --line: rgba(255, 255, 255, 0.08);
+            --line-strong: rgba(255, 255, 255, 0.14);
+            --text: #ededed;
+            --muted: #8b8b91;
+            --faint: #5c5c62;
+            --accent: #ff3a44;
+            --accent-soft: rgba(255, 58, 68, 0.12);
+
             --font-display: 'Bricolage Grotesque', sans-serif;
             --font-body: 'Geist', system-ui, sans-serif;
             --font-mono: 'Geist Mono', ui-monospace, monospace;
             --font-accent: 'Instrument Serif', serif;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
 
         body {
             font-family: var(--font-body);
-            background: #0a0a0f;
+            background: var(--bg);
+            color: var(--text);
             -webkit-font-smoothing: antialiased;
             text-rendering: optimizeLegibility;
-            color: #e2e8f0;
             overflow-x: hidden;
-            position: relative;
         }
 
-        /* ===== ANIMATED BACKGROUND ===== */
-        .bg-animation {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            pointer-events: none;
-            overflow: hidden;
-        }
+        a { color: inherit; text-decoration: none; }
 
-        .particles-container {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-        }
+        .wrap { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
 
-        .particle {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            border-radius: 50%;
-            opacity: 0.6;
-        }
-
-        .particle-red {
-            background: #ff006e;
-            animation: float-particle var(--duration) linear infinite;
-        }
-
-        .particle-purple {
-            background: #8b5cf6;
-            animation: float-particle var(--duration) linear infinite;
-        }
-
-        .particle-cyan {
-            background: #00d4ff;
-            animation: float-particle var(--duration) linear infinite;
-        }
-
-        @keyframes float-particle {
-            0% {
-                transform: translateY(0) translateX(0);
-                opacity: 0.6;
-            }
-            50% {
-                opacity: 0.3;
-            }
-            100% {
-                transform: translateY(-100vh) translateX(var(--tx));
-                opacity: 0.6;
-            }
-        }
-
-        /* Particle connecting lines SVG */
-        .particle-lines {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-        }
-
-        .grid-bg {
-            position: absolute;
-            inset: 0;
-            background-image:
-                linear-gradient(0deg, transparent 24%, rgba(255, 0, 110, 0.05) 25%, rgba(255, 0, 110, 0.05) 26%, transparent 27%, transparent 74%, rgba(255, 0, 110, 0.05) 75%, rgba(255, 0, 110, 0.05) 76%, transparent 77%, transparent),
-                linear-gradient(90deg, transparent 24%, rgba(255, 0, 110, 0.05) 25%, rgba(255, 0, 110, 0.05) 26%, transparent 27%, transparent 74%, rgba(255, 0, 110, 0.05) 75%, rgba(255, 0, 110, 0.05) 76%, transparent 77%, transparent);
-            background-size: 60px 60px;
-            animation: slideGrid 20s linear infinite;
-        }
-
-        @keyframes slideGrid {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(60px); }
+        .label {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--accent);
         }
 
         /* ===== HEADER ===== */
         header {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            background: rgba(10, 10, 15, 0.8);
-            backdrop-
-            border-bottom: 2px solid rgba(255, 0, 110, 0.3);
-            padding: 18px 0;
+            inset: 0 0 auto 0;
+            z-index: 100;
+            background: rgba(11, 11, 12, 0.72);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--line);
         }
 
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: relative;
-            z-index: 1;
-        }
+        .nav { height: 68px; display: flex; align-items: center; justify-content: space-between; }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            font-size: 26px;
-            font-weight: 800;
+            gap: 10px;
             font-family: var(--font-display);
-            letter-spacing: -0.5px;
-            background: linear-gradient(135deg, #ff006e, #ff3a44, #ff6b6b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            
+            font-weight: 800;
+            font-size: 20px;
+            letter-spacing: -0.02em;
         }
 
         .logo-glyph {
-            font-size: 38px;
             font-family: 'Noto Sans Devanagari', sans-serif;
-        }
-
-        nav a {
-            color: #cbd5e1;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            margin-left: 36px;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        nav a::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: linear-gradient(90deg, #ff006e, #00d4ff);
-            transition: width 0.3s ease;
-        }
-
-        nav a:hover {
-            color: #ff006e;
-        }
-
-        nav a:hover::after {
-            width: 100%;
-        }
-
-        .nav-buttons {
-            display: flex;
-            gap: 12px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .btn-nav {
-            padding: 11px 22px;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 14px;
-            font-family: var(--font-body);
-            cursor: pointer;
-            border: none;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-nav-outline {
-            border: 2px solid #ff006e;
-            color: #ff3a44;
-            background: transparent;
-        }
-
-        .btn-nav-outline:hover {
-            background: rgba(255, 0, 110, 0.15);
-            transform: translateY(-2px);
-        }
-
-        .btn-nav-solid {
-            background: linear-gradient(135deg, #ff006e, #ff3a44);
-            color: #fff;
-        }
-
-        .btn-nav-solid:hover {
-            transform: translateY(-2px);
-        }
-
-        /* ===== HERO SECTION ===== */
-        .hero {
-            min-height: 120vh;
-            padding: 140px 40px 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        .hero-content {
-            max-width: 1000px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 80px;
-            align-items: center;
-            width: 100%;
-            position: relative;
-            z-index: 2;
-        }
-
-        .hero-left h1 {
-            font-family: var(--font-display);
-            font-size: 72px;
-            font-weight: 800;
+            color: var(--accent);
+            font-size: 28px;
             line-height: 1;
-            margin-bottom: 28px;
-            letter-spacing: -0.04em;
-            color: #f8fafc;
         }
 
-        .hero-left h1 .highlight {
-            font-family: var(--font-accent);
-            font-style: italic;
-            font-size: 1.12em;
-            letter-spacing: -0.01em;
-            background: linear-gradient(135deg, #ff006e 0%, #ff3a44 50%, #ff006e 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 400;
-            display: block;
-            line-height: 1;
-            margin: 6px 0 0;
-            padding-right: 0.08em;
-            
-        }
+        .nav-links { display: flex; gap: 32px; font-size: 14px; color: var(--muted); }
+        .nav-links a:hover { color: var(--text); }
 
-        .eyebrow {
-            font-family: var(--font-mono);
-            font-size: 12px;
-            font-weight: 500;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            color: #ff3a44;
-            margin-bottom: 24px;
+        .nav-actions { display: flex; align-items: center; gap: 20px; font-size: 14px; }
+        .nav-actions .signin { color: var(--muted); }
+        .nav-actions .signin:hover { color: var(--text); }
+
+        .btn {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            font-family: var(--font-body);
+            font-weight: 500;
+            font-size: 15px;
+            padding: 12px 22px;
+            border-radius: 8px;
+            border: 1px solid transparent;
+            transition: background 0.2s ease, border-color 0.2s ease;
+            cursor: pointer;
         }
 
-        .eyebrow::before {
+        .btn-sm { font-size: 14px; padding: 8px 16px; }
+        .btn-primary { background: var(--accent); color: #fff; }
+        .btn-primary:hover { background: #ff525b; }
+        .btn-ghost { border-color: var(--line-strong); color: var(--text); }
+        .btn-ghost:hover { border-color: rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.03); }
+        .btn .arrow { transition: transform 0.2s ease; }
+        .btn:hover .arrow { transform: translateX(3px); }
+
+        /* ===== HERO ===== */
+        .hero { position: relative; padding: 168px 0 104px; overflow: hidden; }
+
+        .hero::before {
             content: '';
-            width: 24px;
-            height: 1px;
-            background: currentColor;
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+            background-size: 28px 28px;
+            mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 30%, transparent 75%);
+            -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 30%, transparent 75%);
+            pointer-events: none;
         }
 
-        .hero-left p {
+        .hero-grid {
+            position: relative;
+            display: grid;
+            grid-template-columns: 1.05fr 1fr;
+            gap: 64px;
+            align-items: center;
+        }
+
+        .hero h1 {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 76px;
+            line-height: 0.98;
+            letter-spacing: -0.045em;
+            margin: 22px 0 28px;
+        }
+
+        .hero h1 em, .cta h2 em {
+            font-family: var(--font-accent);
+            font-style: italic;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+            color: var(--accent);
+        }
+
+        .hero h1 em { display: block; font-size: 1.1em; margin-top: 4px; }
+
+        .hero-sub {
             font-size: 18px;
             line-height: 1.65;
-            color: #cbd5e1;
-            margin-bottom: 40px;
-            max-width: 500px;
+            color: var(--muted);
+            max-width: 480px;
+            margin-bottom: 36px;
         }
 
-        .hero-buttons {
-            display: flex;
+        .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+        /* Product preview */
+        .preview {
+            background: var(--surface);
+            border: 1px solid var(--line-strong);
+            border-radius: 14px;
+            box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.7), 0 0 0 6px rgba(255, 255, 255, 0.02);
+            overflow: hidden;
+            font-family: var(--font-mono);
+        }
+
+        .preview-bar {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
             align-items: center;
-            gap: 16px;
-            margin-bottom: 60px;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--line);
+            font-size: 12px;
+            color: var(--muted);
         }
 
-        .btn-hero {
-            padding: 18px 38px;
-            font-size: 16px;
-            font-weight: 600;
-            border-radius: 12px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            text-decoration: none;
-            display: inline-block;
-            font-family: var(--font-body);
+        .dots { display: flex; gap: 6px; }
+        .dots i { width: 9px; height: 9px; border-radius: 50%; background: #2a2a2e; display: block; }
+
+        .live { grid-column: 3; justify-self: end; display: inline-flex; align-items: center; gap: 6px; color: var(--text); }
+        .live::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            animation: blink 2s ease-in-out infinite;
         }
 
-        .btn-hero-primary {
-            background: linear-gradient(135deg, #ff006e 0%, #ff3a44 50%, #ff6b6b 100%);
-            color: #fff;
-            
-        }
+        @keyframes blink { 50% { opacity: 0.3; } }
 
-        .btn-hero-primary:hover {
-            transform: translateY(-5px);
-        }
-
-        .btn-hero-secondary {
-            background: rgba(255, 0, 110, 0.1);
-            color: #ff006e;
-            border: 2px solid #ff006e;
-            font-weight: 700;
-        }
-
-        .btn-hero-secondary:hover {
-            background: rgba(255, 0, 110, 0.2);
-            transform: translateY(-3px);
-        }
-
-        .hero-stats {
-            display: flex;
-            flex-direction: column;
-            gap: 32px;
-        }
-
-        .hero-stat {
-            display: flex;
-            gap: 16px;
-            align-items: flex-start;
-        }
-
-        .hero-stat-icon {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, rgba(255, 0, 110, 0.2), rgba(255, 58, 68, 0.2));
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ff006e;
-            font-size: 24px;
-            flex-shrink: 0;
-            animation: iconFloat 3s ease-in-out infinite;
-            border: 1px solid rgba(255, 0, 110, 0.2);
-        }
-
-        .hero-stat:nth-child(2) .hero-stat-icon {
-            animation-delay: 0.3s;
-        }
-
-        .hero-stat:nth-child(3) .hero-stat-icon {
-            animation-delay: 0.6s;
-        }
-
-        @keyframes iconFloat {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-8px); }
-        }
-
-        .hero-stat-text h3 {
+        .preview-stats { display: grid; grid-template-columns: repeat(3, 1fr); border-bottom: 1px solid var(--line); }
+        .preview-stats div { padding: 18px; border-right: 1px solid var(--line); }
+        .preview-stats div:last-child { border-right: 0; }
+        .preview-stats b {
+            display: block;
             font-family: var(--font-display);
-            font-size: 18px;
+            font-size: 26px;
             font-weight: 700;
-            letter-spacing: -0.01em;
-            color: #ff3a44;
+            letter-spacing: -0.02em;
+        }
+        .preview-stats span { font-size: 11px; color: var(--faint); text-transform: uppercase; letter-spacing: 0.08em; }
+
+        .preview table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+        .preview th {
+            text-align: left;
+            font-weight: 400;
+            color: var(--faint);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 14px 18px 10px;
+        }
+        .preview td { padding: 12px 18px; border-top: 1px solid var(--line); color: #b9b9be; }
+        .preview td.num { color: var(--text); }
+
+        .tag {
+            display: inline-block;
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--line-strong);
+            color: var(--muted);
+            white-space: nowrap;
+        }
+        .tag.short { border-color: rgba(255, 58, 68, 0.4); background: var(--accent-soft); color: #ff6b72; }
+
+        /* ===== STATS STRIP ===== */
+        .strip { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+        .strip-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
+        .strip-grid div { padding: 32px 0 32px 32px; border-left: 1px solid var(--line); }
+        .strip-grid div:first-child { border-left: 0; padding-left: 0; }
+        .strip-grid b {
+            display: block;
+            font-family: var(--font-display);
+            font-size: 34px;
+            font-weight: 700;
+            letter-spacing: -0.03em;
             margin-bottom: 4px;
         }
+        .strip-grid span { font-size: 14px; color: var(--muted); }
 
-        .hero-stat-text p {
-            font-size: 14px;
-            color: #94a3b8;
-        }
+        /* ===== SECTIONS ===== */
+        section.block { padding: 128px 0; }
 
-        .hero-right {
-            position: relative;
-            height: 500px;
-        }
-
-        .hero-visual {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(59, 130, 246, 0.08));
-            border: 2px solid rgba(255, 0, 110, 0.3);
-            border-radius: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            padding: 24px;
-            backdrop-
-        }
-
-        .dashboard-preview {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(30, 20, 60, 0.6), rgba(20, 10, 50, 0.8));
-            border-radius: 16px;
-            border: 1px solid rgba(255, 0, 110, 0.2);
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            position: relative;
-            overflow: hidden;
-            backdrop-
-        }
-
-        .dashboard-preview::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at 20% 50%, rgba(255, 0, 110, 0.15), transparent 60%);
-            animation: pulseGlow 4s ease-in-out infinite;
-        }
-
-        @keyframes pulseGlow {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.03); opacity: 0.8; }
-        }
-
-        .dashboard-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .dashboard-title {
-            font-family: var(--font-mono);
-            font-size: 13px;
-            font-weight: 700;
-            color: #ff006e;
-            letter-spacing: 0.5px;
-        }
-
-        .dashboard-badge {
-            font-family: var(--font-mono);
-            font-size: 11px;
-            padding: 4px 10px;
-            background: rgba(255, 0, 110, 0.25);
-            border: 1px solid rgba(255, 0, 110, 0.4);
-            border-radius: 20px;
-            color: #ff006e;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
-        }
-
-        .dashboard-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 12px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, rgba(255, 0, 110, 0.15), rgba(139, 92, 246, 0.15));
-            border: 1px solid rgba(255, 0, 110, 0.2);
-            border-radius: 10px;
-            padding: 12px;
-            text-align: center;
-            backdrop-
-        }
-
-        .stat-value {
-            font-family: var(--font-mono);
-            font-size: 18px;
-            font-weight: 600;
-            color: #ff006e;
-            line-height: 1.2;
-        }
-
-        .stat-label {
-            font-size: 10px;
-            color: #94a3b8;
-            margin-top: 4px;
-        }
-
-        .dashboard-table {
-            font-family: var(--font-mono);
-            font-size: 11.5px;
-            flex: 1;
-            position: relative;
-            z-index: 1;
-        }
-
-        .table-header {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr;
-            gap: 8px;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255, 0, 110, 0.15);
-            margin-bottom: 8px;
-            color: #94a3b8;
-            font-weight: 600;
-        }
-
-        .table-row {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr;
-            gap: 8px;
-            padding: 6px 0;
-            border-bottom: 1px solid rgba(255, 0, 110, 0.08);
-            color: #cbd5e1;
-            animation: slideIn 0.5s ease-out;
-        }
-
-        .table-row:nth-child(1) { animation-delay: 0.1s; }
-        .table-row:nth-child(2) { animation-delay: 0.2s; }
-        .table-row:nth-child(3) { animation-delay: 0.3s; }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .value-highlight {
-            color: #ff006e;
-            font-weight: 600;
-        }
-
-        /* ===== FEATURES SECTION ===== */
-        .features {
-            padding: 140px 40px 120px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .features-header {
-            max-width: 1200px;
-            margin: 0 auto 56px;
+        .section-head {
             display: grid;
             grid-template-columns: 1.3fr 1fr;
             gap: 48px;
             align-items: end;
-            position: relative;
-            z-index: 2;
+            margin-bottom: 56px;
         }
 
-        .section-label {
-            font-family: var(--font-mono);
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.14em;
-            color: #ff3a44;
-            font-weight: 500;
-            margin-bottom: 16px;
-        }
-
-        .features-header h2 {
+        .section-head h2 {
             font-family: var(--font-display);
-            font-size: 54px;
+            font-size: 52px;
             font-weight: 800;
-            color: #f8fafc;
-            letter-spacing: -0.035em;
+            letter-spacing: -0.04em;
             line-height: 1.02;
+            margin-top: 16px;
         }
 
-        .features-header p {
-            font-size: 17px;
-            line-height: 1.6;
-            color: #94a3b8;
-            max-width: 420px;
-            padding-bottom: 6px;
-        }
+        .section-head p { font-size: 17px; line-height: 1.6; color: var(--muted); max-width: 420px; padding-bottom: 6px; }
 
+        /* Features */
         .features-grid {
-            max-width: 1200px;
-            margin: 0 auto;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 1px;
-            background: rgba(148, 163, 184, 0.16);
-            border: 1px solid rgba(148, 163, 184, 0.16);
-            position: relative;
-            z-index: 2;
+            background: var(--line);
+            border: 1px solid var(--line);
         }
 
-        .feature-card {
-            background: #0c0c12;
-            padding: 28px 32px 36px;
-            position: relative;
-            transition: background 0.25s ease;
-        }
+        .feature-card { background: var(--bg); padding: 28px 32px 36px; position: relative; transition: background 0.25s ease; }
 
         .feature-card::after {
             content: '';
@@ -631,17 +287,12 @@
             top: -1px;
             width: 0;
             height: 2px;
-            background: #ff3a44;
+            background: var(--accent);
             transition: width 0.35s ease;
         }
 
-        .feature-card:hover {
-            background: #111119;
-        }
-
-        .feature-card:hover::after {
-            width: calc(100% + 2px);
-        }
+        .feature-card:hover { background: var(--surface); }
+        .feature-card:hover::after { width: calc(100% + 2px); }
 
         .feature-meta {
             display: flex;
@@ -650,21 +301,13 @@
             font-size: 11px;
             letter-spacing: 0.1em;
             text-transform: uppercase;
-            color: #64748b;
+            color: var(--faint);
             margin-bottom: 40px;
         }
 
-        .feature-card:hover .feature-meta span:first-child {
-            color: #ff3a44;
-        }
+        .feature-card:hover .feature-meta span:first-child { color: var(--accent); }
 
-        .feature-icon {
-            width: 48px;
-            height: 48px;
-            color: #ff3a44;
-            margin-bottom: 28px;
-        }
-
+        .feature-icon { width: 44px; height: 44px; color: var(--text); margin-bottom: 28px; }
         .feature-icon svg {
             width: 100%;
             height: 100%;
@@ -674,613 +317,299 @@
             stroke-linecap: round;
             stroke-linejoin: round;
         }
+        .feature-icon .hl { stroke: var(--accent); }
+        .feature-icon .hl-fill { fill: var(--accent); stroke: none; }
 
         .feature-card h3 {
             font-family: var(--font-display);
             font-size: 21px;
             font-weight: 700;
-            color: #f8fafc;
-            margin-bottom: 10px;
             letter-spacing: -0.015em;
+            margin-bottom: 10px;
         }
 
-        .feature-card p {
-            font-size: 15px;
-            color: #94a3b8;
-            line-height: 1.65;
+        .feature-card p { font-size: 15px; line-height: 1.65; color: var(--muted); }
+
+        /* How it works */
+        .how { background: var(--surface); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+        .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px; }
+        .step { border-top: 1px solid var(--line-strong); padding-top: 28px; }
+        .step .n { font-family: var(--font-mono); font-size: 13px; color: var(--accent); margin-bottom: 20px; display: block; }
+        .step h3 {
+            font-family: var(--font-display);
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 12px;
+        }
+        .step p { font-size: 15px; line-height: 1.65; color: var(--muted); }
+        .step code {
+            font-family: var(--font-mono);
+            font-size: 13px;
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.06);
+            padding: 1px 6px;
+            border-radius: 4px;
         }
 
-        @media (max-width: 1024px) {
-            .features-grid { grid-template-columns: repeat(2, 1fr); }
-            .features-header { grid-template-columns: 1fr; gap: 16px; }
-        }
-
-        @media (max-width: 640px) {
-            .features-grid { grid-template-columns: 1fr; }
-            .feature-meta { margin-bottom: 28px; }
-        }
-
-        /* ===== CTA SECTION ===== */
-        .cta {
-            padding: 120px 40px;
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(0, 255, 255, 0.05));
-            border-top: 3px solid rgba(0, 212, 255, 0.5);
-            border-bottom: 3px solid rgba(0, 212, 255, 0.5);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        .cta::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at 50% 50%, rgba(0, 212, 255, 0.1), transparent 70%);
-            pointer-events: none;
-            animation: gradientShift 8s ease-in-out infinite;
-        }
-
-        .cta-content {
-            max-width: 700px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 2;
-        }
-
+        /* CTA */
+        .cta { text-align: center; padding: 144px 0; }
         .cta h2 {
             font-family: var(--font-display);
-            font-size: 52px;
+            font-size: 64px;
             font-weight: 800;
-            color: #f8fafc;
-            margin-bottom: 24px;
-            letter-spacing: -0.035em;
-            line-height: 1.15;
-            background: linear-gradient(135deg, #00d4ff, #00ffff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .cta p {
-            font-size: 18px;
-            color: #cbd5e1;
-            margin-bottom: 48px;
-            line-height: 1.8;
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn-cta {
-            padding: 18px 38px;
-            font-size: 16px;
-            font-weight: 600;
-            font-family: var(--font-body);
-            border-radius: 12px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.4s ease;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-cta-primary {
-            background: linear-gradient(135deg, #00d4ff, #00ffff);
-            color: #0a0a0f;
-            
-        }
-
-        .btn-cta-primary:hover {
-            transform: translateY(-5px);
-        }
-
-        .btn-cta-secondary {
-            background: transparent;
-            color: #00d4ff;
-            border: 2px solid #00d4ff;
-        }
-
-        .btn-cta-secondary:hover {
-            background: rgba(0, 212, 255, 0.1);
-            transform: translateY(-3px);
-        }
-
-        /* ===== CONTACT SECTION ===== */
-        .contact {
-            padding: 120px 40px;
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.05), rgba(0, 212, 255, 0.05));
-            position: relative;
-            z-index: 1;
-        }
-
-        .contact-content {
-            max-width: 600px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .contact-content h2 {
-            font-family: var(--font-display);
-            font-size: 48px;
-            font-weight: 800;
-            color: #f8fafc;
+            letter-spacing: -0.045em;
+            line-height: 1;
             margin-bottom: 20px;
-            letter-spacing: -0.035em;
-            background: linear-gradient(135deg, #ff006e, #8b5cf6, #00d4ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
+        .cta p { font-size: 18px; color: var(--muted); max-width: 480px; margin: 0 auto 36px; line-height: 1.6; }
+        .cta .actions { justify-content: center; }
 
-        .contact-content p {
-            font-size: 16px;
-            color: #cbd5e1;
-            margin-bottom: 50px;
-            line-height: 1.7;
-        }
-
-        .contact-card {
-            background: linear-gradient(135deg, rgba(255, 0, 110, 0.1), rgba(139, 92, 246, 0.1));
-            border: 2px solid rgba(255, 0, 110, 0.2);
-            border-radius: 16px;
-            padding: 40px;
-            transition: all 0.3s ease;
-        }
-
-        .contact-card:hover {
-            background: linear-gradient(135deg, rgba(255, 0, 110, 0.15), rgba(139, 92, 246, 0.15));
-            border-color: rgba(255, 0, 110, 0.4);
-            transform: translateY(-8px);
-        }
-
-        .contact-item {
-            display: flex;
-            gap: 20px;
-            align-items: flex-start;
-        }
-
-        .contact-item i {
-            font-size: 32px;
-            color: #ff006e;
-            margin-top: 4px;
-        }
-
-        .contact-item h3 {
-            font-size: 18px;
+        /* Footer */
+        footer { border-top: 1px solid var(--line); padding: 48px 0 32px; }
+        .footer-grid { display: flex; justify-content: space-between; align-items: flex-start; gap: 32px; flex-wrap: wrap; }
+        .footer-note { font-size: 14px; color: var(--muted); margin-top: 12px; max-width: 320px; line-height: 1.6; }
+        .footer-contact { text-align: right; }
+        .footer-contact .label { color: var(--faint); display: block; margin-bottom: 10px; }
+        .footer-contact a {
+            font-family: var(--font-display);
+            font-size: 22px;
             font-weight: 700;
-            color: #f8fafc;
-            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+            border-bottom: 1px solid var(--line-strong);
+            padding-bottom: 2px;
+            transition: border-color 0.2s ease, color 0.2s ease;
         }
-
-        .contact-item a {
-            font-family: var(--font-mono);
-            font-size: 15px;
-            color: #ff006e;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            font-weight: 600;
-        }
-
-        .contact-item a:hover {
-            color: #ff3a44;
-            text-decoration: underline;
-        }
-
-        /* ===== FOOTER ===== */
-        footer {
-            padding: 40px;
-            background: rgba(10, 10, 15, 0.9);
-            border-top: 1px solid rgba(255, 0, 110, 0.1);
-            text-align: center;
-            color: #64748b;
-            font-size: 14px;
-            position: relative;
-            z-index: 1;
+        .footer-contact a:hover { color: var(--accent); border-color: var(--accent); }
+        .copyright {
+            margin-top: 48px;
+            padding-top: 24px;
+            border-top: 1px solid var(--line);
+            font-size: 13px;
+            color: var(--faint);
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
         }
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 1024px) {
-            .hero-content {
-                grid-template-columns: 1fr;
-                gap: 40px;
-            }
-
-            .hero-right {
-                height: 400px;
-            }
-
-            .hero-left h1 {
-                font-size: 52px;
-            }
-
-            .features-header h2 {
-                font-size: 42px;
-            }
-
-            .cta h2 {
-                font-size: 40px;
-            }
+            .hero-grid { grid-template-columns: 1fr; gap: 56px; }
+            .hero h1 { font-size: 60px; }
+            .section-head { grid-template-columns: 1fr; gap: 16px; }
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
+            .strip-grid { grid-template-columns: repeat(2, 1fr); }
+            .strip-grid div:nth-child(3) { border-left: 0; padding-left: 0; }
+            .strip-grid div:nth-child(n+3) { border-top: 1px solid var(--line); }
         }
 
-        @media (max-width: 768px) {
-            .nav-container {
-                padding: 0 20px;
-            }
-
-            nav {
-                display: none;
-            }
-
-            .hero {
-                padding: 100px 20px 60px;
-                min-height: auto;
-            }
-
-            .hero-left h1 {
-                font-size: 38px;
-            }
-
-            .hero-left p {
-                font-size: 16px;
-            }
-
-            .hero-buttons {
-                flex-direction: column;
-            }
-
-            .hero-right {
-                height: 300px;
-            }
-
-            .features,
-            .cta,
-            .contact {
-                padding: 60px 20px;
-            }
-
-            .features-header h2 {
-                font-size: 32px;
-            }
-
-            .cta h2 {
-                font-size: 32px;
-            }
-
-            .contact-content h2 {
-                font-size: 32px;
-            }
-
-            .cta-buttons {
-                flex-direction: column;
-            }
-
-            .cta-buttons .btn-cta {
-                width: 100%;
-            }
-
-            .contact-item {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .contact-item i {
-                margin-top: 0;
-            }
+        @media (max-width: 720px) {
+            .wrap { padding: 0 20px; }
+            .nav-links { display: none; }
+            .nav-actions { gap: 14px; }
+            .hero { padding: 120px 0 72px; }
+            .hero h1 { font-size: 46px; }
+            .hero-sub { font-size: 16px; }
+            .preview-bar span:not(.live) { display: none; }
+            .preview-stats div { padding: 14px 12px; }
+            .preview-stats b { font-size: 20px; }
+            .preview th, .preview td { padding-left: 12px; padding-right: 12px; }
+            .preview th:nth-child(2), .preview td:nth-child(2) { display: none; }
+            section.block { padding: 88px 0; }
+            .section-head h2 { font-size: 36px; }
+            .features-grid { grid-template-columns: 1fr; }
+            .feature-meta { margin-bottom: 28px; }
+            .strip-grid div { padding: 24px 0 24px 20px; }
+            .strip-grid b { font-size: 26px; }
+            .steps { grid-template-columns: 1fr; gap: 36px; }
+            .cta { padding: 96px 0; }
+            .cta h2 { font-size: 42px; }
+            .footer-contact { text-align: left; }
+            .footer-contact a { font-size: 18px; }
         }
     </style>
 </head>
 <body>
-    <!-- ANIMATED BACKGROUND -->
-    <div class="bg-animation">
-        <div class="grid-bg"></div>
-        <div class="particles-container" id="particlesContainer"></div>
-        <svg class="particle-lines" id="particleLines"></svg>
-    </div>
-
-    <!-- HEADER -->
     <header>
-        <div class="nav-container">
+        <div class="wrap nav">
             <a href="/" class="logo">
                 <span class="logo-glyph">क</span>
                 <span>KOSSH</span>
             </a>
-            <nav>
+            <nav class="nav-links">
                 <a href="#features">Features</a>
+                <a href="#how">How it works</a>
                 <a href="#contact">Contact</a>
             </nav>
-            <div class="nav-buttons">
-                <a href="/login" class="btn-nav btn-nav-outline">Sign in</a>
-                <a href="/signup" class="btn-nav btn-nav-solid">Sign up</a>
+            <div class="nav-actions">
+                <a href="/login" class="signin">Sign in</a>
+                <a href="/signup" class="btn btn-primary btn-sm">Sign up</a>
             </div>
         </div>
     </header>
 
-    <!-- HERO SECTION -->
+    <!-- HERO -->
     <section class="hero">
-        <div class="hero-content">
-            <div class="hero-left">
-                <div class="eyebrow">PCB &amp; warehouse inventory</div>
-                <h1>
-                    Every part, <span class="highlight">accounted for.</span>
-                </h1>
-                <p>
-                    KOSSH tracks every reel, tray, and loose part from receiving to the line. Scan to stock, scan to pick, and know about a shortage before the build starts.
-                </p>
-                <div class="hero-buttons">
-                    <a href="/signup" class="btn-hero btn-hero-primary">Create an account</a>
-                    <a href="#features" class="btn-hero btn-hero-secondary">See how it works</a>
-                </div>
-                <div class="hero-stats">
-                    <div class="hero-stat">
-                        <div class="hero-stat-icon">
-                            <i class="bi bi-boxes"></i>
-                        </div>
-                        <div class="hero-stat-text">
-                            <h3>271K+ parts</h3>
-                            <p>Tracked across 14 locations</p>
-                        </div>
-                    </div>
-                    <div class="hero-stat">
-                        <div class="hero-stat-icon">
-                            <i class="bi bi-lightning-fill"></i>
-                        </div>
-                        <div class="hero-stat-text">
-                            <h3>Scan and done</h3>
-                            <p>Stock and pick with a single PCN scan</p>
-                        </div>
-                    </div>
-                    <div class="hero-stat">
-                        <div class="hero-stat-icon">
-                            <i class="bi bi-graph-up"></i>
-                        </div>
-                        <div class="hero-stat-text">
-                            <h3>Shortages up front</h3>
-                            <p>BOMs checked against what's on the shelf</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="hero-right">
-                <div class="hero-visual">
-                    <div class="dashboard-preview">
-                        <div class="dashboard-header">
-                            <div class="dashboard-title">kossh / warehouse</div>
-                            <div class="dashboard-badge">● Live</div>
-                        </div>
-
-                        <div class="dashboard-stats">
-                            <div class="stat-card">
-                                <div class="stat-value">271K</div>
-                                <div class="stat-label">Parts</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-value">14</div>
-                                <div class="stat-label">Locations</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-value">35</div>
-                                <div class="stat-label">Open jobs</div>
-                            </div>
-                        </div>
-
-                        <div class="dashboard-table">
-                            <div class="table-header">
-                                <div>PCN</div>
-                                <div>Qty</div>
-                                <div>Status</div>
-                            </div>
-                            <div class="table-row">
-                                <div>PCN 104822</div>
-                                <div class="value-highlight">5,240</div>
-                                <div>✓ Ready</div>
-                            </div>
-                            <div class="table-row">
-                                <div>PCN 104823</div>
-                                <div class="value-highlight">1,820</div>
-                                <div>MSL 3</div>
-                            </div>
-                            <div class="table-row">
-                                <div>PCN 104824</div>
-                                <div class="value-highlight">240</div>
-                                <div>⚠ Short</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FEATURES SECTION -->
-    <section class="features" id="features">
-        <div class="features-header">
+        <div class="wrap hero-grid">
             <div>
-                <div class="section-label">What it does</div>
-                <h2>Built for the<br>stockroom floor</h2>
-            </div>
-            <p>Made for electronics manufacturing, where a single missing part can stall a whole build.</p>
-        </div>
-
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-meta"><span>01</span><span>Inventory</span></div>
-                <div class="feature-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="22" cy="26" r="16"/><circle cx="22" cy="26" r="10" stroke-dasharray="2 3"/><circle cx="22" cy="26" r="3.5"/><path d="M22 10h22"/><path d="M28 7v6M34 7v6M40 7v6" stroke-width="1"/></svg></div>
-                <h3>Live stock</h3>
-                <p>Every stock, pick, and restock updates counts immediately and lands in the transaction log.</p>
+                <div class="label">PCB &amp; warehouse inventory</div>
+                <h1>Every part, <em>accounted for.</em></h1>
+                <p class="hero-sub">KOSSH tracks every reel, tray, and loose part from receiving to the line. Scan to stock, scan to pick, and know about a shortage before the build starts.</p>
+                <div class="actions">
+                    <a href="/signup" class="btn btn-primary">Create an account <span class="arrow">&rarr;</span></a>
+                    <a href="#how" class="btn btn-ghost">See how it works</a>
+                </div>
             </div>
 
-            <div class="feature-card">
-                <div class="feature-meta"><span>02</span><span>Planning</span></div>
-                <div class="feature-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="9" y="5" width="26" height="36" rx="2"/><path d="M15 14h14M15 20h14M15 32h10"/><path d="M15 26h6" stroke-dasharray="1.5 2.5"/><circle cx="36" cy="36" r="7" fill="#0c0c12"/><path d="M36 32.5v4M36 39.2v.1"/></svg></div>
-                <h3>Shortage reports</h3>
-                <p>Load a BOM and see what's missing for the build quantity, then export the list for purchasing.</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-meta"><span>03</span><span>Access</span></div>
-                <div class="feature-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M12 7v34"/><circle cx="12" cy="12" r="3" fill="#0c0c12"/><circle cx="12" cy="24" r="3" fill="#0c0c12"/><circle cx="12" cy="36" r="3" fill="#0c0c12"/><path d="M20 12h20M20 24h14M20 36h18"/><path d="M20 16h8M20 28h11M20 40h6" stroke-width="1" opacity=".6"/></svg></div>
-                <h3>Roles and audit trail</h3>
-                <p>Five permission levels, including ITAR, plus a full record of who touched what and when.</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-meta"><span>04</span><span>Production</span></div>
-                <div class="feature-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="13" y="13" width="22" height="22" rx="2"/><circle cx="18" cy="18" r="1.5"/><path d="M19 13V7M24 13V7M29 13V7M19 41v-6M24 41v-6M29 41v-6M13 19H7M13 24H7M13 29H7M41 19h-6M41 24h-6M41 29h-6"/></svg></div>
-                <h3>BOMs and jobs</h3>
-                <p>Drop in an Excel BOM and columns are detected automatically. Track revisions and build quantities per job.</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-meta"><span>05</span><span>Compliance</span></div>
-                <div class="feature-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="5" y="11" width="38" height="26" rx="3"/><circle cx="15" cy="24" r="4.5" fill="currentColor" fill-opacity=".25"/><circle cx="24" cy="24" r="4.5"/><circle cx="33" cy="24" r="4.5"/><path d="M11 32.5h8M20 32.5h8M29 32.5h8" stroke-width="1" opacity=".6"/></svg></div>
-                <h3>Moisture and date codes</h3>
-                <p>MSL levels, date codes, and shelf life tracked on every part, with expiring stock flagged early.</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-meta"><span>06</span><span>Labeling</span></div>
-                <div class="feature-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="5" y="9" width="38" height="30" rx="2"/><path d="M11 15v14M14 15v14M19 15v14M23 15v14M26 15v14M31 15v14M37 15v14" /><path d="M16.5 15v14M34 15v14" stroke-width="3"/><path d="M11 34h14" stroke-width="1" opacity=".6"/></svg></div>
-                <h3>Barcode labels</h3>
-                <p>Generate PCNs and print ZPL labels straight to the printer. Scan them from any page.</p>
+            <div class="preview" aria-hidden="true">
+                <div class="preview-bar">
+                    <div class="dots"><i></i><i></i><i></i></div>
+                    <span>kossh / warehouse</span>
+                    <span class="live">Live</span>
+                </div>
+                <div class="preview-stats">
+                    <div><b>271K</b><span>Parts</span></div>
+                    <div><b>14</b><span>Locations</span></div>
+                    <div><b>35</b><span>Open jobs</span></div>
+                </div>
+                <table>
+                    <thead>
+                        <tr><th>PCN</th><th>Location</th><th>Qty</th><th>Status</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>104822</td><td>A-12-03</td><td class="num">5,240</td><td><span class="tag">Ready</span></td></tr>
+                        <tr><td>104823</td><td>DRY-02</td><td class="num">1,820</td><td><span class="tag">MSL 3</span></td></tr>
+                        <tr><td>104824</td><td>B-04-11</td><td class="num">240</td><td><span class="tag short">Short 760</span></td></tr>
+                        <tr><td>104825</td><td>A-07-01</td><td class="num">12,000</td><td><span class="tag">Ready</span></td></tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </section>
 
-    <!-- CTA SECTION -->
-    <section class="cta" id="cta">
-        <div class="cta-content">
-            <h2>Stop counting by hand.</h2>
-            <p>Sign in to pick up where you left off, or create an account and load your first BOM in a few minutes.</p>
-            <div class="cta-buttons">
-                <a href="/login" class="btn-cta btn-cta-primary">Sign in</a>
-                <a href="#features" class="btn-cta btn-cta-secondary">Back to features</a>
-            </div>
+    <!-- STATS STRIP -->
+    <div class="strip">
+        <div class="wrap strip-grid">
+            <div><b>271K+</b><span>Parts tracked</span></div>
+            <div><b>14</b><span>Warehouse locations</span></div>
+            <div><b>1 scan</b><span>To stock or pick a part</span></div>
+            <div><b>5</b><span>Permission levels, incl. ITAR</span></div>
         </div>
-    </section>
+    </div>
 
-    <!-- CONTACT SECTION -->
-    <section class="contact" id="contact">
-        <div class="contact-content">
-            <div class="section-label">Get in touch</div>
-            <h2>Have a question?</h2>
-            <p>Feedback, a feature you need, or just curious how KOSSH works. Send me a note and I'll get back to you.</p>
+    <!-- FEATURES -->
+    <section class="block" id="features">
+        <div class="wrap">
+            <div class="section-head">
+                <div>
+                    <div class="label">What it does</div>
+                    <h2>Built for the<br>stockroom floor</h2>
+                </div>
+                <p>Made for electronics manufacturing, where a single missing part can stall a whole build.</p>
+            </div>
 
-            <div class="contact-card">
-                <div class="contact-item">
-                    <i class="bi bi-envelope-fill"></i>
-                    <div>
-                        <h3>Email</h3>
-                        <a href="mailto:kanav.info28@gmail.com">kanav.info28@gmail.com</a>
-                    </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-meta"><span>01</span><span>Inventory</span></div>
+                    <div class="feature-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="22" cy="26" r="16"/><circle cx="22" cy="26" r="10" stroke-dasharray="2 3"/><circle class="hl" cx="22" cy="26" r="3.5"/><path d="M22 10h22"/><path d="M28 7v6M34 7v6M40 7v6" stroke-width="1"/></svg></div>
+                    <h3>Live stock</h3>
+                    <p>Every stock, pick, and restock updates counts immediately and lands in the transaction log.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-meta"><span>02</span><span>Planning</span></div>
+                    <div class="feature-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="9" y="5" width="26" height="36" rx="2"/><path d="M15 14h14M15 20h14M15 32h10"/><path class="hl" d="M15 26h6" stroke-dasharray="1.5 2.5"/><circle class="hl" cx="36" cy="36" r="7" fill="#0b0b0c"/><path class="hl" d="M36 32.5v4M36 39.2v.1"/></svg></div>
+                    <h3>Shortage reports</h3>
+                    <p>Load a BOM and see what's missing for the build quantity, then export the list for purchasing.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-meta"><span>03</span><span>Access</span></div>
+                    <div class="feature-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M12 7v34"/><circle class="hl" cx="12" cy="12" r="3" fill="#0b0b0c"/><circle cx="12" cy="24" r="3" fill="#0b0b0c"/><circle cx="12" cy="36" r="3" fill="#0b0b0c"/><path d="M20 12h20M20 24h14M20 36h18"/><path d="M20 16h8M20 28h11M20 40h6" stroke-width="1" opacity=".5"/></svg></div>
+                    <h3>Roles and audit trail</h3>
+                    <p>Five permission levels, including ITAR, plus a full record of who touched what and when.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-meta"><span>04</span><span>Production</span></div>
+                    <div class="feature-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="13" y="13" width="22" height="22" rx="2"/><circle class="hl-fill" cx="18.5" cy="18.5" r="1.8"/><path d="M19 13V7M24 13V7M29 13V7M19 41v-6M24 41v-6M29 41v-6M13 19H7M13 24H7M13 29H7M41 19h-6M41 24h-6M41 29h-6"/></svg></div>
+                    <h3>BOMs and jobs</h3>
+                    <p>Drop in an Excel BOM and columns are detected automatically. Track revisions and build quantities per job.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-meta"><span>05</span><span>Compliance</span></div>
+                    <div class="feature-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="5" y="11" width="38" height="26" rx="3"/><circle class="hl" cx="15" cy="24" r="4.5" fill="rgba(255,58,68,.25)"/><circle cx="24" cy="24" r="4.5"/><circle cx="33" cy="24" r="4.5"/><path d="M11 32.5h8M20 32.5h8M29 32.5h8" stroke-width="1" opacity=".5"/></svg></div>
+                    <h3>Moisture and date codes</h3>
+                    <p>MSL levels, date codes, and shelf life tracked on every part, with expiring stock flagged early.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-meta"><span>06</span><span>Labeling</span></div>
+                    <div class="feature-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="5" y="9" width="38" height="30" rx="2"/><path d="M11 15v14M14 15v14M19 15v14M23 15v14M26 15v14M31 15v14M37 15v14"/><path d="M16.5 15v14M34 15v14" stroke-width="3"/><path class="hl" d="M11 34h14"/></svg></div>
+                    <h3>Barcode labels</h3>
+                    <p>Generate PCNs and print ZPL labels straight to the printer. Scan them from any page.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- FOOTER -->
-    <footer>
-        <p>&copy; 2026 KOSSH &middot; Inventory for electronics manufacturing</p>
+    <!-- HOW IT WORKS -->
+    <section class="block how" id="how">
+        <div class="wrap">
+            <div class="section-head">
+                <div>
+                    <div class="label">How it works</div>
+                    <h2>From BOM to build<br>in three steps</h2>
+                </div>
+                <p>No spreadsheets to reconcile at the end of the day. The counts stay right because every move gets scanned.</p>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <span class="n">01</span>
+                    <h3>Load the BOM</h3>
+                    <p>Upload the customer's Excel file. KOSSH maps the columns, creates the job, and sets the build quantity.</p>
+                </div>
+                <div class="step">
+                    <span class="n">02</span>
+                    <h3>Scan every move</h3>
+                    <p>Parts get a <code>PCN</code> label when they're stocked. Scan it to pick, restock, or move it between locations.</p>
+                </div>
+                <div class="step">
+                    <span class="n">03</span>
+                    <h3>Catch shortages early</h3>
+                    <p>Run a shortage report against what's actually on the shelf and hand purchasing a list before the line stops.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <div class="wrap">
+            <h2>Stop counting <em>by hand.</em></h2>
+            <p>Sign in to pick up where you left off, or create an account and load your first BOM in a few minutes.</p>
+            <div class="actions">
+                <a href="/signup" class="btn btn-primary">Create an account <span class="arrow">&rarr;</span></a>
+                <a href="/login" class="btn btn-ghost">Sign in</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER / CONTACT -->
+    <footer id="contact">
+        <div class="wrap">
+            <div class="footer-grid">
+                <div>
+                    <a href="/" class="logo"><span class="logo-glyph">क</span><span>KOSSH</span></a>
+                    <p class="footer-note">Inventory for electronics manufacturing. Feedback or a feature you need? Send a note.</p>
+                </div>
+                <div class="footer-contact">
+                    <span class="label">Get in touch</span>
+                    <a href="mailto:kanav.info28@gmail.com">kanav.info28@gmail.com</a>
+                </div>
+            </div>
+            <div class="copyright">
+                <span>&copy; 2026 KOSSH</span>
+                <span>Built for the stockroom floor</span>
+            </div>
+        </div>
     </footer>
-
-    <script>
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
-
-        // Particle constellation animation
-        class ParticleConstellation {
-            constructor() {
-                this.particles = [];
-                this.colors = ['#ff006e', '#8b5cf6', '#00d4ff'];
-                this.container = document.getElementById('particlesContainer');
-                this.svgLines = document.getElementById('particleLines');
-                this.init();
-                this.animateLines();
-            }
-
-            init() {
-                const particleCount = 50;
-                for (let i = 0; i < particleCount; i++) {
-                    const particle = this.createParticle();
-                    this.particles.push(particle);
-                    this.container.appendChild(particle.el);
-                }
-            }
-
-            createParticle() {
-                const el = document.createElement('div');
-                const color = this.colors[Math.floor(Math.random() * this.colors.length)];
-                const className = color === '#ff006e' ? 'particle-red' : color === '#8b5cf6' ? 'particle-purple' : 'particle-cyan';
-
-                el.className = `particle ${className}`;
-
-                const startX = Math.random() * window.innerWidth;
-                const startY = Math.random() * window.innerHeight;
-                const duration = 15 + Math.random() * 20;
-                const tx = (Math.random() - 0.5) * 200;
-
-                el.style.left = startX + 'px';
-                el.style.top = startY + 'px';
-                el.style.setProperty('--duration', duration + 's');
-                el.style.setProperty('--tx', tx + 'px');
-                el.style.animationDelay = Math.random() * 5 + 's';
-
-                return {
-                    el: el,
-                    x: startX,
-                    y: startY,
-                    color: color
-                };
-            }
-
-            animateLines() {
-                setInterval(() => {
-                    this.svgLines.innerHTML = '';
-
-                    for (let i = 0; i < this.particles.length; i++) {
-                        for (let j = i + 1; j < this.particles.length; j++) {
-                            const dx = this.particles[i].x - this.particles[j].x;
-                            const dy = this.particles[i].y - this.particles[j].y;
-                            const distance = Math.sqrt(dx * dx + dy * dy);
-
-                            if (distance < 150) {
-                                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                                line.setAttribute('x1', this.particles[i].x);
-                                line.setAttribute('y1', this.particles[i].y);
-                                line.setAttribute('x2', this.particles[j].x);
-                                line.setAttribute('y2', this.particles[j].y);
-                                line.setAttribute('stroke', this.particles[i].color);
-                                line.setAttribute('stroke-width', '1');
-                                line.setAttribute('opacity', 1 - (distance / 150));
-                                this.svgLines.appendChild(line);
-                            }
-                        }
-                    }
-
-                    // Update particle positions
-                    this.particles.forEach((p, i) => {
-                        const rect = p.el.getBoundingClientRect();
-                        p.x = rect.left + rect.width / 2;
-                        p.y = rect.top + rect.height / 2;
-                    });
-                }, 50);
-            }
-        }
-
-        new ParticleConstellation();
-    </script>
 </body>
 </html>
