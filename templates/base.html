@@ -196,44 +196,44 @@
     <div class="theme-customizer-body">
         <div class="theme-customizer-section-label">Presets</div>
         <div class="theme-preset-grid">
-            <button type="button" class="theme-preset" data-bg="#0f172a" data-text="#94a3b8" data-active-text="#818cf8" title="Slate (default)">
-                <span class="theme-preset-swatch" style="background:#0f172a"></span>
+            <button type="button" class="theme-preset" data-bg="#0f172a" data-accent="#f59e0b" title="Slate">
+                <span class="theme-preset-swatch" style="background:#0f172a;--swatch-accent:#f59e0b"></span>
                 <span class="theme-preset-name">Slate</span>
             </button>
-            <button type="button" class="theme-preset" data-bg="#020617" data-text="#94a3b8" data-active-text="#a78bfa" title="Midnight">
-                <span class="theme-preset-swatch" style="background:#020617"></span>
+            <button type="button" class="theme-preset" data-bg="#020617" data-accent="#818cf8" title="Midnight">
+                <span class="theme-preset-swatch" style="background:#020617;--swatch-accent:#818cf8"></span>
                 <span class="theme-preset-name">Midnight</span>
             </button>
-            <button type="button" class="theme-preset" data-bg="#1c1917" data-text="#a8a29e" data-active-text="#fbbf24" title="Charcoal">
-                <span class="theme-preset-swatch" style="background:#1c1917"></span>
-                <span class="theme-preset-name">Charcoal</span>
+            <button type="button" class="theme-preset" data-bg="#18181b" data-accent="#e4e4e7" title="Graphite">
+                <span class="theme-preset-swatch" style="background:#18181b;--swatch-accent:#e4e4e7"></span>
+                <span class="theme-preset-name">Graphite</span>
             </button>
-            <button type="button" class="theme-preset" data-bg="#1e3a8a" data-text="#bfdbfe" data-active-text="#fbbf24" title="Royal Blue">
-                <span class="theme-preset-swatch" style="background:#1e3a8a"></span>
-                <span class="theme-preset-name">Royal Blue</span>
+            <button type="button" class="theme-preset" data-bg="#172554" data-accent="#93c5fd" title="Navy">
+                <span class="theme-preset-swatch" style="background:#172554;--swatch-accent:#93c5fd"></span>
+                <span class="theme-preset-name">Navy</span>
             </button>
-            <button type="button" class="theme-preset" data-bg="#064e3b" data-text="#a7f3d0" data-active-text="#fde047" title="Forest">
-                <span class="theme-preset-swatch" style="background:#064e3b"></span>
+            <button type="button" class="theme-preset" data-bg="#052e23" data-accent="#6ee7b7" title="Forest">
+                <span class="theme-preset-swatch" style="background:#052e23;--swatch-accent:#6ee7b7"></span>
                 <span class="theme-preset-name">Forest</span>
             </button>
-            <button type="button" class="theme-preset" data-bg="#4c1d95" data-text="#ddd6fe" data-active-text="#fcd34d" title="Royal Purple">
-                <span class="theme-preset-swatch" style="background:#4c1d95"></span>
-                <span class="theme-preset-name">Purple</span>
+            <button type="button" class="theme-preset" data-bg="#3b0a45" data-accent="#f0abfc" title="Plum">
+                <span class="theme-preset-swatch" style="background:#3b0a45;--swatch-accent:#f0abfc"></span>
+                <span class="theme-preset-name">Plum</span>
             </button>
-            <button type="button" class="theme-preset" data-bg="#7c2d12" data-text="#fed7aa" data-active-text="#fde047" title="Rust">
-                <span class="theme-preset-swatch" style="background:#7c2d12"></span>
+            <button type="button" class="theme-preset" data-bg="#6b2410" data-accent="#fdba74" title="Rust">
+                <span class="theme-preset-swatch" style="background:#6b2410;--swatch-accent:#fdba74"></span>
                 <span class="theme-preset-name">Rust</span>
             </button>
-            <button type="button" class="theme-preset" data-bg="#831843" data-text="#fbcfe8" data-active-text="#fde047" title="Crimson">
-                <span class="theme-preset-swatch" style="background:#831843"></span>
-                <span class="theme-preset-name">Crimson</span>
+            <button type="button" class="theme-preset" data-bg="#4c0519" data-accent="#fda4af" title="Wine">
+                <span class="theme-preset-swatch" style="background:#4c0519;--swatch-accent:#fda4af"></span>
+                <span class="theme-preset-name">Wine</span>
             </button>
-            <button type="button" class="theme-preset" data-bg="#0c4a6e" data-text="#bae6fd" data-active-text="#fde047" title="Ocean">
-                <span class="theme-preset-swatch" style="background:#0c4a6e"></span>
+            <button type="button" class="theme-preset" data-bg="#083344" data-accent="#67e8f9" title="Ocean">
+                <span class="theme-preset-swatch" style="background:#083344;--swatch-accent:#67e8f9"></span>
                 <span class="theme-preset-name">Ocean</span>
             </button>
-            <button type="button" class="theme-preset" data-bg="#f8fafc" data-text="#475569" data-active-text="#4f46e5" title="Light">
-                <span class="theme-preset-swatch" style="background:#f8fafc;border:1px solid #cbd5e1"></span>
+            <button type="button" class="theme-preset" data-bg="#f8fafc" data-accent="#4f46e5" title="Light">
+                <span class="theme-preset-swatch" style="background:#f8fafc;--swatch-accent:#4f46e5"></span>
                 <span class="theme-preset-name">Light</span>
             </button>
         </div>
@@ -573,62 +573,120 @@ setTimeout(function() {
 // ---- Theme Customizer ----
 (function() {
     const STORAGE_KEY = 'kossh.sidebarTheme';
+    const VARS = ['--sidebar-bg','--sidebar-bg-2','--sidebar-border','--sidebar-text','--sidebar-text-hover',
+                  '--sidebar-label','--sidebar-hover-bg','--sidebar-active-bg','--sidebar-active-text',
+                  '--sidebar-active-border','--sidebar-active-shadow'];
     const root = document.documentElement;
+    const HEX = /^#[0-9a-f]{6}$/i;
 
-    function pickContrast(hex) {
-        // Determine if a hex color is light enough that we need dark text on top
-        const h = hex.replace('#','');
-        if (h.length !== 6) return '#ffffff';
-        const r = parseInt(h.slice(0,2),16);
-        const g = parseInt(h.slice(2,4),16);
-        const b = parseInt(h.slice(4,6),16);
-        const yiq = (r*299 + g*587 + b*114) / 1000;
-        return yiq >= 160 ? '#1e293b' : '#ffffff';
+    // ---- color helpers ----
+    function toRgb(hex) {
+        const h = hex.replace('#', '');
+        return [0, 2, 4].map(i => parseInt(h.slice(i, i + 2), 16));
+    }
+    function toHex(rgb) {
+        return '#' + rgb.map(v => Math.round(Math.max(0, Math.min(255, v))).toString(16).padStart(2, '0')).join('');
+    }
+    function mix(a, b, t) {
+        const x = toRgb(a), y = toRgb(b);
+        return toHex(x.map((v, i) => v + (y[i] - v) * t));
+    }
+    function luminance(hex) {
+        const c = toRgb(hex).map(v => {
+            v /= 255;
+            return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+        });
+        return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+    }
+    function toHsl(hex) {
+        let [r, g, b] = toRgb(hex).map(v => v / 255);
+        const max = Math.max(r, g, b), min = Math.min(r, g, b);
+        let h = 0, s = 0;
+        const l = (max + min) / 2;
+        if (max !== min) {
+            const d = max - min;
+            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+            h = max === r ? (g - b) / d + (g < b ? 6 : 0) : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
+            h *= 60;
+        }
+        return [h, s * 100, l * 100];
+    }
+    function fromHsl(h, s, l) {
+        s /= 100; l /= 100;
+        const k = n => (n + h / 30) % 12;
+        const a = s * Math.min(l, 1 - l);
+        const f = n => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+        return toHex([f(0) * 255, f(8) * 255, f(4) * 255]);
+    }
+
+    // Build a full, solid sidebar palette from a single base color
+    function buildPalette(bg, accent) {
+        const light = luminance(bg) > 0.4;
+        const [h, s] = toHsl(bg);
+        if (light) {
+            return {
+                '--sidebar-bg': bg,
+                '--sidebar-bg-2': mix(bg, '#000000', 0.03),
+                '--sidebar-border': mix(bg, '#000000', 0.09),
+                '--sidebar-text': mix(bg, '#000000', 0.62),
+                '--sidebar-text-hover': mix(bg, '#000000', 0.88),
+                '--sidebar-label': mix(bg, '#000000', 0.42),
+                '--sidebar-hover-bg': mix(bg, '#000000', 0.045),
+                '--sidebar-active-bg': '#ffffff',
+                '--sidebar-active-text': mix(bg, '#000000', 0.88),
+                '--sidebar-active-border': accent || fromHsl(h, Math.max(s, 60), 45),
+                '--sidebar-active-shadow': '0 1px 2px rgba(15,23,42,0.08), 0 0 0 1px rgba(15,23,42,0.06)'
+            };
+        }
+        return {
+            '--sidebar-bg': bg,
+            '--sidebar-bg-2': mix(bg, '#000000', 0.2),
+            '--sidebar-border': mix(bg, '#ffffff', 0.1),
+            '--sidebar-text': mix(bg, '#ffffff', 0.74),
+            '--sidebar-text-hover': '#ffffff',
+            '--sidebar-label': mix(bg, '#ffffff', 0.42),
+            '--sidebar-hover-bg': mix(bg, '#ffffff', 0.06),
+            '--sidebar-active-bg': mix(bg, '#ffffff', 0.13),
+            '--sidebar-active-text': '#ffffff',
+            '--sidebar-active-border': accent || fromHsl(h, Math.min(Math.max(s, 50) + 15, 92), 72),
+            '--sidebar-active-shadow': 'inset 0 1px 0 rgba(255,255,255,0.08), 0 1px 2px rgba(0,0,0,0.3)'
+        };
     }
 
     function applyTheme(theme) {
-        if (!theme || !theme.bg) return;
-        const onLight = pickContrast(theme.bg) === '#1e293b';
-        const text = theme.text || (onLight ? '#475569' : '#94a3b8');
-        const textHover = onLight ? '#0f172a' : '#f1f5f9';
-        const activeText = theme.activeText || (onLight ? '#4f46e5' : '#a5b4fc');
-        const activeBg = onLight ? 'rgba(79, 70, 229, 0.10)' : 'rgba(255, 255, 255, 0.08)';
-        const border = onLight ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.06)';
-
-        root.style.setProperty('--sidebar-bg', theme.bg);
-        root.style.setProperty('--sidebar-text', text);
-        root.style.setProperty('--sidebar-text-hover', textHover);
-        root.style.setProperty('--sidebar-active-bg', activeBg);
-        root.style.setProperty('--sidebar-active-text', activeText);
-        root.style.setProperty('--sidebar-active-border', activeText);
-        root.style.setProperty('--sidebar-border', border);
+        if (!theme || !HEX.test(theme.bg || '')) return;
+        const accent = HEX.test(theme.accent || '') ? theme.accent : null;
+        const pal = buildPalette(theme.bg, accent);
+        Object.keys(pal).forEach(k => root.style.setProperty(k, pal[k]));
     }
 
-    function loadTheme() {
+    function clearVars() { VARS.forEach(v => root.style.removeProperty(v)); }
+
+    function readSaved() {
         try {
             const stored = localStorage.getItem(STORAGE_KEY);
-            if (stored) {
-                const theme = JSON.parse(stored);
-                applyTheme(theme);
-                return theme;
-            }
-        } catch(e) {}
-        return null;
+            return stored ? JSON.parse(stored) : null;
+        } catch (e) { return null; }
+    }
+
+    function restoreSaved() {
+        const saved = readSaved();
+        clearVars();
+        if (saved) applyTheme(saved);
+        return saved;
     }
 
     function saveTheme(theme) {
-        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(theme)); } catch(e) {}
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(theme)); } catch (e) {}
     }
 
     function clearTheme() {
-        try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
-        ['--sidebar-bg','--sidebar-text','--sidebar-text-hover',
-         '--sidebar-active-bg','--sidebar-active-text','--sidebar-active-border',
-         '--sidebar-border'].forEach(v => root.style.removeProperty(v));
+        try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+        clearVars();
     }
 
     // Apply saved theme as early as possible
-    loadTheme();
+    restoreSaved();
 
     document.addEventListener('DOMContentLoaded', function() {
         const panel    = document.getElementById('themeCustomizer');
@@ -639,70 +697,93 @@ setTimeout(function() {
         const colorTxt = document.getElementById('themeCustomColorText');
         const applyCst = document.getElementById('themeApplyCustom');
         const resetBtn = document.getElementById('themeResetBtn');
+        const presets  = Array.from(document.querySelectorAll('.theme-preset'));
 
         if (!panel) return;
 
+        function markActive(bg) {
+            presets.forEach(b => b.classList.toggle('active',
+                !!bg && (b.dataset.bg || '').toLowerCase() === bg.toLowerCase()));
+        }
+
+        function syncInputs(bg) {
+            if (!HEX.test(bg || '')) return;
+            if (colorInp) colorInp.value = bg;
+            if (colorTxt) colorTxt.value = bg;
+        }
+
         function open()  { panel.classList.add('open'); overlay.classList.add('open'); }
-        function close() { panel.classList.remove('open'); overlay.classList.remove('open'); }
+        function close() {
+            panel.classList.remove('open');
+            overlay.classList.remove('open');
+            // Drop any unsaved live preview
+            const saved = restoreSaved();
+            markActive(saved && saved.bg);
+            if (saved) syncInputs(saved.bg);
+        }
 
         openBtn  && openBtn.addEventListener('click', open);
         closeBtn && closeBtn.addEventListener('click', close);
         overlay  && overlay.addEventListener('click', close);
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape' && panel.classList.contains('open')) close();
+        });
 
-        // Preset clicks
-        document.querySelectorAll('.theme-preset').forEach(btn => {
+        // Presets apply and save immediately
+        presets.forEach(btn => {
             btn.addEventListener('click', function() {
-                const theme = {
-                    bg: this.dataset.bg,
-                    text: this.dataset.text || null,
-                    activeText: this.dataset.activeText || null
-                };
+                const theme = { bg: this.dataset.bg, accent: this.dataset.accent || null };
+                clearVars();
                 applyTheme(theme);
                 saveTheme(theme);
-                document.querySelectorAll('.theme-preset').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
+                markActive(theme.bg);
+                syncInputs(theme.bg);
             });
         });
 
-        // Custom color sync
+        // Custom color: live preview while picking, saved on Apply
+        function preview(v) {
+            if (!HEX.test(v)) return;
+            clearVars();
+            applyTheme({ bg: v });
+            markActive(null);
+        }
+
         if (colorInp && colorTxt) {
-            colorInp.addEventListener('input', () => { colorTxt.value = colorInp.value; });
+            colorInp.addEventListener('input', () => {
+                colorTxt.value = colorInp.value;
+                preview(colorInp.value);
+            });
             colorTxt.addEventListener('input', () => {
                 const v = colorTxt.value.trim();
-                if (/^#[0-9a-f]{6}$/i.test(v)) colorInp.value = v;
+                if (HEX.test(v)) { colorInp.value = v; preview(v); }
             });
         }
 
         applyCst && applyCst.addEventListener('click', function() {
             const v = (colorTxt.value || colorInp.value || '').trim();
-            if (!/^#[0-9a-f]{6}$/i.test(v)) {
-                alert('Please enter a valid hex color like #1e3a8a');
+            if (!HEX.test(v)) {
+                colorTxt.focus();
+                colorTxt.classList.add('is-invalid');
+                setTimeout(() => colorTxt.classList.remove('is-invalid'), 1200);
                 return;
             }
             const theme = { bg: v };
+            clearVars();
             applyTheme(theme);
             saveTheme(theme);
-            document.querySelectorAll('.theme-preset').forEach(b => b.classList.remove('active'));
+            markActive(v);
         });
 
         resetBtn && resetBtn.addEventListener('click', function() {
             clearTheme();
-            document.querySelectorAll('.theme-preset').forEach(b => b.classList.remove('active'));
+            markActive(null);
+            syncInputs('#0f172a');
         });
 
         // Reflect saved selection in UI
-        const saved = loadTheme();
-        if (saved) {
-            document.querySelectorAll('.theme-preset').forEach(b => {
-                if (b.dataset.bg && b.dataset.bg.toLowerCase() === (saved.bg || '').toLowerCase()) {
-                    b.classList.add('active');
-                }
-            });
-            if (colorInp && /^#[0-9a-f]{6}$/i.test(saved.bg || '')) {
-                colorInp.value = saved.bg;
-                if (colorTxt) colorTxt.value = saved.bg;
-            }
-        }
+        const saved = readSaved();
+        if (saved) { markActive(saved.bg); syncInputs(saved.bg); }
     });
 })();
 </script>
