@@ -562,22 +562,18 @@
 
         /* ===== FEATURES SECTION ===== */
         .features {
-            padding: 120px 40px;
+            padding: 140px 40px 120px;
             position: relative;
             z-index: 1;
         }
 
-        .features::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(180deg, transparent 0%, rgba(139, 92, 246, 0.1) 50%, transparent 100%);
-            pointer-events: none;
-        }
-
         .features-header {
-            text-align: center;
-            margin-bottom: 80px;
+            max-width: 1200px;
+            margin: 0 auto 56px;
+            display: grid;
+            grid-template-columns: 1.3fr 1fr;
+            gap: 48px;
+            align-items: end;
             position: relative;
             z-index: 2;
         }
@@ -587,7 +583,7 @@
             font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 0.14em;
-            color: #8b5cf6;
+            color: #ff3a44;
             font-weight: 500;
             margin-bottom: 16px;
         }
@@ -597,96 +593,111 @@
             font-size: 54px;
             font-weight: 800;
             color: #f8fafc;
-            margin-bottom: 20px;
             letter-spacing: -0.035em;
-            line-height: 1.05;
-            background: linear-gradient(135deg, #8b5cf6, #a78bfa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            line-height: 1.02;
         }
 
         .features-header p {
-            font-size: 18px;
-            color: #cbd5e1;
-            max-width: 600px;
-            margin: 0 auto;
+            font-size: 17px;
+            line-height: 1.6;
+            color: #94a3b8;
+            max-width: 420px;
+            padding-bottom: 6px;
         }
 
         .features-grid {
             max-width: 1200px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 28px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: rgba(148, 163, 184, 0.16);
+            border: 1px solid rgba(148, 163, 184, 0.16);
             position: relative;
             z-index: 2;
         }
 
         .feature-card {
-            padding: 44px;
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(123, 58, 237, 0.1));
-            border: 2px solid rgba(139, 92, 246, 0.3);
-            border-radius: 20px;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #0c0c12;
+            padding: 28px 32px 36px;
             position: relative;
-            overflow: hidden;
-            backdrop-
+            transition: background 0.25s ease;
         }
 
-        .feature-card::before {
+        .feature-card::after {
             content: '';
             position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, transparent 100%);
-            opacity: 0;
-            transition: opacity 0.5s ease;
-            pointer-events: none;
+            left: -1px;
+            top: -1px;
+            width: 0;
+            height: 2px;
+            background: #ff3a44;
+            transition: width 0.35s ease;
         }
 
         .feature-card:hover {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(123, 58, 237, 0.2));
-            border-color: rgba(167, 139, 250, 0.5);
-            transform: translateY(-16px);
+            background: #111119;
         }
 
-        .feature-card:hover::before {
-            opacity: 1;
+        .feature-card:hover::after {
+            width: calc(100% + 2px);
+        }
+
+        .feature-meta {
+            display: flex;
+            justify-content: space-between;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #64748b;
+            margin-bottom: 40px;
+        }
+
+        .feature-card:hover .feature-meta span:first-child {
+            color: #ff3a44;
         }
 
         .feature-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(167, 139, 250, 0.3));
-            border: 2px solid rgba(139, 92, 246, 0.4);
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            color: #a78bfa;
-            margin-bottom: 24px;
-            animation: iconPulse 2s ease-in-out infinite;
+            width: 48px;
+            height: 48px;
+            color: #ff3a44;
+            margin-bottom: 28px;
         }
 
-        @keyframes iconPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+        .feature-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
         .feature-card h3 {
             font-family: var(--font-display);
-            font-size: 22px;
+            font-size: 21px;
             font-weight: 700;
-            color: #a78bfa;
-            margin-bottom: 12px;
+            color: #f8fafc;
+            margin-bottom: 10px;
             letter-spacing: -0.015em;
         }
 
         .feature-card p {
             font-size: 15px;
-            color: #cbd5e1;
-            line-height: 1.7;
+            color: #94a3b8;
+            line-height: 1.65;
+        }
+
+        @media (max-width: 1024px) {
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
+            .features-header { grid-template-columns: 1fr; gap: 16px; }
+        }
+
+        @media (max-width: 640px) {
+            .features-grid { grid-template-columns: 1fr; }
+            .feature-meta { margin-bottom: 28px; }
         }
 
         /* ===== CTA SECTION ===== */
@@ -1089,56 +1100,52 @@
     <!-- FEATURES SECTION -->
     <section class="features" id="features">
         <div class="features-header">
-            <div class="section-label">What it does</div>
-            <h2>Built for the stockroom floor</h2>
+            <div>
+                <div class="section-label">What it does</div>
+                <h2>Built for the<br>stockroom floor</h2>
+            </div>
             <p>Made for electronics manufacturing, where a single missing part can stall a whole build.</p>
         </div>
 
         <div class="features-grid">
             <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="bi bi-speedometer2"></i>
-                </div>
+                <div class="feature-meta"><span>01</span><span>Inventory</span></div>
+                <div class="feature-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="22" cy="26" r="16"/><circle cx="22" cy="26" r="10" stroke-dasharray="2 3"/><circle cx="22" cy="26" r="3.5"/><path d="M22 10h22"/><path d="M28 7v6M34 7v6M40 7v6" stroke-width="1"/></svg></div>
                 <h3>Live stock</h3>
                 <p>Every stock, pick, and restock updates counts immediately and lands in the transaction log.</p>
             </div>
 
             <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="bi bi-graph-up"></i>
-                </div>
+                <div class="feature-meta"><span>02</span><span>Planning</span></div>
+                <div class="feature-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="9" y="5" width="26" height="36" rx="2"/><path d="M15 14h14M15 20h14M15 32h10"/><path d="M15 26h6" stroke-dasharray="1.5 2.5"/><circle cx="36" cy="36" r="7" fill="#0c0c12"/><path d="M36 32.5v4M36 39.2v.1"/></svg></div>
                 <h3>Shortage reports</h3>
                 <p>Load a BOM and see what's missing for the build quantity, then export the list for purchasing.</p>
             </div>
 
             <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="bi bi-shield-check"></i>
-                </div>
+                <div class="feature-meta"><span>03</span><span>Access</span></div>
+                <div class="feature-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M12 7v34"/><circle cx="12" cy="12" r="3" fill="#0c0c12"/><circle cx="12" cy="24" r="3" fill="#0c0c12"/><circle cx="12" cy="36" r="3" fill="#0c0c12"/><path d="M20 12h20M20 24h14M20 36h18"/><path d="M20 16h8M20 28h11M20 40h6" stroke-width="1" opacity=".6"/></svg></div>
                 <h3>Roles and audit trail</h3>
                 <p>Five permission levels, including ITAR, plus a full record of who touched what and when.</p>
             </div>
 
             <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="bi bi-diagram-3"></i>
-                </div>
+                <div class="feature-meta"><span>04</span><span>Production</span></div>
+                <div class="feature-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="13" y="13" width="22" height="22" rx="2"/><circle cx="18" cy="18" r="1.5"/><path d="M19 13V7M24 13V7M29 13V7M19 41v-6M24 41v-6M29 41v-6M13 19H7M13 24H7M13 29H7M41 19h-6M41 24h-6M41 29h-6"/></svg></div>
                 <h3>BOMs and jobs</h3>
                 <p>Drop in an Excel BOM and columns are detected automatically. Track revisions and build quantities per job.</p>
             </div>
 
             <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="bi bi-droplet-half"></i>
-                </div>
+                <div class="feature-meta"><span>05</span><span>Compliance</span></div>
+                <div class="feature-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="5" y="11" width="38" height="26" rx="3"/><circle cx="15" cy="24" r="4.5" fill="currentColor" fill-opacity=".25"/><circle cx="24" cy="24" r="4.5"/><circle cx="33" cy="24" r="4.5"/><path d="M11 32.5h8M20 32.5h8M29 32.5h8" stroke-width="1" opacity=".6"/></svg></div>
                 <h3>Moisture and date codes</h3>
                 <p>MSL levels, date codes, and shelf life tracked on every part, with expiring stock flagged early.</p>
             </div>
 
             <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="bi bi-upc-scan"></i>
-                </div>
+                <div class="feature-meta"><span>06</span><span>Labeling</span></div>
+                <div class="feature-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="5" y="9" width="38" height="30" rx="2"/><path d="M11 15v14M14 15v14M19 15v14M23 15v14M26 15v14M31 15v14M37 15v14" /><path d="M16.5 15v14M34 15v14" stroke-width="3"/><path d="M11 34h14" stroke-width="1" opacity=".6"/></svg></div>
                 <h3>Barcode labels</h3>
                 <p>Generate PCNs and print ZPL labels straight to the printer. Scan them from any page.</p>
             </div>
